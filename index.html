@@ -149,7 +149,18 @@
             right: 3rem;
         }
 
-        .bair-logo {
+        .header-logos {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .header-logo-link {
+            display: block;
+        }
+
+        .bair-logo,
+        .nvidia-logo {
             display: block;
             height: 2.5rem;
             width: auto;
@@ -924,9 +935,14 @@
     <div class="top-gradient"></div>
 
     <div class="header-title header-left">T-Rex</div>
-    <a class="header-title header-right" href="https://bair.berkeley.edu/" target="_blank" rel="noopener noreferrer" aria-label="Berkeley AI Research">
-        <img src="logos/BAIR_Logo_White_BearOnly.svg" alt="BAIR" class="bair-logo">
-    </a>
+    <div class="header-title header-right header-logos">
+        <a class="header-logo-link" href="https://bair.berkeley.edu/" target="_blank" rel="noopener noreferrer" aria-label="Berkeley AI Research">
+            <img src="logos/BAIR_Logo_White_BearOnly.svg" alt="BAIR" class="bair-logo">
+        </a>
+        <a class="header-logo-link" href="https://www.nvidia.com/" target="_blank" rel="noopener noreferrer" aria-label="NVIDIA">
+            <img src="logos/NVIDIA_logo_white.svg" alt="NVIDIA" class="nvidia-logo">
+        </a>
+    </div>
 
     <div class="nav-buttons">
         <a href="#" class="nav-btn" id="nav-home">Home</a>
