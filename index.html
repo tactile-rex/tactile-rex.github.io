@@ -1450,11 +1450,11 @@
 
         // Pin the paper title section so the viewer is forced to dwell on the
         // real T-Rex title for ~2 extra viewport heights of scrolling. The
-        // "top 15%" start leaves space above the title so it sits a bit lower
-        // than the navbar, instead of slamming against the very top of viewport.
+        // "top 10%" start leaves a small gap above the title so it sits just
+        // below the navbar instead of slamming against the very top of viewport.
         ScrollTrigger.create({
             trigger: ".paper-title-section",
-            start: "top 15%",
+            start: "top 10%",
             end: "+=200%",
             pin: true,
             pinSpacing: true
