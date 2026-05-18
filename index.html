@@ -305,12 +305,15 @@
         }
 
         .feature-title-section {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 96px 32px;
-            min-height: 100vh;
+            position: fixed;
+            top: 50%;
+            left: 10%;
+            transform: translateY(-50%);
+            opacity: 0;
+            z-index: 2;
             display: flex;
-            align-items: center;
+            align-items: flex-start;
+            pointer-events: none;
         }
 
         .paper-title-section {
@@ -1436,14 +1439,37 @@
         gsap.set("#title-section .main-title", { x: -30, opacity: 0 });
         gsap.set("#title-section .subtitle", { x: -20, opacity: 0 });
 
-        // Dark overlay fades in as the feature title section enters the viewport,
-        // so the held last frame is dimmed beneath both the feature title and the paper title.
+        // Near the end of the scroll animation, fade in the dark overlay and the
+        // feature title overlay so "Unified Visuotactile Foundation Model" appears
+        // at center, then fades out before the paper title section takes over.
+        gsap.set(".feature-title-section", { opacity: 0 });
+
         gsap.to(darkOverlay, {
             opacity: 1,
             scrollTrigger: {
-                trigger: ".feature-title-section",
-                start: "top 85%",
-                end: "top 30%",
+                trigger: ".content",
+                start: "82% bottom",
+                end: "88% bottom",
+                scrub: true
+            }
+        });
+
+        gsap.to(".feature-title-section", {
+            opacity: 1,
+            scrollTrigger: {
+                trigger: ".content",
+                start: "82% bottom",
+                end: "88% bottom",
+                scrub: true
+            }
+        });
+
+        gsap.to(".feature-title-section", {
+            opacity: 0,
+            scrollTrigger: {
+                trigger: ".content",
+                start: "96% bottom",
+                end: "100% bottom",
                 scrub: true
             }
         });
