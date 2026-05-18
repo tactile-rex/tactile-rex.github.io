@@ -1,0 +1,2124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T-Rex: A Unified Model for Tactile-Reactive Dexterous Manipulation</title>
+    <style>
+        @font-face {
+            font-family: 'NVIDIA Sans';
+            src: url('font/NVIDIASansVF_NALA_W_Wght.woff2') format('woff2');
+            font-weight: 100 900;
+            font-display: swap;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'NVIDIA Sans', 'Arial', sans-serif;
+            background: #000;
+            color: white;
+            overflow-x: hidden;
+            margin: 0;
+            min-height: 100vh;
+            min-height: 100dvh;
+        }
+
+        .background-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            z-index: -1;
+            width: 100vw;
+            height: 100vh;
+            /* Use dynamic viewport height to adapt when browser chrome hides/shows */
+            height: 100dvh; /* Dynamic viewport height - expands when chrome hides */
+            object-fit: cover;
+        }
+
+        @supports (-webkit-touch-callout: none) and (not (height: 100dvh)) {
+            /* Fallback for older iOS that doesn't support dvh */
+            .background-canvas {
+                height: -webkit-fill-available;
+            }
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+            height: 1000vh; /* Extended height for two video sequences */
+        }
+
+        .dark-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            width: 100%;
+            height: 100vh;
+            height: 100dvh;
+            background: rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .title-section {
+            position: fixed;
+            top: 50%;
+            left: 10%;
+            transform: translateY(-50%);
+            text-align: left;
+            opacity: 0;
+            z-index: 2;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .title-section-2 {
+            position: fixed;
+            top: 50%;
+            left: 10%;
+            transform: translateY(-50%);
+            text-align: left;
+            opacity: 0;
+            z-index: 2;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .vertical-bar {
+            width: 10px;
+            height: 9rem;
+            background: #76b900;
+            margin-right: 2rem;
+        }
+
+        .title-content {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-title {
+            font-size: 4rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .subtitle {
+            font-size: 1.8rem;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+            opacity: 0.9;
+        }
+
+        .scroll-indicator {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.95rem;
+            z-index: 3;
+            opacity: 0;
+            letter-spacing: 0.5px;
+            font-weight: 400;
+        }
+
+        .header-title {
+            position: fixed;
+            top: 2rem;
+            font-size: 1.2rem;
+            font-weight: 400;
+            letter-spacing: 1px;
+            z-index: 10;
+            color: white;
+        }
+
+        .header-left {
+            left: 3rem;
+        }
+
+        .header-right {
+            right: 3rem;
+        }
+
+        .top-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 150px;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 50%, transparent 100%);
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 1;
+            transition: opacity 0.8s ease;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loading-text {
+            font-size: 1.5rem;
+            color: #76b900;
+            margin-bottom: 2rem;
+            letter-spacing: 2px;
+            font-weight: 500;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            position: relative;
+        }
+
+        .spinner-ring {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 3px solid transparent;
+            border-top-color: #76b900;
+            border-radius: 50%;
+            animation: spin 1.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+        }
+
+        .spinner-ring:nth-child(2) {
+            border-top-color: #a8e063;
+            animation-duration: 2s;
+            animation-delay: -0.3s;
+        }
+
+        .spinner-ring:nth-child(3) {
+            border-top-color: #56ab2f;
+            animation-duration: 2.5s;
+            animation-delay: -0.6s;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .nav-buttons {
+            position: fixed;
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 1rem;
+            z-index: 10;
+        }
+
+        .nav-btn {
+            padding: 0.6rem 1.5rem;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            position: relative;
+            transition: color 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .nav-btn::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 3px;
+            background: #76b900;
+            transition: width 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .nav-btn:hover::after {
+            width: 100%;
+        }
+
+        .video-container {
+            position: fixed;
+            right: 5%;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 2;
+            opacity: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .video-container video {
+            width: 600px;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .static-sections {
+            position: relative;
+            z-index: 2;
+            background: transparent;
+            padding: 20px 0;
+        }
+
+        .section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 50px 40px;
+        }
+
+        .paper-title-section {
+            text-align: left;
+            padding: 96px 32px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .paper-title {
+            font-size: 2.7rem;
+            font-weight: 400;
+            line-height: 1.4;
+            margin-bottom: 2.4rem;
+        }
+
+        .paper-title .doorman {
+            display: block;
+            color: #76b900;
+            font-size: 3.6rem;
+            font-weight: 600;
+            margin-bottom: 0.4rem;
+        }
+
+        .authors {
+            font-size: 1rem;
+            font-weight: 300;
+            line-height: 2;
+            color: rgba(255, 255, 255, 0.8);
+            max-width: 720px;
+        }
+
+        .authors a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .authors a:hover {
+            color: #76b900;
+            text-decoration: underline;
+        }
+
+        .logos-section {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 2rem;
+            margin-top: 2.4rem;
+        }
+
+        .logo-separator {
+            width: 1px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .logos-section img {
+            height: 40px;
+            width: auto;
+            object-fit: contain;
+            opacity: 0.9;
+            transition: opacity 0.3s ease;
+        }
+
+        .logos-section img:hover {
+            opacity: 1;
+        }
+
+        .logos-section img.logo-smaller {
+            height: 32px;
+        }
+
+        .logos-section img.logo-larger {
+            height: 48px;
+        }
+
+        .logos-section img.logo-nvidia {
+            transform: translateY(-3px);
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            color: #76b900;
+        }
+
+        .bootstrap-text {
+            display: inline-block;
+            position: relative;
+            font-weight: 700;
+            opacity: 0;
+            transform: translateX(-20px);
+            background: linear-gradient(120deg, #76b900, #a8e063, #56ab2f, #76b900);
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 4s ease infinite;
+            filter: brightness(1.2);
+            margin-left: 0.15em;
+        }
+
+        .highlight-text {
+            display: inline-block;
+            font-weight: 700;
+            background: linear-gradient(120deg, #76b900, #a8e063, #56ab2f, #76b900);
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 4s ease infinite;
+            filter: brightness(1.2);
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .bootstrap-text::before {
+            content: 'Bootstrap';
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            background: linear-gradient(120deg, #76b900, #a8e063, #56ab2f, #76b900);
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 4s ease infinite;
+            filter: brightness(1.2);
+        }
+
+        .bootstrap-text.glitch::before {
+            animation: glitch 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both, gradientShift 4s ease infinite;
+        }
+
+        @keyframes glitch {
+            0%, 100% {
+                transform: translate(0);
+                opacity: 0;
+            }
+            20% {
+                transform: translate(-2px, 2px);
+                opacity: 0.8;
+            }
+            40% {
+                transform: translate(2px, -2px);
+                opacity: 0.8;
+            }
+            60% {
+                transform: translate(-2px, -2px);
+                opacity: 0.8;
+            }
+            80% {
+                transform: translate(2px, 2px);
+                opacity: 0.8;
+            }
+        }
+
+        .section-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: 2rem;
+        }
+
+        .placeholder-image {
+            width: 100%;
+            height: 400px;
+            background: #2a2a2a;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 1.2rem;
+        }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            width: 100%;
+        }
+
+        .video-grid video {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .demo-subsection {
+            margin-top: 3rem;
+        }
+
+        .demo-subsection:first-child {
+            margin-top: 2rem;
+        }
+
+        .demo-subsection-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            width: 100%;
+        }
+
+        .demo-grid video,
+        .demo-grid .demo-placeholder {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .demo-placeholder {
+            background: #2a2a2a;
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 0.9rem;
+        }
+
+        .failure-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            width: 100%;
+            margin-top: 2rem;
+        }
+
+        .failure-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .failure-item video {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .failure-caption {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            font-style: italic;
+        }
+
+        .tsb-flow {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 0.5rem;
+            margin-top: 3rem;
+        }
+
+        .tsb-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        .tsb-item:has(.icon-container) {
+            flex: 0 0 80px;
+            align-self: center;
+        }
+
+        .tsb-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        .tsb-label {
+            margin-top: 1rem;
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.75);
+            text-align: center;
+            line-height: 1.4;
+            max-width: 200px;
+        }
+
+        .placeholder-figure {
+            min-height: 300px;
+            width: 100%;
+            background: #2a2a2a;
+            border-radius: 8px;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .tsb-video {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .tsb-placeholder {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: #2a2a2a;
+            border-radius: 8px;
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+        }
+
+        #bootstrap-chart {
+            border: none;
+            background: transparent;
+        }
+
+        #bootstrap-chart svg {
+            display: block;
+        }
+
+        .icon-container {
+            flex: 0 0 auto;
+        }
+
+        .icon-container svg,
+        .icon-container img {
+            width: 64px;
+            height: 64px;
+        }
+
+        .beaker-icon {
+            transform-box: fill-box;
+            transform-origin: 50% 20%;
+        }
+
+        .bibtex-section {
+            background: transparent;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 50px 40px;
+        }
+
+        .bibtex-code {
+            background: #2a2a2a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 2rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: #76b900;
+            overflow-x: auto;
+        }
+
+        .technical-details {
+            margin-top: 2rem;
+        }
+
+        .technical-details summary {
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #76b900;
+            padding: 1rem 0;
+            list-style: none;
+            user-select: none;
+            transition: color 0.3s ease;
+        }
+
+        .technical-details summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .technical-details summary::before {
+            content: '▶';
+            display: inline-block;
+            margin-right: 0.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .technical-details[open] summary::before {
+            transform: rotate(90deg);
+        }
+
+        .technical-details summary:hover {
+            color: #a8e063;
+        }
+
+        .technical-details-content {
+            padding: 1rem 0 1rem 1.5rem;
+            color: rgba(255, 255, 255, 0.85);
+            line-height: 1.8;
+        }
+
+        .technical-details-content ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .technical-details-content li {
+            margin-bottom: 1.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .technical-details-content li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #76b900;
+            font-weight: bold;
+        }
+
+        .technical-details-content a {
+            color: #76b900;
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.3s ease;
+        }
+
+        .technical-details-content a:hover {
+            border-bottom-color: #76b900;
+        }
+
+        @media (max-width: 768px) {
+            .title-section {
+                left: 5%;
+            }
+            .vertical-bar {
+                height: 6rem;
+                margin-right: 1rem;
+            }
+            .main-title {
+                font-size: 2.5rem;
+            }
+            .subtitle {
+                font-size: 1.2rem;
+            }
+            .header-title {
+                font-size: 1rem;
+                top: 1.5rem;
+            }
+            .header-left {
+                left: 1.5rem;
+            }
+            .header-right {
+                right: 1.5rem;
+            }
+            .video-container video {
+                width: 300px;
+            }
+            .title-section-2 {
+                left: 5%;
+                top: 25%;
+                transform: translateY(-50%);
+            }
+            .video-container {
+                left: 5%;
+                right: 5%;
+                top: 60%;
+                transform: translateY(-50%);
+                gap: 1rem;
+            }
+            .paper-title {
+                font-size: 1.6rem;
+            }
+            .paper-title .doorman {
+                font-size: 2.3rem;
+            }
+            .authors {
+                font-size: 0.85rem;
+            }
+            .section-title {
+                font-size: 1.8rem;
+            }
+            .section {
+                padding: 40px 20px;
+            }
+            .bibtex-section {
+                padding: 40px 20px;
+            }
+            .technical-details summary {
+                font-size: 1rem;
+            }
+            .technical-details-content {
+                font-size: 0.9rem;
+                padding-left: 0.5rem;
+            }
+            .technical-details-content li {
+                padding-left: 1rem;
+            }
+            .logos-section {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1.5rem;
+            }
+            .logos-section img {
+                height: 28px;
+            }
+            .logos-section img.logo-smaller {
+                height: 22px;
+            }
+            .logos-section img.logo-larger {
+                height: 34px;
+            }
+            .logo-separator {
+                display: none;
+            }
+            .video-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            .demo-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            .failure-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            .tsb-flow {
+                flex-direction: column;
+                gap: 3rem;
+            }
+            .tsb-item {
+                width: 100%;
+            }
+            .tsb-item:has(.icon-container) {
+                width: auto;
+            }
+            .placeholder-figure {
+                min-height: 200px;
+                width: 100%;
+            }
+            .icon-container svg,
+            .icon-container img {
+                width: 48px;
+                height: 48px;
+            }
+            .tsb-label {
+                font-size: 0.85rem;
+                max-width: 100%;
+            }
+            .nav-buttons {
+                top: 4.5rem;
+                left: 0;
+                transform: none;
+                width: 100%;
+                padding: 0 1.5rem;
+                gap: 0.5rem;
+                justify-content: center;
+            }
+            .nav-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+            .loading-text {
+                font-size: 1.2rem;
+                letter-spacing: 1px;
+            }
+            .loading-spinner {
+                width: 50px;
+                height: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loading-screen">
+        <div class="loading-text">Loading Experience...</div>
+        <div class="loading-spinner">
+            <div class="spinner-ring"></div>
+            <div class="spinner-ring"></div>
+            <div class="spinner-ring"></div>
+        </div>
+    </div>
+
+    <canvas id="background-canvas" class="background-canvas"></canvas>
+
+    <div class="dark-overlay" id="dark-overlay"></div>
+
+    <div class="top-gradient"></div>
+
+    <div class="header-title header-left">T-Rex</div>
+    <div class="header-title header-right">BAIR</div>
+
+    <div class="nav-buttons">
+        <a href="#" class="nav-btn" id="nav-home">Home</a>
+        <a href="#" class="nav-btn" id="nav-paper">Paper Details</a>
+        <a href="#" class="nav-btn" id="nav-dataset">Dataset</a>
+        <a href="#" class="nav-btn" id="nav-benchmark">Benchmark</a>
+        <a href="#" class="nav-btn" id="nav-arxiv" target="_blank" rel="noopener noreferrer">arXiv</a>
+        <a href="#" class="nav-btn" id="nav-code" target="_blank" rel="noopener noreferrer">Code</a>
+    </div>
+
+    <div class="content">
+        <div class="title-section" id="title-section">
+            <div class="vertical-bar"></div>
+            <div class="title-content">
+                <h1 class="main-title">Tactile-Reactive<br>Dexterous Hand</h1>
+                <p class="subtitle">High-Frequency Physical Interaction</p>
+            </div>
+        </div>
+        <div class="title-section-2" id="title-section-2">
+            <div class="vertical-bar"></div>
+            <div class="title-content">
+                <h1 class="main-title">Unified Visuotactile<br>Foundation Model</h1>
+                <p class="subtitle">Vision &middot; Action &middot; Tactile</p>
+            </div>
+        </div>
+
+        <div class="video-container" id="video-container">
+            <!-- Demo videos will be added later -->
+        </div>
+    </div>
+
+    <div class="scroll-indicator" id="scroll-indicator">
+        Scroll to explore
+    </div>
+
+    <!-- Static Sections -->
+    <div class="static-sections">
+        <!-- Paper Title Section -->
+        <div class="paper-title-section">
+            <h1 class="paper-title">
+                <span class="doorman">T-Rex</span>
+                A Unified Model for Tactile-Reactive<br>Dexterous Manipulation
+            </h1>
+            <div class="authors">
+                <a href="#">Author One</a><sup>1,*</sup>,
+                <a href="#">Author Two</a><sup>1,*</sup>,
+                <a href="#">Author Three</a><sup>2,*</sup><br>
+                <a href="#">Author Four</a><sup>1</sup>,
+                <a href="#">Author Five</a><sup>1</sup>,
+                <a href="#">Author Six</a><sup>2</sup>,
+                <a href="#">Author Seven</a><sup>1,&dagger;</sup>,
+                <a href="#">Author Eight</a><sup>1,&dagger;</sup>
+                <br><br>
+                <sup>1</sup>UC Berkeley (BAIR), <sup>2</sup>Institution B<br>
+                <sup>*</sup>Equal Contribution, <sup>&dagger;</sup>Project Leads
+            </div>
+        </div>
+
+        <!-- Method Section -->
+        <div class="section">
+            <h2 class="section-title">Section Title One</h2>
+            <div class="section-content">
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+            </div>
+            <div class="video-grid">
+                <div style="aspect-ratio: 16/9; background: rgba(255,255,255,0.04); border: 1.5px dashed rgba(255,255,255,0.12); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.3); font-size: 0.85rem;">Demo video coming soon</div>
+                <div style="aspect-ratio: 16/9; background: rgba(255,255,255,0.04); border: 1.5px dashed rgba(255,255,255,0.12); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.3); font-size: 0.85rem;">Demo video coming soon</div>
+            </div>
+        </div>
+
+        <!-- Result Section -->
+        <div class="section" id="results-section">
+            <h2 class="section-title">Section Title <span class="bootstrap-text">Two</span></h2>
+            <div class="section-content">
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore.</p>
+            </div>
+            <div class="tsb-flow">
+                <div class="tsb-item">
+                    <div class="tsb-content">
+                        <div class="tsb-video" style="background: rgba(255,255,255,0.04); border: 1.5px dashed rgba(255,255,255,0.12); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.3); font-size: 0.8rem; aspect-ratio: 16/9;">Video coming soon</div>
+                        <div class="tsb-label">Phase 1: Lorem ipsum dolor sit<br><b>(placeholder)</b></div>
+                    </div>
+                </div>
+                <div class="tsb-item">
+                    <div class="tsb-content">
+                        <div class="icon-container" id="beaker-icon">
+                            <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <g class="beaker-icon">
+                                    <!-- Hollow white bubbles -->
+                                    <circle class="bubble" cx="17" cy="31" r="1.2" stroke="white" stroke-width="1" fill="none" />
+                                    <circle class="bubble" cx="19" cy="27" r="1.2" stroke="white" stroke-width="1" fill="none" />
+                                    <circle class="bubble" cx="21" cy="34" r="1.2" stroke="white" stroke-width="1" fill="none" />
+
+                                    <!-- Main beaker path in white -->
+                                    <g clip-path="url(#clip0_24_403)">
+                                        <path d="M23.499 11.5H24.999V8.5H15.5V11.5H17L16.999 20.8594L8.38525 34.9453L9.61475 39.5H30.3828L31.6104 34.9531L23.5 20.8662L23.499 11.5ZM16.5 10.5V9.5H23.999V10.5H22.499L22.4997 17.5H17.9993L18 10.5H16.5ZM29.6172 38.5H10.3804L9.46237 35.1001L17.999 21.1406L17.9993 18.5H22.4998L22.5 21.1338L24.4382 24.5H22.5V25.5H25.0139L26.1655 27.5H23.5V28.5H26.7412L27.8928 30.5H24.5V31.5H28.4685L29.6201 33.5H25.5V34.5H30.1958L30.5371 35.0928L29.6172 38.5ZM39.5 13.5V10.5H32.5V13.5H33.5L33.499 35C33.499 35.6632 33.7624 36.2992 34.2314 36.7681C34.7003 37.2371 35.3363 37.5005 35.9995 37.5005C36.6627 37.5005 37.2987 37.2371 37.7676 36.7681C38.2366 36.2992 38.5 35.6632 38.5 35V34.5V33.5L38.4998 31.5H38.5V30.5H38.4998V28.5H38.5V27.5H38.4996L38.4995 25.5H38.5V24.5H38.4995V22.5H38.5V21.5H38.4994L38.4993 19.5H38.5V18.5H38.4993L38.4992 16.5H38.5V15.5H38.499V13.5H39.5ZM37.4993 16.5V18.5H36.5V19.5H37.4993L37.4994 21.5H36.5V22.5H37.4995V24.5H36.5V25.5H37.4995L37.4998 27.5H36.5V28.5H37.4998V30.5H36.5V31.5H37.4999L37.5 33.5H36.5V34.5H37.5V35C37.5 35.398 37.3419 35.7796 37.0605 36.061C36.7791 36.3424 36.3975 36.5005 35.9995 36.5005C35.6015 36.5005 35.2199 36.3424 34.9385 36.061C34.6571 35.7796 34.499 35.398 34.499 35L34.5 12.5H33.5V11.5H38.5V12.5H37.499L37.4991 15.5H36.5V16.5H37.4993Z" fill="white"/>
+                                    </g>
+                                </g>
+
+                                <defs>
+                                    <clipPath id="clip0_24_403">
+                                        <rect width="48" height="48" fill="none"/>
+                                    </clipPath>
+                                </defs>
+                            </svg>
+                        </div>
+                        <div class="tsb-label">Step A</div>
+                    </div>
+                </div>
+                <div class="tsb-item">
+                    <div class="tsb-content">
+                        <div class="tsb-video" style="background: rgba(255,255,255,0.04); border: 1.5px dashed rgba(255,255,255,0.12); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.3); font-size: 0.8rem; aspect-ratio: 16/9;">Video coming soon</div>
+                        <div class="tsb-label">Phase 2: Lorem ipsum dolor sit<br><b>(placeholder)</b></div>
+                    </div>
+                </div>
+                <div class="tsb-item">
+                    <div class="tsb-content">
+                        <div class="icon-container" id="copy-icon">
+                            <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <g class="copy-icon" clip-path="url(#clip0_1969_665)">
+                                    <!-- Left "file" -->
+                                    <path d="M11.5 12.8V26.5H25.5V7.5H16.8L11.5 12.8ZM16.5 9.2V12.5H13.2L16.5 9.2ZM24.5 25.5H12.5V13.5H17.5V8.5H24.5V25.5Z" fill="white"/>
+
+                                    <!-- Left-side bars -->
+                                    <path d="M10.5 14.5H9.5V28.5H23.5V27.5H10.5V14.5Z" fill="white"/>
+                                    <path d="M21.5 29.5H8.5V16.5H7.5V30.5H21.5V29.5Z" fill="white"/>
+
+                                    <!-- Left file lines -->
+                                    <path d="M22.5 15.5H14.5V16.5H22.5V15.5Z" fill="white"/>
+                                    <path d="M22.5 18.5H14.5V19.5H22.5V18.5Z" fill="white"/>
+                                    <path d="M18.5 21.5H14.5V22.5H18.5V21.5Z" fill="white"/>
+
+                                    <!-- Right "file" - grouped for animation -->
+                                    <g class="right-file">
+                                        <path d="M31.8 21.5L26.5 26.8V40.5H40.5V21.5H31.8ZM31.5 23.2V26.5H28.2L31.5 23.2ZM39.5 39.5H27.5V27.5H32.5V22.5H39.5V39.5Z" fill="white"/>
+
+                                        <!-- Right file lines -->
+                                        <path d="M37.5 29.5H29.5V30.5H37.5V29.5Z" fill="white"/>
+                                        <path d="M37.5 32.5H29.5V33.5H37.5V32.5Z" fill="white"/>
+                                        <path d="M33.5 35.5H29.5V36.5H33.5V35.5Z" fill="white"/>
+                                    </g>
+
+                                    <!-- Arrows (not animated) -->
+                                    <path d="M32.5 17.8L31 16.3V17.7L33 19.7L35 17.7V16.3L33.5 17.8V13.5H27.5V14.5H32.5V17.8Z"
+                                          fill="white"/>
+                                    <path d="M18.3 35L19.8 36.5H16.5V31.5H15.5V37.5H19.8L18.3 39H19.7L21.7 37L19.7 35H18.3Z"
+                                          fill="white"/>
+                                </g>
+
+                                <defs>
+                                    <clipPath id="clip0_1969_665">
+                                        <rect width="48" height="48" fill="none"/>
+                                    </clipPath>
+                                </defs>
+                            </svg>
+                        </div>
+                        <div class="tsb-label">Step B</div>
+                    </div>
+                </div>
+                <div class="tsb-item">
+                    <div class="tsb-content">
+                        <div id="bootstrap-chart" class="tsb-placeholder"></div>
+                        <div class="tsb-label">Phase 3: Lorem ipsum dolor sit<br><b>(placeholder)</b></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Real-World Generalization Section -->
+        <div class="section" id="generalization-section">
+            <h2 class="section-title">Section Title Three</h2>
+            <div class="section-content">
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            </div>
+
+            <!-- Diverse Handle Shape -->
+            <div class="demo-subsection">
+                <h3 class="demo-subsection-title">Subsection One</h3>
+                <div class="demo-grid">
+                    <div style="aspect-ratio: 16/9; background: rgba(255,255,255,0.04); border: 1.5px dashed rgba(255,255,255,0.12); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.3); font-size: 0.85rem;">Demo video coming soon</div>
+                    <div style="aspect-ratio: 16/9; background: rgba(255,255,255,0.04); border: 1.5px dashed rgba(255,255,255,0.12); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.3); font-size: 0.85rem;">Demo video coming soon</div>
+                    <div style="aspect-ratio: 16/9; background: rgba(255,255,255,0.04); border: 1.5px dashed rgba(255,255,255,0.12); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.3); font-size: 0.85rem;">Demo video coming soon</div>
+                </div>
+            </div>
+
+            <!-- Diverse Visuals -->
+            <div class="demo-subsection">
+                <h3 class="demo-subsection-title">Subsection Two</h3>
+                <div class="demo-grid">
+                    <div style="aspect-ratio: 16/9; background: rgba(255,255,255,0.04); border: 1.5px dashed rgba(255,255,255,0.12); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.3); font-size: 0.85rem;">Demo video coming soon</div>
+                    <div style="aspect-ratio: 16/9; background: rgba(255,255,255,0.04); border: 1.5px dashed rgba(255,255,255,0.12); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.3); font-size: 0.85rem;">Demo video coming soon</div>
+                    <div style="aspect-ratio: 16/9; background: rgba(255,255,255,0.04); border: 1.5px dashed rgba(255,255,255,0.12); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.3); font-size: 0.85rem;">Demo video coming soon</div>
+                </div>
+            </div>
+
+            <!-- Diverse Locations and Door Types -->
+            <div class="demo-subsection">
+                <h3 class="demo-subsection-title">Subsection Three</h3>
+                <div class="demo-grid">
+                    <div style="aspect-ratio: 16/9; background: rgba(255,255,255,0.04); border: 1.5px dashed rgba(255,255,255,0.12); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.3); font-size: 0.85rem;">Demo video coming soon</div>
+                    <div style="aspect-ratio: 16/9; background: rgba(255,255,255,0.04); border: 1.5px dashed rgba(255,255,255,0.12); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.3); font-size: 0.85rem;">Demo video coming soon</div>
+                    <div style="aspect-ratio: 16/9; background: rgba(255,255,255,0.04); border: 1.5px dashed rgba(255,255,255,0.12); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.3); font-size: 0.85rem;">Demo video coming soon</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Faster than Human Section -->
+        <div class="section">
+            <h2 class="section-title">Section Title <span class="highlight-text">Four</span></h2>
+            <div class="section-content">
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.</p>
+            </div>
+            <div class="failure-grid">
+                <div class="failure-item">
+                    <div style="aspect-ratio: 16/9; background: rgba(255,255,255,0.04); border: 1.5px dashed rgba(255,255,255,0.12); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.3); font-size: 0.85rem;">Demo video coming soon</div>
+                    <div class="failure-caption">Caption coming soon.</div>
+                </div>
+                <div class="failure-item">
+                    <div style="aspect-ratio: 16/9; background: rgba(255,255,255,0.04); border: 1.5px dashed rgba(255,255,255,0.12); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.3); font-size: 0.85rem;">Demo video coming soon</div>
+                    <div class="failure-caption">Caption coming soon.</div>
+                </div>
+                <div class="failure-item">
+                    <div style="aspect-ratio: 16/9; background: rgba(255,255,255,0.04); border: 1.5px dashed rgba(255,255,255,0.12); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.3); font-size: 0.85rem;">Demo video coming soon</div>
+                    <div class="failure-caption">Caption coming soon.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Failure Cases Section -->
+        <div class="section">
+            <h2 class="section-title">Section Title Five</h2>
+            <div class="section-content">
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+            </div>
+            <div class="failure-grid">
+                <div class="failure-item">
+                    <div style="aspect-ratio: 16/9; background: rgba(255,255,255,0.04); border: 1.5px dashed rgba(255,255,255,0.12); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.3); font-size: 0.85rem;">Demo video coming soon</div>
+                    <div class="failure-caption">Caption coming soon</div>
+                </div>
+                <div class="failure-item">
+                    <div style="aspect-ratio: 16/9; background: rgba(255,255,255,0.04); border: 1.5px dashed rgba(255,255,255,0.12); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.3); font-size: 0.85rem;">Demo video coming soon</div>
+                    <div class="failure-caption">Caption coming soon</div>
+                </div>
+                <div class="failure-item">
+                    <div style="aspect-ratio: 16/9; background: rgba(255,255,255,0.04); border: 1.5px dashed rgba(255,255,255,0.12); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.3); font-size: 0.85rem;">Demo video coming soon</div>
+                    <div class="failure-caption">Caption coming soon</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Abstract Section -->
+        <div class="section">
+            <h2 class="section-title">Abstract</h2>
+            <div class="section-content">
+                <p>Dexterous manipulation in contact-rich environments requires robots to dynamically adapt to physical interaction signals such as force, slip, and deformation through tactile feedback. While recent Vision-Language-Action (VLA) models and large-scale human video pretraining have demonstrated promising progress in general robotic manipulation, existing approaches primarily focus on vision-driven and position-level control, limiting their ability to perform tactile-reactive dexterous behaviors. In this work, we propose <strong>T-Rex</strong>, a unified model for tactile-reactive dexterous manipulation. Built upon a Mixture-of-Transformer-Experts (MoT) architecture, T-Rex integrates low-frequency visuomotor action generation with high-frequency asynchronous tactile-reactive residual control through a dedicated tactile expert and a temporal VQ-VAE tactile encoder. To bridge large-scale human visuomotor pretraining and physically grounded robot interaction, we further introduce a tactile-aware midtraining paradigm using a 100-hour teleoperated dexterous manipulation dataset designed around diverse motor primitive and object interaction combinations. We additionally establish a real-world benchmark of 13 tactile-sensitive dexterous manipulation tasks involving insertion, deformation, force-sensitive interaction, and bimanual coordination.</p>
+            </div>
+        </div>
+
+        <!-- BibTeX Section -->
+        <div class="bibtex-section">
+            <h2 class="section-title">Citation</h2>
+            <pre class="bibtex-code">@article{trex2025,
+  title={T-Rex: A Unified Model for Tactile-Reactive Dexterous Manipulation},
+  author={Author One and Author Two and Author Three and others},
+  year={2025},
+  archivePrefix={arXiv},
+  primaryClass={cs.RO}
+}</pre>
+
+            <!-- Technical Details Collapsible -->
+            <details class="technical-details">
+                <summary>Interested in the simulation rendering / website template?</summary>
+                <div class="technical-details-content">
+                    <ul>
+                        <li>
+                            <strong>Website Source Code:</strong> The website source code can be found at <a href="https://github.com/doorman-humanoid/doorman-humanoid.github.io" target="_blank" rel="noopener noreferrer">here</a>. The <code>CLAUDE.md</code> file contains comprehensive documentation that enables coding agents to understand and adapt this website template for other projects.
+                        </li>
+                        <li>
+                            <strong>Simulation Rendering with IsaacSim:</strong> All simulation rendering is done using IsaacSim. The workflow involves:
+                            <ol style="margin-top: 0.5rem; padding-left: 1.5rem;">
+                                <li>Recording rollouts as USD animation files following <a href="https://isaac-sim.github.io/IsaacLab/main/source/how-to/record_animation.html" target="_blank" rel="noopener noreferrer">IsaacLab's animation recording guide</a></li>
+                                <li>Opening the USD files interactively in IsaacSim</li>
+                                <li>Generating camera flyby trajectories using the <a href="https://docs.omniverse.nvidia.com/extensions/latest/ext_animation-motionpath.html" target="_blank" rel="noopener noreferrer">Animation Curve extension</a></li>
+                                <li>Recording final videos using the <a href="https://docs.omniverse.nvidia.com/extensions/latest/ext_core/ext_movie-capture.html" target="_blank" rel="noopener noreferrer">Movie Capture extension</a></li>
+                            </ol>
+                        </li>
+                        <li>
+                            <strong>Contact:</strong> For further guidance on the website implementation or simulation rendering pipeline, please contact Haoru Xue at <a href="mailto:haoru-xue@berkeley.edu">haoru-xue@berkeley.edu</a>.
+                        </li>
+                    </ul>
+                </div>
+            </details>
+        </div>
+    </div>
+
+    <!-- GSAP CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <!-- D3.js CDN -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    
+    <script>
+        // Register ScrollTrigger plugin
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Get canvas and context
+        const canvas = document.getElementById('background-canvas');
+        const context = canvas.getContext('2d');
+        const titleSection = document.getElementById('title-section');
+        const titleSection2 = document.getElementById('title-section-2');
+        const scrollIndicator = document.getElementById('scroll-indicator');
+        const darkOverlay = document.getElementById('dark-overlay');
+        const videoContainer = document.getElementById('video-container');
+
+        // Detect mobile device
+        const isMobile = window.innerWidth <= 768;
+
+        // Use current viewport height (dvh in CSS will handle dynamic resizing)
+        const viewportHeight = window.innerHeight;
+
+        // Set canvas size to match viewport with device pixel ratio for sharp rendering
+        // Use 1x DPR on mobile to reduce memory, 2x max on desktop
+        const dpr = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 2);
+
+        // Cap canvas dimensions to prevent excessive memory usage
+        const maxDimension = isMobile ? 1920 : 3840;
+        const canvasWidth = Math.min(window.innerWidth * dpr, maxDimension);
+        const canvasHeight = Math.min(viewportHeight * dpr, maxDimension);
+
+        canvas.width = canvasWidth;
+        canvas.height = canvasHeight;
+
+        // On mobile, let CSS dvh handle the sizing. On desktop, set explicit dimensions.
+        if (!isMobile) {
+            canvas.style.width = window.innerWidth + 'px';
+            canvas.style.height = viewportHeight + 'px';
+        }
+
+        // Handle window resize
+        let resizeTimeout;
+        let lastWidth = window.innerWidth;
+
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                const currentWidth = window.innerWidth;
+                const currentHeight = window.innerHeight;
+                const isMobile = currentWidth <= 768;
+
+                // On mobile, only resize if width changed (rotation), ignore height changes (browser chrome)
+                if (isMobile && currentWidth === lastWidth) {
+                    return;
+                }
+
+                lastWidth = currentWidth;
+
+                const dpr = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 2);
+                const maxDimension = isMobile ? 1920 : 3840;
+                const canvasWidth = Math.min(currentWidth * dpr, maxDimension);
+                const canvasHeight = Math.min(currentHeight * dpr, maxDimension);
+
+                canvas.width = canvasWidth;
+                canvas.height = canvasHeight;
+
+                // On mobile, let CSS dvh handle the sizing. On desktop, set explicit dimensions.
+                if (!isMobile) {
+                    canvas.style.width = currentWidth + 'px';
+                    canvas.style.height = currentHeight + 'px';
+                }
+
+                render(); // Re-render at new size
+            }, 250); // Debounce resize events
+        });
+
+        // Single continuous video sequence (Open Lock)
+        // Use more aggressive subsampling on mobile to reduce memory
+        const subsampleFactor = isMobile ? 4 : 2; // Every 4th frame on mobile, every 2nd on desktop
+        const frameCount1 = Math.floor(1204 / subsampleFactor); // Subsampled frame count
+        const frameOffset1 = 1; // Start from frame 1
+        const getFrame1 = index => {
+            const frameNum = (index * subsampleFactor) + frameOffset1;
+            return `media/frames_open_lock/frame_${frameNum.toString().padStart(4, '0')}.jpg`;
+        };
+
+        // Load all images for the sequence
+        const images1 = [];
+        let imagesLoaded = false;
+
+        // Progressive lazy loading strategy
+        // Load initial frames first, then load rest in background
+        const initialFramesToLoad = isMobile ? 10 : 20; // Load fewer frames initially on mobile
+        const loadPromises = [];
+
+        // Pre-create all image objects
+        for (let i = 0; i < frameCount1; i++) {
+            images1.push(new Image());
+        }
+
+        // Load initial frames
+        for (let i = 0; i < Math.min(initialFramesToLoad, frameCount1); i++) {
+            const promise = new Promise((resolve) => {
+                images1[i].onload = resolve;
+                images1[i].onerror = resolve;
+            });
+            images1[i].src = getFrame1(i);
+            loadPromises.push(promise);
+        }
+
+        const doorman = {
+            progress: 0
+        };
+
+        // Start animation once initial frames are loaded
+        Promise.all(loadPromises).then(() => {
+            console.log('Initial frames loaded, starting animation');
+            imagesLoaded = true;
+            render(); // Initial render
+
+            // Hide loading screen with fade out effect
+            const loadingScreen = document.getElementById('loading-screen');
+            setTimeout(() => {
+                loadingScreen.classList.add('hidden');
+                // Remove from DOM after fade completes
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                }, 800);
+            }, 300); // Small delay to ensure first frame renders
+
+            // Single unified scroll animation
+            gsap.to(doorman, {
+                progress: 1,
+                ease: "none",
+                scrollTrigger: {
+                    trigger: ".content",
+                    start: "top top",
+                    end: "bottom bottom",
+                    scrub: 0.5
+                },
+                onUpdate: render
+            });
+
+            // Load remaining frames in background with lower priority
+            loadRemainingFrames();
+        });
+
+        // Function to load remaining frames in background
+        function loadRemainingFrames() {
+            // Use requestIdleCallback for better performance if available
+            const scheduleLoad = window.requestIdleCallback || ((cb) => setTimeout(cb, 1));
+
+            let currentIndex1 = initialFramesToLoad;
+
+            function loadNextBatch() {
+                const batchSize = 5; // Load 5 frames at a time
+
+                for (let i = 0; i < batchSize && currentIndex1 < frameCount1; i++, currentIndex1++) {
+                    images1[currentIndex1].src = getFrame1(currentIndex1);
+                }
+
+                if (currentIndex1 < frameCount1) {
+                    scheduleLoad(loadNextBatch);
+                } else {
+                    console.log('All frames loaded in background');
+                }
+            }
+
+            scheduleLoad(loadNextBatch);
+        }
+
+        // Helper function to draw image covering the entire canvas (like CSS background-size: cover)
+        function drawImageCover(img) {
+            const imgRatio = img.width / img.height;
+            const canvasRatio = canvas.width / canvas.height;
+
+            let drawWidth, drawHeight, offsetX = 0, offsetY = 0;
+
+            if (imgRatio > canvasRatio) {
+                // Image is wider than canvas
+                drawHeight = canvas.height;
+                drawWidth = img.width * (canvas.height / img.height);
+                offsetX = (canvas.width - drawWidth) / 2;
+            } else {
+                // Image is taller than canvas
+                drawWidth = canvas.width;
+                drawHeight = img.height * (canvas.width / img.width);
+                offsetY = (canvas.height - drawHeight) / 2;
+            }
+
+            context.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
+        }
+
+        // Render function based on overall scroll progress (single continuous sequence)
+        function render() {
+            if (!imagesLoaded) {
+                console.log('Images not loaded yet, skipping render');
+                return;
+            }
+
+            context.clearRect(0, 0, canvas.width, canvas.height);
+
+            const p = doorman.progress;
+            const frame = Math.min(
+                frameCount1 - 1,
+                Math.max(0, Math.round(p * (frameCount1 - 1)))
+            );
+            context.globalAlpha = 1;
+            drawImageCover(images1[frame]);
+        }
+
+        /* ---------------------------------- */
+        /* Title and Overlay Animations */
+
+        // Set initial states
+        gsap.set(darkOverlay, { opacity: 0 });
+        gsap.set(titleSection, { opacity: 0 });
+        gsap.set(titleSection2, { opacity: 0 });
+        gsap.set(videoContainer, { opacity: 0 });
+        gsap.set("#title-section .main-title", { x: -30, opacity: 0 });
+        gsap.set("#title-section .subtitle", { x: -20, opacity: 0 });
+        gsap.set("#title-section-2 .main-title", { x: -30, opacity: 0 });
+        gsap.set("#title-section-2 .subtitle", { x: -20, opacity: 0 });
+
+        // First title section fade in (35%-37% scroll)
+        gsap.to(titleSection, {
+            opacity: 1,
+            scrollTrigger: {
+                trigger: ".content",
+                start: "35% bottom",
+                end: "37% bottom",
+                scrub: true
+            }
+        });
+
+        gsap.to("#title-section .main-title", {
+            x: 0,
+            opacity: 1,
+            scrollTrigger: {
+                trigger: ".content",
+                start: "35% bottom",
+                end: "37% bottom",
+                scrub: true
+            }
+        });
+
+        gsap.to("#title-section .subtitle", {
+            x: 0,
+            opacity: 0.9,
+            scrollTrigger: {
+                trigger: ".content",
+                start: "35% bottom",
+                end: "37% bottom",
+                scrub: true
+            }
+        });
+
+        // First title section fade out (43%-45% scroll)
+        gsap.to(titleSection, {
+            opacity: 0,
+            scrollTrigger: {
+                trigger: ".content",
+                start: "43% top",
+                end: "45% top",
+                scrub: true
+            }
+        });
+
+        // Second overlay fade in (85%-87% scroll)
+        gsap.to(darkOverlay, {
+            opacity: 1,
+            scrollTrigger: {
+                trigger: ".content",
+                start: "85% bottom",
+                end: "87% bottom",
+                scrub: true
+            }
+        });
+
+        // Second title section fade in (85%-87% scroll)
+        gsap.to(titleSection2, {
+            opacity: 1,
+            scrollTrigger: {
+                trigger: ".content",
+                start: "85% bottom",
+                end: "87% bottom",
+                scrub: true
+            }
+        });
+
+        gsap.to("#title-section-2 .main-title", {
+            x: 0,
+            opacity: 1,
+            scrollTrigger: {
+                trigger: ".content",
+                start: "85% bottom",
+                end: "87% bottom",
+                scrub: true
+            }
+        });
+
+        gsap.to("#title-section-2 .subtitle", {
+            x: 0,
+            opacity: 0.9,
+            scrollTrigger: {
+                trigger: ".content",
+                start: "85% bottom",
+                end: "87% bottom",
+                scrub: true
+            }
+        });
+
+        // Video container fade in (85%-87% scroll) - same timing as title-section-2
+        gsap.to(videoContainer, {
+            opacity: 1,
+            scrollTrigger: {
+                trigger: ".content",
+                start: "85% bottom",
+                end: "87% bottom",
+                scrub: true
+            }
+        });
+
+        // Second title section fade out (95%-97% scroll)
+        gsap.to(titleSection2, {
+            opacity: 0,
+            scrollTrigger: {
+                trigger: ".content",
+                start: "95% bottom",
+                end: "97% bottom",
+                scrub: true
+            }
+        });
+
+        // Video container fade out (95%-97% scroll)
+        gsap.to(videoContainer, {
+            opacity: 0,
+            scrollTrigger: {
+                trigger: ".content",
+                start: "95% bottom",
+                end: "97% bottom",
+                scrub: true
+            }
+        });
+
+        // Scroll indicator initial fade-in animation
+        gsap.to(scrollIndicator, {
+            opacity: 1,
+            duration: 1.5,
+            delay: 1,
+            ease: "power2.out"
+        });
+
+        // Scroll indicator continuous bounce animation
+        gsap.to(scrollIndicator, {
+            y: -10,
+            duration: 1.2,
+            ease: "power1.inOut",
+            repeat: -1,
+            yoyo: true
+        });
+
+        // Scroll indicator fade out (95%-97% scroll) - hide when paper title section appears
+        gsap.to(scrollIndicator, {
+            opacity: 0,
+            scrollTrigger: {
+                trigger: ".content",
+                start: "95% bottom",
+                end: "97% bottom",
+                scrub: true,
+                onComplete: () => { scrollIndicator.style.display = 'none'; },
+                onReverseComplete: () => { scrollIndicator.style.display = 'block'; }
+            }
+        });
+
+        // Bootstrap text animation - slide in with glitch and gradient
+        const bootstrapText = document.querySelector('.bootstrap-text');
+
+        // Initial slide-in animation with glitch effect when section comes into view
+        gsap.to(bootstrapText, {
+            opacity: 1,
+            x: 0,
+            duration: 0.8,
+            ease: "back.out(1.2)",
+            scrollTrigger: {
+                trigger: "#results-section",
+                start: "top 80%",
+                toggleActions: "play none none reverse",
+                onEnter: () => {
+                    // Trigger glitch effect on entry
+                    bootstrapText.classList.add('glitch');
+                    setTimeout(() => {
+                        bootstrapText.classList.remove('glitch');
+                    }, 300);
+                }
+            },
+            onComplete: () => {
+                bootstrapText.classList.add('highlight');
+                // Subtle pulse effect to keep drawing attention
+                gsap.to(bootstrapText, {
+                    scale: 1.08,
+                    duration: 2,
+                    ease: "sine.inOut",
+                    yoyo: true,
+                    repeat: -1
+                });
+            }
+        });
+
+        // ========================================
+        // Beaker Icon Animations
+        // ========================================
+
+        // Bubble jitter animation - subtle continuous boiling effect
+        gsap.to("#beaker-icon .bubble", {
+            x: "random(-0.7, 0.7)",
+            y: "random(-0.7, 0.7)",
+            duration: 0.3,
+            yoyo: true,
+            repeat: -1,
+            ease: "sine.inOut",
+            stagger: {
+                each: 0.1,
+                repeat: -1,
+                yoyo: true
+            }
+        });
+
+        // Realistic beaker shake animation - simulates hand shaking (slowed to 0.5x speed)
+        const distillShake = gsap.timeline({
+            repeat: -1,
+            repeatDelay: 0.6,
+            paused: false,  // Auto-start
+            defaults: { ease: "power2.inOut" }
+        });
+
+        distillShake
+            .to("#beaker-icon .beaker-icon", { rotation: -3, x: -0.8, duration: 0.12 })
+            .to("#beaker-icon .beaker-icon", { rotation: 4,  x:  1.0, duration: 0.12 })
+            .to("#beaker-icon .beaker-icon", { rotation: -2, x: -0.6, duration: 0.10 })
+            .to("#beaker-icon .beaker-icon", { rotation: 2,  x:  0.4, duration: 0.10 })
+            .to("#beaker-icon .beaker-icon", { rotation: 0,  x:  0,   duration: 0.36, ease: "power3.out" });
+
+        // Optional: API to control distillation animation
+        window.beakerAnimation = {
+            start: () => distillShake.play(),
+            stop: () => distillShake.pause(0)
+        };
+
+        // ========================================
+        // Copy Icon File Translation Animation
+        // ========================================
+
+        // Animate the right file being copied from left file position
+        const rightFile = document.querySelector("#copy-icon .right-file");
+
+        if (rightFile) {
+            // Create a looping timeline
+            const copyTimeline = gsap.timeline({
+                repeat: -1,
+                repeatDelay: 0.5,
+                paused: false  // Auto-start
+            });
+
+            copyTimeline
+                // Start at left file position (translate left by ~15px, up by ~14px)
+                .set(rightFile, { x: -15, y: -14, opacity: 0.3 })
+                // Fade in and move to final position
+                .to(rightFile, {
+                    x: 0,
+                    y: 0,
+                    opacity: 1,
+                    duration: 1,
+                    ease: "power2.out"
+                })
+                // Hold at final position
+                .to(rightFile, {
+                    duration: 0.8
+                });
+
+            // Optional: API to control copy animation
+            window.copyFlowAnimation = {
+                start: () => copyTimeline.play(),
+                stop: () => {
+                    copyTimeline.pause();
+                    gsap.set(rightFile, { x: 0, y: 0, opacity: 1 });
+                }
+            };
+        }
+
+        // ========================================
+        // Bootstrap Chart - D3.js Line Plot
+        // ========================================
+
+        function createBootstrapChart() {
+            // Chart dimensions
+            const chartContainer = document.getElementById('bootstrap-chart');
+            if (!chartContainer) return;
+
+            const containerWidth = chartContainer.offsetWidth;
+            const containerHeight = containerWidth * (9/16); // 16:9 aspect ratio
+
+            const margin = {top: 20, right: 30, bottom: 40, left: 50};
+            const width = containerWidth - margin.left - margin.right;
+            const height = containerHeight - margin.top - margin.bottom;
+
+            // Create SVG
+            const svg = d3.select("#bootstrap-chart")
+                .append("svg")
+                .attr("width", containerWidth)
+                .attr("height", containerHeight)
+                .append("g")
+                .attr("transform", `translate(${margin.left},${margin.top})`);
+
+            // Load and process data
+            d3.csv("media/data.csv").then(data => {
+            // Convert strings to numbers and scale to percentage
+            data.forEach(d => {
+                d.Step = +d.Step;
+                d.push = +d.push * 100;
+                d.pull = +d.pull * 100;
+                d.pushbar = +d.pushbar * 100;
+            });
+
+            // Sort by Step to ensure correct order
+            data.sort((a, b) => a.Step - b.Step);
+
+            // Moving average smoothing function
+            const movingAverage = (data, key, windowSize = 10) => {
+                return data.map((d, i) => {
+                    const start = Math.max(0, i - Math.floor(windowSize / 2));
+                    const end = Math.min(data.length, i + Math.ceil(windowSize / 2));
+                    const window = data.slice(start, end);
+                    const avg = window.reduce((sum, item) => sum + item[key], 0) / window.length;
+                    return { ...d, [key]: avg };
+                });
+            };
+
+            // Apply moving average to smooth the data
+            let smoothedData = data;
+            ['push', 'pull', 'pushbar'].forEach(key => {
+                smoothedData = movingAverage(smoothedData, key, 10);
+            });
+
+            // Subsample data - take every 5th point to reduce density
+            const subsampleRate = 5;
+            const subsampledData = smoothedData.filter((d, i) => i % subsampleRate === 0);
+
+            // Scales
+            const xDomain = [0, d3.max(subsampledData, d => d.Step)];
+            const x = d3.scaleLinear()
+                .domain(xDomain)
+                .range([0, width]);
+
+            const y = d3.scaleLinear()
+                .domain([50, 95])
+                .range([height, 0]);
+
+            // Grid lines - subtle and modern
+            svg.append("g")
+                .attr("class", "grid")
+                .call(d3.axisLeft(y)
+                    .tickValues([50, 70, 90])
+                    .tickSize(-width)
+                    .tickFormat("")
+                )
+                .call(g => g.select(".domain").remove())
+                .selectAll("line")
+                .style("stroke", "rgba(255, 255, 255, 0.1)")
+                .style("stroke-width", 1);
+
+            svg.append("g")
+                .attr("class", "grid")
+                .attr("transform", `translate(0,${height})`)
+                .call(d3.axisBottom(x)
+                    .tickSize(-height)
+                    .tickFormat("")
+                )
+                .call(g => g.select(".domain").remove())
+                .selectAll("line")
+                .style("stroke", "rgba(255, 255, 255, 0.1)")
+                .style("stroke-width", 1);
+
+            // Axes - modern minimal style
+            const xAxis = svg.append("g")
+                .attr("transform", `translate(0,${height})`)
+                .call(d3.axisBottom(x).ticks(5).tickSize(5))
+                .call(g => g.select(".domain").remove());
+
+            xAxis.selectAll("line").style("stroke", "rgba(255, 255, 255, 0.5)");
+            xAxis.selectAll("text")
+                .style("fill", "rgba(255, 255, 255, 0.8)")
+                .style("font-size", "11px")
+                .style("font-family", "system-ui, -apple-system, sans-serif");
+
+            const yAxis = svg.append("g")
+                .call(d3.axisLeft(y).tickValues([50, 70, 90]).tickSize(5).tickFormat(d => d + "%"))
+                .call(g => g.select(".domain").remove());
+
+            yAxis.selectAll("line").style("stroke", "rgba(255, 255, 255, 0.5)");
+            yAxis.selectAll("text")
+                .style("fill", "rgba(255, 255, 255, 0.8)")
+                .style("font-size", "11px")
+                .style("font-family", "system-ui, -apple-system, sans-serif");
+
+            // Axis labels - modern style
+            svg.append("text")
+                .attr("text-anchor", "middle")
+                .attr("x", width / 2)
+                .attr("y", height + 35)
+                .style("fill", "rgba(255, 255, 255, 0.7)")
+                .style("font-size", "12px")
+                .style("font-family", "system-ui, -apple-system, sans-serif")
+                .style("font-weight", "500")
+                .text("Iteration");
+
+            svg.append("text")
+                .attr("text-anchor", "middle")
+                .attr("transform", "rotate(-90)")
+                .attr("y", -40)
+                .attr("x", -height / 2)
+                .style("fill", "rgba(255, 255, 255, 0.7)")
+                .style("font-size", "12px")
+                .style("font-family", "system-ui, -apple-system, sans-serif")
+                .style("font-weight", "500")
+                .text("Success Rate");
+
+            // Line generator
+            const line = d3.line()
+                .x(d => x(d.Step))
+                .y(d => y(d.value));
+
+            // Line colors and labels
+            const lineColors = {
+                push: "#bff230",
+                pull: "#76b900",
+                pushbar: "#3f8500"
+            };
+
+            const lineLabels = {
+                push: "Push Door w/ Handle",
+                pull: "Pull Door w/ Handle",
+                pushbar: "Push Door w/ Push-Bar"
+            };
+
+            // Prepare data for each line (in reverse order so darkest is drawn first)
+            const lines = ['pushbar', 'pull', 'push'].map(key => ({
+                name: key,
+                color: lineColors[key],
+                label: lineLabels[key],
+                values: subsampledData.map(d => ({Step: d.Step, value: d[key]}))
+            }));
+
+            // Create gradient definitions for laser effect
+            const defs = svg.append("defs");
+
+            // Create glow filter for laser effect
+            const filter = defs.append("filter")
+                .attr("id", "glow")
+                .attr("x", "-50%")
+                .attr("y", "-50%")
+                .attr("width", "200%")
+                .attr("height", "200%");
+
+            filter.append("feGaussianBlur")
+                .attr("stdDeviation", "2")
+                .attr("result", "coloredBlur");
+
+            const feMerge = filter.append("feMerge");
+            feMerge.append("feMergeNode").attr("in", "coloredBlur");
+            feMerge.append("feMergeNode").attr("in", "SourceGraphic");
+
+            // Store references for coordinated hover effects
+            const lineElements = {};
+
+            // Draw lines with animation
+            lines.forEach((lineData, i) => {
+                // Create gradient for this line - from original color to white
+                const gradientId = `gradient-${lineData.name}`;
+                const gradient = defs.append("linearGradient")
+                    .attr("id", gradientId)
+                    .attr("x1", "0%")
+                    .attr("y1", "0%")
+                    .attr("x2", "100%")
+                    .attr("y2", "0%");
+
+                gradient.append("stop")
+                    .attr("offset", "0%")
+                    .attr("stop-color", lineData.color)
+                    .attr("stop-opacity", 1);
+
+                gradient.append("stop")
+                    .attr("offset", "95%")
+                    .attr("stop-color", lineData.color)
+                    .attr("stop-opacity", 1);
+
+                gradient.append("stop")
+                    .attr("offset", "98%")
+                    .attr("stop-color", "#ffffff")
+                    .attr("stop-opacity", 1);
+
+                gradient.append("stop")
+                    .attr("offset", "100%")
+                    .attr("stop-color", "#ffffff")
+                    .attr("stop-opacity", 1);
+
+                // Create invisible wider hit area for easier hovering
+                const hitArea = svg.append("path")
+                    .datum(lineData.values)
+                    .attr("fill", "none")
+                    .attr("stroke", "transparent")
+                    .attr("stroke-width", 15)
+                    .attr("d", line)
+                    .style("cursor", "pointer");
+
+                const path = svg.append("path")
+                    .datum(lineData.values)
+                    .attr("fill", "none")
+                    .attr("stroke", `url(#${gradientId})`)
+                    .attr("stroke-width", 3)
+                    .attr("filter", "url(#glow)")
+                    .attr("d", line)
+                    .style("pointer-events", "none"); // Let hit area handle mouse events
+
+                // Store path reference
+                lineElements[lineData.name] = { path: path, hitArea: hitArea };
+
+                // Get total length for animation
+                const totalLength = path.node().getTotalLength();
+
+                // Animate drawing from left to right with gradient
+                // Reverse delay so animation still goes 1-2-3 visually
+                const reverseIndex = lines.length - 1 - i;
+                path
+                    .attr("stroke-dasharray", totalLength + " " + totalLength)
+                    .attr("stroke-dashoffset", totalLength)
+                    .transition()
+                    .duration(2000)
+                    .delay(reverseIndex * 200) // Stagger each line slightly
+                    .ease(d3.easeLinear)
+                    .attr("stroke-dashoffset", 0)
+                    .on("end", function() {
+                        const pathElement = d3.select(this);
+                        // After animation completes, switch to solid color and remove glow
+                        pathElement
+                            .transition()
+                            .duration(300)
+                            .attr("stroke", lineData.color)
+                            .attr("stroke-width", 2)
+                            .attr("filter", null);
+
+                        // Add hover effects to hit area after animation completes
+                        const hitAreaElement = lineElements[lineData.name].hitArea;
+                        hitAreaElement
+                            .on("mouseenter", function() {
+                                // Highlight path
+                                pathElement
+                                    .transition()
+                                    .duration(200)
+                                    .attr("stroke-width", 3)
+                                    .attr("filter", "url(#glow)");
+
+                                // Highlight corresponding legend
+                                const legendItem = lineElements[lineData.name].legend;
+                                if (legendItem) {
+                                    legendItem.select("text")
+                                        .transition()
+                                        .duration(200)
+                                        .style("fill", "white")
+                                        .style("font-weight", "600");
+                                    legendItem.select("line")
+                                        .transition()
+                                        .duration(200)
+                                        .attr("stroke-width", 3.5)
+                                        .style("opacity", 1)
+                                        .style("filter", "drop-shadow(0 0 4px " + lineData.color + ")");
+                                }
+                            })
+                            .on("mouseleave", function() {
+                                // Unhighlight path
+                                pathElement
+                                    .transition()
+                                    .duration(200)
+                                    .attr("stroke-width", 2)
+                                    .attr("filter", null);
+
+                                // Unhighlight corresponding legend
+                                const legendItem = lineElements[lineData.name].legend;
+                                if (legendItem) {
+                                    legendItem.select("text")
+                                        .transition()
+                                        .duration(200)
+                                        .style("fill", "rgba(255, 255, 255, 0.85)")
+                                        .style("font-weight", "400");
+                                    legendItem.select("line")
+                                        .transition()
+                                        .duration(200)
+                                        .attr("stroke-width", 2.5)
+                                        .style("opacity", 1)
+                                        .style("filter", "none");
+                                }
+                            });
+                    });
+            });
+
+            // Add legend - bottom right position
+            const legendHeight = lines.length * 18;
+            const legend = svg.append("g")
+                .attr("class", "legend")
+                .attr("transform", `translate(${width - 180}, ${height - legendHeight - 5})`);
+
+            lines.forEach((lineData, i) => {
+                const legendRow = legend.append("g")
+                    .attr("transform", `translate(0, ${i * 18})`)
+                    .style("cursor", "pointer");
+
+                // Store legend reference
+                lineElements[lineData.name].legend = legendRow;
+
+                // Colored line
+                legendRow.append("line")
+                    .attr("x1", 0)
+                    .attr("x2", 20)
+                    .attr("y1", 6)
+                    .attr("y2", 6)
+                    .attr("stroke", lineData.color)
+                    .attr("stroke-width", 2.5);
+
+                // Label text - modern style
+                legendRow.append("text")
+                    .attr("x", 25)
+                    .attr("y", 10)
+                    .style("fill", "rgba(255, 255, 255, 0.85)")
+                    .style("font-size", "10px")
+                    .style("font-family", "system-ui, -apple-system, sans-serif")
+                    .style("font-weight", "400")
+                    .text(lineData.label);
+
+                // Add hover effects to legend
+                legendRow
+                    .on("mouseenter", function() {
+                        // Highlight legend
+                        d3.select(this).select("text")
+                            .transition()
+                            .duration(200)
+                            .style("fill", "white")
+                            .style("font-weight", "600");
+                        d3.select(this).select("line")
+                            .transition()
+                            .duration(200)
+                            .attr("stroke-width", 3.5)
+                            .style("opacity", 1)
+                            .style("filter", "drop-shadow(0 0 4px " + lineData.color + ")");
+
+                        // Highlight corresponding path
+                        const pathElement = lineElements[lineData.name].path;
+                        if (pathElement) {
+                            pathElement
+                                .transition()
+                                .duration(200)
+                                .attr("stroke-width", 3)
+                                .attr("filter", "url(#glow)");
+                        }
+                    })
+                    .on("mouseleave", function() {
+                        // Unhighlight legend
+                        d3.select(this).select("text")
+                            .transition()
+                            .duration(200)
+                            .style("fill", "rgba(255, 255, 255, 0.85)")
+                            .style("font-weight", "400");
+                        d3.select(this).select("line")
+                            .transition()
+                            .duration(200)
+                            .attr("stroke-width", 2.5)
+                            .style("opacity", 1)
+                            .style("filter", "none");
+
+                        // Unhighlight corresponding path
+                        const pathElement = lineElements[lineData.name].path;
+                        if (pathElement) {
+                            pathElement
+                                .transition()
+                                .duration(200)
+                                .attr("stroke-width", 2)
+                                .attr("filter", null);
+                        }
+                    });
+            });
+            }).catch(error => {
+                console.error("Error loading CSV data:", error);
+            });
+        }
+
+        // Call chart creation after a short delay to ensure layout is complete
+        setTimeout(createBootstrapChart, 100);
+
+        // Navigation button handlers
+        document.getElementById('nav-home').addEventListener('click', function(e) {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        document.getElementById('nav-paper').addEventListener('click', function(e) {
+            e.preventDefault();
+            const paperSection = document.querySelector('.paper-title-section');
+            if (paperSection) {
+                paperSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    </script>
+</body>
+</html>
