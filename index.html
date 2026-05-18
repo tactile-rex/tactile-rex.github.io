@@ -1479,6 +1479,19 @@
             }
         });
 
+        // Fade the second title section out at the very end of .content so it
+        // doesn't overlap with the static paper title section below.
+        // The dark overlay stays on so the static section reads cleanly over the held frame.
+        gsap.to(titleSection2, {
+            opacity: 0,
+            scrollTrigger: {
+                trigger: ".content",
+                start: "95% bottom",
+                end: "100% bottom",
+                scrub: true
+            }
+        });
+
         // Scroll indicator initial fade-in animation
         gsap.to(scrollIndicator, {
             opacity: 1,
