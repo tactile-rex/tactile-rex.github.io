@@ -925,14 +925,6 @@
                 <p class="subtitle">High-Frequency Physical Interaction</p>
             </div>
         </div>
-        <div class="title-section-2" id="title-section-2">
-            <div class="vertical-bar"></div>
-            <div class="title-content">
-                <h1 class="main-title">Unified Visuotactile<br>Foundation Model</h1>
-                <p class="subtitle">Vision &middot; Action &middot; Tactile</p>
-            </div>
-        </div>
-
         <div class="video-container" id="video-container">
             <!-- Demo videos will be added later -->
         </div>
@@ -1217,7 +1209,6 @@
         const canvas = document.getElementById('background-canvas');
         const context = canvas.getContext('2d');
         const titleSection = document.getElementById('title-section');
-        const titleSection2 = document.getElementById('title-section-2');
         const scrollIndicator = document.getElementById('scroll-indicator');
         const darkOverlay = document.getElementById('dark-overlay');
         const videoContainer = document.getElementById('video-container');
@@ -1423,12 +1414,9 @@
         // Set initial states
         gsap.set(darkOverlay, { opacity: 0 });
         gsap.set(titleSection, { opacity: 0 });
-        gsap.set(titleSection2, { opacity: 0 });
         gsap.set(videoContainer, { opacity: 0 });
         gsap.set("#title-section .main-title", { x: -30, opacity: 0 });
         gsap.set("#title-section .subtitle", { x: -20, opacity: 0 });
-        gsap.set("#title-section-2 .main-title", { x: -30, opacity: 0 });
-        gsap.set("#title-section-2 .subtitle", { x: -20, opacity: 0 });
 
         // Dark overlay fades in only when the static paper title section enters
         // the viewport, so the held last frame is dimmed beneath the real title.
