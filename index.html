@@ -304,6 +304,15 @@
             padding: 50px 40px;
         }
 
+        .feature-title-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 96px 32px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+
         .paper-title-section {
             text-align: left;
             padding: 96px 32px;
@@ -937,6 +946,15 @@
     <!-- Static Sections -->
     <div class="static-sections">
         <!-- Paper Title Section -->
+        <!-- Feature Title Section (above paper title, scrolls normally, no pin) -->
+        <div class="feature-title-section">
+            <div class="vertical-bar"></div>
+            <div class="title-content">
+                <h1 class="main-title">Unified Visuotactile<br>Foundation Model</h1>
+                <p class="subtitle">Vision &middot; Action &middot; Tactile</p>
+            </div>
+        </div>
+
         <div class="paper-title-section">
             <h1 class="paper-title">
                 <span class="doorman">T-Rex</span>
@@ -1418,23 +1436,25 @@
         gsap.set("#title-section .main-title", { x: -30, opacity: 0 });
         gsap.set("#title-section .subtitle", { x: -20, opacity: 0 });
 
-        // Dark overlay fades in only when the static paper title section enters
-        // the viewport, so the held last frame is dimmed beneath the real title.
+        // Dark overlay fades in as the feature title section enters the viewport,
+        // so the held last frame is dimmed beneath both the feature title and the paper title.
         gsap.to(darkOverlay, {
             opacity: 1,
             scrollTrigger: {
-                trigger: ".paper-title-section",
+                trigger: ".feature-title-section",
                 start: "top 85%",
-                end: "top 40%",
+                end: "top 30%",
                 scrub: true
             }
         });
 
         // Pin the paper title section so the viewer is forced to dwell on the
-        // real T-Rex title for ~2 extra viewport heights of scrolling.
+        // real T-Rex title for ~2 extra viewport heights of scrolling. The
+        // "top 15%" start leaves space above the title so it sits a bit lower
+        // than the navbar, instead of slamming against the very top of viewport.
         ScrollTrigger.create({
             trigger: ".paper-title-section",
-            start: "top top",
+            start: "top 15%",
             end: "+=200%",
             pin: true,
             pinSpacing: true
