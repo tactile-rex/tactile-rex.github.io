@@ -1400,6 +1400,9 @@
         }
 
         // Render function based on overall scroll progress (single continuous sequence)
+        // Animation completes by 70% scroll; remaining 30% holds the last frame
+        // so the title overlay can fade in over a still image.
+        const ANIMATION_END_PROGRESS = 0.70;
         function render() {
             if (!imagesLoaded) {
                 console.log('Images not loaded yet, skipping render');
@@ -1409,9 +1412,10 @@
             context.clearRect(0, 0, canvas.width, canvas.height);
 
             const p = doorman.progress;
+            const animationP = Math.min(1, p / ANIMATION_END_PROGRESS);
             const frame = Math.min(
                 frameCount1 - 1,
-                Math.max(0, Math.round(p * (frameCount1 - 1)))
+                Math.max(0, Math.round(animationP * (frameCount1 - 1)))
             );
             context.globalAlpha = 1;
             drawImageCover(images1[frame]);
@@ -1430,68 +1434,25 @@
         gsap.set("#title-section-2 .main-title", { x: -30, opacity: 0 });
         gsap.set("#title-section-2 .subtitle", { x: -20, opacity: 0 });
 
-        // First title section fade in (35%-37% scroll)
-        gsap.to(titleSection, {
-            opacity: 1,
-            scrollTrigger: {
-                trigger: ".content",
-                start: "35% bottom",
-                end: "37% bottom",
-                scrub: true
-            }
-        });
-
-        gsap.to("#title-section .main-title", {
-            x: 0,
-            opacity: 1,
-            scrollTrigger: {
-                trigger: ".content",
-                start: "35% bottom",
-                end: "37% bottom",
-                scrub: true
-            }
-        });
-
-        gsap.to("#title-section .subtitle", {
-            x: 0,
-            opacity: 0.9,
-            scrollTrigger: {
-                trigger: ".content",
-                start: "35% bottom",
-                end: "37% bottom",
-                scrub: true
-            }
-        });
-
-        // First title section fade out (43%-45% scroll)
-        gsap.to(titleSection, {
-            opacity: 0,
-            scrollTrigger: {
-                trigger: ".content",
-                start: "43% top",
-                end: "45% top",
-                scrub: true
-            }
-        });
-
-        // Second overlay fade in (85%-87% scroll)
+        // After the scroll animation completes (at 70% scroll), the last frame
+        // is held while the dark overlay and second title section fade in.
+        // The remaining 30% of .content (~300vh) gives the viewer time to read.
         gsap.to(darkOverlay, {
             opacity: 1,
             scrollTrigger: {
                 trigger: ".content",
-                start: "85% bottom",
-                end: "87% bottom",
+                start: "70% bottom",
+                end: "73% bottom",
                 scrub: true
             }
         });
 
-        // Second title section fade in (85%-87% scroll)
         gsap.to(titleSection2, {
             opacity: 1,
             scrollTrigger: {
                 trigger: ".content",
-                start: "85% bottom",
-                end: "87% bottom",
+                start: "70% bottom",
+                end: "73% bottom",
                 scrub: true
             }
         });
@@ -1501,8 +1462,8 @@
             opacity: 1,
             scrollTrigger: {
                 trigger: ".content",
-                start: "85% bottom",
-                end: "87% bottom",
+                start: "70% bottom",
+                end: "73% bottom",
                 scrub: true
             }
         });
@@ -1512,41 +1473,8 @@
             opacity: 0.9,
             scrollTrigger: {
                 trigger: ".content",
-                start: "85% bottom",
-                end: "87% bottom",
-                scrub: true
-            }
-        });
-
-        // Video container fade in (85%-87% scroll) - same timing as title-section-2
-        gsap.to(videoContainer, {
-            opacity: 1,
-            scrollTrigger: {
-                trigger: ".content",
-                start: "85% bottom",
-                end: "87% bottom",
-                scrub: true
-            }
-        });
-
-        // Second title section fade out (95%-97% scroll)
-        gsap.to(titleSection2, {
-            opacity: 0,
-            scrollTrigger: {
-                trigger: ".content",
-                start: "95% bottom",
-                end: "97% bottom",
-                scrub: true
-            }
-        });
-
-        // Video container fade out (95%-97% scroll)
-        gsap.to(videoContainer, {
-            opacity: 0,
-            scrollTrigger: {
-                trigger: ".content",
-                start: "95% bottom",
-                end: "97% bottom",
+                start: "70% bottom",
+                end: "73% bottom",
                 scrub: true
             }
         });
