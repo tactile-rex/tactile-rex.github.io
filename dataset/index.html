@@ -221,6 +221,108 @@
             font-size: 0.9rem;
         }
 
+        /* ===== Getting Started ===== */
+        .gs-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        .gs-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 10px;
+            padding: 1.75rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.1rem;
+            transition: border-color 0.3s ease;
+        }
+        .gs-card:hover { border-color: rgba(253,181,21,0.5); }
+        .gs-card-title {
+            color: #FDB515;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin: 0;
+        }
+        .gs-card-title .muted {
+            color: rgba(255,255,255,0.55);
+            font-weight: 400;
+        }
+        .gs-preview {
+            border-radius: 8px;
+            min-height: 280px;
+            background: #141414;
+            border: 1px solid rgba(255,255,255,0.06);
+            overflow: hidden;
+            position: relative;
+        }
+        .gs-preview-empty {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1.5px dashed rgba(255,255,255,0.15);
+            background: #1a1a1a;
+        }
+        .gs-empty-inner {
+            text-align: center;
+            color: rgba(255,255,255,0.4);
+            font-size: 0.95rem;
+            padding: 1rem;
+        }
+        .gs-empty-inner .gs-icon {
+            display: block;
+            font-size: 2.2rem;
+            color: rgba(253,181,21,0.55);
+            margin-bottom: 0.6rem;
+        }
+        .gs-preview-code {
+            padding: 1.25rem 1.5rem;
+            overflow-x: auto;
+        }
+        .code-block {
+            font-family: 'SFMono-Regular', 'Menlo', 'Consolas', 'Courier New', monospace;
+            font-size: 0.82rem;
+            line-height: 1.7;
+            color: rgba(255,255,255,0.88);
+            white-space: pre;
+            margin: 0;
+        }
+        .code-block .kw   { color: #ff79c6; }
+        .code-block .fn   { color: #66d9ef; }
+        .code-block .str  { color: #f1fa8c; }
+        .code-block .num  { color: #bd93f9; }
+        .code-block .bool { color: #bd93f9; }
+        .code-block .com  { color: rgba(255,255,255,0.35); font-style: italic; }
+        .gs-card-desc {
+            color: rgba(255,255,255,0.75);
+            font-size: 0.95rem;
+            line-height: 1.65;
+            margin: 0;
+        }
+        .gs-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            align-self: flex-start;
+            padding: 0.5rem 1rem;
+            background: rgba(253,181,21,0.1);
+            border: 1px solid rgba(253,181,21,0.4);
+            border-radius: 6px;
+            color: #FDB515;
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+        .gs-action:hover {
+            background: rgba(253,181,21,0.18);
+            border-color: #FDB515;
+        }
+        .gs-action.disabled {
+            opacity: 0.45;
+            pointer-events: none;
+        }
+
         /* ===== Download buttons ===== */
         .download-grid {
             display: grid;
@@ -311,6 +413,7 @@
             .stats-strip { grid-template-columns: repeat(2, 1fr); }
             .modality-grid { grid-template-columns: 1fr; }
             .sample-grid { grid-template-columns: 1fr 1fr; }
+            .gs-grid { grid-template-columns: 1fr; }
         }
         @media (max-width: 768px) {
             .header-title { font-size: 1rem; top: 1.5rem; }
@@ -486,6 +589,59 @@
                 <div class="sample-placeholder">Sample video coming soon</div>
                 <div class="sample-caption">Slip recovery (placeholder)</div>
             </div>
+        </div>
+    </section>
+
+    <!-- ===== Getting Started ===== -->
+    <section class="section" id="getting-started">
+        <h2 class="section-title">Getting Started</h2>
+        <div class="gs-grid">
+
+            <!-- Interactive Dataset Visualizer -->
+            <div class="gs-card">
+                <h3 class="gs-card-title">Interactive Dataset Visualizer</h3>
+                <div class="gs-preview gs-preview-empty">
+                    <div class="gs-empty-inner">
+                        <span class="gs-icon">&#9783;</span>
+                        Visualizer coming soon
+                    </div>
+                </div>
+                <p class="gs-card-desc">
+                    Filter by scene, object category, and motion primitive to browse a
+                    representative subset of T-Rex trajectories directly in your browser.
+                </p>
+                <a class="gs-action disabled" href="#" aria-disabled="true">
+                    Open visualizer &nbsp;&rarr;
+                </a>
+            </div>
+
+            <!-- Dataset Quickstart (Colab) -->
+            <div class="gs-card">
+                <h3 class="gs-card-title">
+                    Dataset Quickstart <span class="muted">(Colab)</span>
+                </h3>
+                <div class="gs-preview gs-preview-code">
+<pre class="code-block"><span class="kw">import</span> datasets
+
+ds = datasets.<span class="fn">load_dataset</span>(<span class="str">"tactile-rex/trex-dataset"</span>,
+    split=<span class="str">"train"</span>, streaming=<span class="bool">True</span>)
+
+<span class="kw">for</span> episode <span class="kw">in</span> ds.take(<span class="num">5</span>):
+    head_image  = episode[<span class="str">"observation"</span>][<span class="str">"head_image"</span>]
+    wrist_left  = episode[<span class="str">"observation"</span>][<span class="str">"wrist_image_left"</span>]
+    tactile     = episode[<span class="str">"observation"</span>][<span class="str">"tactile_left"</span>]
+    action      = episode[<span class="str">"action"</span>]
+    instruction = episode[<span class="str">"language_instruction"</span>]</pre>
+                </div>
+                <p class="gs-card-desc">
+                    A single-cell Colab notebook to stream the dataset, inspect each
+                    modality, and visualize episodes &mdash; no local download required.
+                </p>
+                <a class="gs-action disabled" href="#" aria-disabled="true">
+                    Open in Colab &nbsp;&rarr;
+                </a>
+            </div>
+
         </div>
     </section>
 
