@@ -363,12 +363,13 @@
             <div>
                 <h1 class="hero-title">
                     <span class="accent">T-Rex Dataset</span>
-                    Tactile-Reactive Dexterous<br>Manipulation at Scale
+                    Tactile-Rich Bimanual<br>Dexterous Manipulation
                 </h1>
                 <p class="hero-subtitle">
-                    A large-scale teleoperated dexterous manipulation dataset with synchronized
-                    vision, action, and high-frequency tactile signals — designed around diverse
-                    motor primitives and object interactions.
+                    100&nbsp;hours of teleoperated bimanual dexterous play, spanning 270+
+                    daily objects and 22 motion primitives — with synchronized multi-view
+                    vision, robot states, joint actions, per-fingertip tactile signals,
+                    and language instructions.
                 </p>
             </div>
         </div>
@@ -378,19 +379,19 @@
     <section class="stats-strip">
         <div class="stat-card">
             <div class="stat-number">100<span style="font-size:1.4rem;">h</span></div>
-            <div class="stat-label">Teleoperated Hours</div>
+            <div class="stat-label">Teleoperated Play</div>
         </div>
         <div class="stat-card">
-            <div class="stat-number">TBD</div>
-            <div class="stat-label">Demonstrations</div>
+            <div class="stat-number">270<span style="font-size:1.4rem;">+</span></div>
+            <div class="stat-label">Daily Objects</div>
         </div>
         <div class="stat-card">
-            <div class="stat-number">TBD</div>
-            <div class="stat-label">Tasks</div>
+            <div class="stat-number">22</div>
+            <div class="stat-label">Motion Primitives</div>
         </div>
         <div class="stat-card">
-            <div class="stat-number">TBD</div>
-            <div class="stat-label">Tactile Channels</div>
+            <div class="stat-number">3</div>
+            <div class="stat-label">Tactile Modalities</div>
         </div>
     </section>
 
@@ -399,33 +400,56 @@
         <h2 class="section-title">Overview</h2>
         <div class="section-content">
             <p>
-                The T-Rex dataset is a large-scale, teleoperated dexterous manipulation
-                corpus collected with a tactile-equipped dexterous hand. Each trajectory
-                includes time-synchronized RGB video from multiple viewpoints,
-                proprioceptive joint states and actions, and high-frequency tactile
-                signals across the fingertip and palm sensors. The dataset is organized
-                around diverse motor primitives (insertion, deformation, force-sensitive
-                contact, bimanual coordination) and object interaction modes to support
-                pretraining and benchmarking of tactile-reactive policies.
+                Existing robot manipulation datasets are mostly built around
+                parallel-gripper embodiments or grasp-centric dexterous hands, offering
+                limited coverage of tactile-rich dexterous interactions beyond grasping.
+                To train tactile-reactive policies, we collect a large-scale robot play
+                dataset with synchronized tactile observations on our bimanual dexterous
+                embodiment.
+            </p>
+            <p style="margin-top: 1.25rem;">
+                The T-Rex mid-training dataset contains <strong>100 hours</strong> of
+                teleoperated bimanual dexterous manipulation, spanning more than
+                <strong>270 daily objects</strong> and <strong>22 motion primitives</strong>.
+                Episodes are designed around <em>object &times; motion-primitive</em>
+                combinations for compact coverage of contact-rich behaviors, and include
+                randomly selected distractor objects to encourage instruction-following
+                under visual ambiguity.
+            </p>
+            <p style="margin-top: 1.25rem;">
+                Data is collected on a bimanual <strong>Dexmate Vega-1</strong> robot
+                with a fixed base and two <strong>Sharpa Wave</strong> dexterous hands.
             </p>
         </div>
     </section>
 
     <!-- ===== Modalities ===== -->
     <section class="section">
-        <h2 class="section-title">Data Modalities</h2>
+        <h2 class="section-title">What's in Each Episode</h2>
         <div class="modality-grid">
             <div class="modality-card">
-                <h3>Vision</h3>
-                <p>Multi-view RGB video streams capturing scene, wrist, and ego perspectives at synchronized timestamps.</p>
+                <h3>Multi-View Vision</h3>
+                <p>RGB streams from one head camera and two wrist cameras, time-synchronized with all other modalities.</p>
             </div>
             <div class="modality-card">
-                <h3>Action &amp; Proprioception</h3>
-                <p>Joint-level commands and measured states for the dexterous hand and arm, recorded with timestamps for downstream alignment.</p>
+                <h3>Robot States &amp; Actions</h3>
+                <p>Per-step robot states and joint-level actions for the bimanual Dexmate Vega-1 arms and two Sharpa Wave dexterous hands.</p>
             </div>
             <div class="modality-card">
-                <h3>Tactile</h3>
-                <p>High-frequency tactile signals from fingertip and palm sensors, enabling reactive control and contact-rich modeling.</p>
+                <h3>Per-Fingertip Tactile</h3>
+                <p>Three tactile modalities per fingertip: raw tactile images, deformation maps, and net force/torque signals.</p>
+            </div>
+            <div class="modality-card">
+                <h3>Language Instructions</h3>
+                <p>VLM-generated natural-language instructions paired with every episode, enabling instruction-following under visual ambiguity.</p>
+            </div>
+            <div class="modality-card">
+                <h3>Object &times; Primitive Coverage</h3>
+                <p>Episodes are structured around <em>object</em>&nbsp;&times;&nbsp;<em>motion-primitive</em> combinations spanning 270+ daily objects and 22 primitives.</p>
+            </div>
+            <div class="modality-card">
+                <h3>Distractor Objects</h3>
+                <p>Each scene includes randomly selected distractor objects, providing visually ambiguous contexts for grounded policy learning.</p>
             </div>
         </div>
     </section>
