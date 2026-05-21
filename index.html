@@ -1198,7 +1198,7 @@
         <div class="section">
             <h2 class="section-title">Abstract</h2>
             <div class="section-content">
-                <p>Dexterous manipulation in contact-rich environments requires robots to dynamically adapt to physical interaction signals such as force, slip, and deformation through tactile feedback. While recent Vision-Language-Action (VLA) models and large-scale human video pretraining have demonstrated promising progress in general robotic manipulation, existing approaches primarily focus on vision-driven and position-level control, limiting their ability to perform tactile-reactive dexterous behaviors. In this work, we propose <strong>T-Rex</strong>, a unified model for tactile-reactive dexterous manipulation. Built upon a Mixture-of-Transformer-Experts (MoT) architecture, T-Rex integrates low-frequency visuomotor action generation with high-frequency asynchronous tactile-reactive residual control through a dedicated tactile expert and a temporal VQ-VAE tactile encoder. To bridge large-scale human visuomotor pretraining and physically grounded robot interaction, we further introduce a tactile-aware midtraining paradigm using a 100-hour teleoperated dexterous manipulation dataset designed around diverse motor primitive and object interaction combinations. We additionally establish a real-world benchmark of 13 tactile-sensitive dexterous manipulation tasks involving insertion, deformation, force-sensitive interaction, and bimanual coordination.</p>
+                <p>Dexterous manipulation in contact-rich environments requires robots to dynamically adapt to physical interaction signals such as force, slip, and deformation through tactile feedback. While recent Vision-Language-Action (VLA) models and large-scale human video pretraining have demonstrated promising progress in general robotic manipulation, existing approaches primarily focus on vision-driven and position-level control, limiting their ability to perform tactile-reactive dexterous behaviors. In this work, we propose <strong>T-Rex</strong>, a unified model for tactile-reactive dexterous manipulation. Built upon a Mixture-of-Transformer-Experts (MoT) architecture, T-Rex integrates low-frequency visuomotor action generation with high-frequency asynchronous tactile-reactive residual control through a dedicated tactile expert and a temporal VQ-VAE tactile encoder. To bridge large-scale human visuomotor pretraining and physically grounded robot interaction, we further introduce a tactile-aware midtraining paradigm using a teleoperated dexterous manipulation dataset designed around diverse motor primitive and object interaction combinations. We additionally establish a real-world benchmark of 13 tactile-sensitive dexterous manipulation tasks involving insertion, deformation, force-sensitive interaction, and bimanual coordination.</p>
             </div>
         </div>
 
@@ -1219,7 +1219,7 @@
                 <div class="technical-details-content">
                     <ul>
                         <li>
-                            <strong>Website Source Code:</strong> The website source code can be found at <a href="https://github.com/doorman-humanoid/doorman-humanoid.github.io" target="_blank" rel="noopener noreferrer">here</a>. The <code>CLAUDE.md</code> file contains comprehensive documentation that enables coding agents to understand and adapt this website template for other projects.
+                            <strong>Website Source Code:</strong> The website source code can be found at <a href="https://github.com/doorman-humanoid/doorman-humanoid.github.io" target="_blank" rel="noopener noreferrer">here</a>, which includes comprehensive documentation on how to adapt the template for other projects.
                         </li>
                         <li>
                             <strong>Simulation Rendering with IsaacSim:</strong> All simulation rendering is done using IsaacSim. The workflow involves:
@@ -1472,8 +1472,8 @@
             opacity: 1,
             scrollTrigger: {
                 trigger: ".content",
-                start: "82% bottom",
-                end: "88% bottom",
+                start: "76% bottom",
+                end: "82% bottom",
                 scrub: true
             }
         });
@@ -1482,19 +1482,22 @@
             opacity: 1,
             scrollTrigger: {
                 trigger: ".content",
-                start: "82% bottom",
-                end: "88% bottom",
+                start: "76% bottom",
+                end: "82% bottom",
                 scrub: true
             }
         });
 
+        // Hold the title at full opacity from ~82% to ~90%, then fade out
+        // slowly between 90% and 100%. Bumping scrub from 1.5 to 2.5 gives the
+        // fade a softer, more drawn-out feel during interactive scrolling.
         gsap.to(".feature-title-section", {
             opacity: 0,
             scrollTrigger: {
                 trigger: ".content",
                 start: "90% bottom",
                 end: "100% bottom",
-                scrub: 1.5
+                scrub: 2.5
             }
         });
 
