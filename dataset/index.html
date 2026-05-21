@@ -10,10 +10,25 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
+        :root {
+            --bg:           #ffffff;
+            --bg-soft:      #f7f8fa;
+            --text:         #1a1a1a;
+            --text-muted:   #555a63;
+            --text-faint:   #7a818c;
+            --border:       rgba(0,0,0,0.10);
+            --border-soft:  rgba(0,0,0,0.06);
+            --blue:         #003262;   /* Berkeley Blue */
+            --blue-soft:    rgba(0,50,98,0.06);
+            --gold:         #FDB515;   /* California Gold */
+            --gold-deep:    #C68B16;
+            --gold-soft:    rgba(253,181,21,0.10);
+        }
+
         body {
             font-family: 'Inter', 'Arial', sans-serif;
-            background: #000;
-            color: white;
+            background: var(--bg);
+            color: var(--text);
             overflow-x: hidden;
             margin: 0;
             min-height: 100vh;
@@ -26,10 +41,10 @@
             position: fixed;
             top: 2rem;
             font-size: 1.2rem;
-            font-weight: 400;
+            font-weight: 500;
             letter-spacing: 1px;
             z-index: 10;
-            color: white;
+            color: var(--blue);
             text-decoration: none;
         }
         .header-left { left: 3rem; }
@@ -38,11 +53,13 @@
         .header-logos { display: flex; align-items: center; gap: 1.5rem; }
         .header-logo-link { display: block; }
         .bair-logo, .nvidia-logo { display: block; height: 2.5rem; width: auto; }
+        /* Source SVGs are white; invert so they appear dark on the light background. */
+        .bair-logo { filter: invert(1) brightness(0.15); }
 
         .top-gradient {
             position: fixed; top: 0; left: 0;
-            width: 100%; height: 150px;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 50%, transparent 100%);
+            width: 100%; height: 110px;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.7) 60%, transparent 100%);
             z-index: 5; pointer-events: none;
         }
 
@@ -55,8 +72,8 @@
         .nav-btn {
             padding: 0.6rem 1.5rem;
             background: transparent; border: none;
-            color: white; font-size: 1.1rem;
-            font-weight: 400; letter-spacing: 0.5px;
+            color: var(--text); font-size: 1.1rem;
+            font-weight: 500; letter-spacing: 0.5px;
             cursor: pointer; text-decoration: none;
             display: inline-block; position: relative;
             transition: color 0.3s ease; white-space: nowrap;
@@ -65,19 +82,18 @@
             content: ''; position: absolute; bottom: 0; left: 50%;
             transform: translateX(-50%);
             width: 0; height: 3px;
-            background: #FDB515;
+            background: var(--gold);
             transition: width 0.3s ease;
         }
-        .nav-btn:hover { color: rgba(255,255,255,0.9); }
+        .nav-btn:hover { color: var(--blue); }
         .nav-btn:hover::after { width: 100%; }
-        .nav-btn.active { color: #FDB515; }
+        .nav-btn.active { color: var(--blue); }
         .nav-btn.active::after { width: 100%; }
 
         /* ===== Hero ===== */
         .hero {
-            min-height: 100vh;
-            display: flex; align-items: center;
-            padding: 0 10%;
+            display: flex; align-items: flex-start;
+            padding: 7rem 10% 1.5rem;
             position: relative;
         }
         .hero-inner { display: flex; align-items: flex-start; }
@@ -92,20 +108,21 @@
             letter-spacing: 0.5px;
             margin-bottom: 1rem;
             line-height: 1.3;
+            color: var(--text);
         }
         .hero-title .accent {
             display: block;
-            color: #FDB515;
+            color: var(--blue);
             font-size: 3.6rem;
-            font-weight: 600;
+            font-weight: 700;
             margin-bottom: 0.4rem;
             line-height: 1.1;
         }
         .hero-subtitle {
             font-size: 1.15rem;
-            font-weight: 300;
+            font-weight: 400;
             letter-spacing: 0.3px;
-            opacity: 0.85;
+            color: var(--text-muted);
             max-width: 720px;
             line-height: 1.7;
         }
@@ -114,33 +131,34 @@
         .stats-strip {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 60px 40px;
+            padding: 24px 40px 60px;
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 1.5rem;
         }
         .stat-card {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.08);
+            background: var(--bg-soft);
+            border: 1px solid var(--border);
             border-radius: 10px;
             padding: 2rem 1.5rem;
             text-align: center;
-            transition: border-color 0.3s ease, transform 0.3s ease;
+            transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
         }
         .stat-card:hover {
-            border-color: rgba(253,181,21,0.5);
+            border-color: var(--gold);
             transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.06);
         }
         .stat-number {
             font-size: 2.6rem;
-            font-weight: 600;
-            color: #FDB515;
+            font-weight: 700;
+            color: var(--blue);
             line-height: 1.1;
             margin-bottom: 0.4rem;
         }
         .stat-label {
             font-size: 0.95rem;
-            color: rgba(255,255,255,0.7);
+            color: var(--text-muted);
             letter-spacing: 0.5px;
         }
 
@@ -152,17 +170,21 @@
         }
         .section-title {
             font-size: 2.5rem;
-            font-weight: 500;
+            font-weight: 600;
             margin-bottom: 2rem;
-            color: #FDB515;
+            color: var(--blue);
+            position: relative;
+            padding-left: 1rem;
+            border-left: 5px solid var(--gold);
         }
         .section-content {
             font-size: 1.1rem;
             line-height: 1.8;
-            color: rgba(255,255,255,0.85);
+            color: var(--text-muted);
             margin-bottom: 2rem;
             max-width: 900px;
         }
+        .section-content strong { color: var(--text); }
 
         /* ===== Modality grid ===== */
         .modality-grid {
@@ -172,21 +194,25 @@
             margin-top: 2rem;
         }
         .modality-card {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.08);
+            background: var(--bg-soft);
+            border: 1px solid var(--border);
             border-radius: 10px;
             padding: 2rem;
-            transition: border-color 0.3s ease;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
         }
-        .modality-card:hover { border-color: rgba(253,181,21,0.5); }
+        .modality-card:hover {
+            border-color: var(--gold);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+            transform: translateY(-2px);
+        }
         .modality-card h3 {
-            color: #FDB515;
+            color: var(--blue);
             font-size: 1.2rem;
             font-weight: 600;
             margin-bottom: 0.75rem;
         }
         .modality-card p {
-            color: rgba(255,255,255,0.75);
+            color: var(--text-muted);
             font-size: 0.95rem;
             line-height: 1.7;
         }
@@ -206,18 +232,18 @@
             width: 100%;
             aspect-ratio: 16 / 9;
             border-radius: 8px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
         }
         .sample-placeholder {
-            background: #1a1a1a;
-            border: 1.5px dashed rgba(255,255,255,0.15);
+            background: var(--bg-soft);
+            border: 1.5px dashed var(--border);
             display: flex; align-items: center; justify-content: center;
-            color: rgba(255,255,255,0.35);
+            color: var(--text-faint);
             font-size: 0.9rem;
         }
         .sample-caption {
             text-align: center;
-            color: rgba(255,255,255,0.7);
+            color: var(--text-muted);
             font-size: 0.9rem;
         }
 
@@ -229,31 +255,34 @@
             margin-top: 2rem;
         }
         .gs-card {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.08);
+            background: var(--bg-soft);
+            border: 1px solid var(--border);
             border-radius: 10px;
             padding: 1.75rem;
             display: flex;
             flex-direction: column;
             gap: 1.1rem;
-            transition: border-color 0.3s ease;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
-        .gs-card:hover { border-color: rgba(253,181,21,0.5); }
+        .gs-card:hover {
+            border-color: var(--gold);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+        }
         .gs-card-title {
-            color: #FDB515;
+            color: var(--blue);
             font-size: 1.3rem;
             font-weight: 600;
             margin: 0;
         }
         .gs-card-title .muted {
-            color: rgba(255,255,255,0.55);
+            color: var(--text-faint);
             font-weight: 400;
         }
         .gs-preview {
             border-radius: 8px;
             min-height: 280px;
-            background: #141414;
-            border: 1px solid rgba(255,255,255,0.06);
+            background: #ffffff;
+            border: 1px solid var(--border-soft);
             overflow: hidden;
             position: relative;
         }
@@ -261,41 +290,93 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 1.5px dashed rgba(255,255,255,0.15);
-            background: #1a1a1a;
+            border: 1.5px dashed var(--border);
+            background: #ffffff;
+        }
+        /* Live miniature of the actual visualizer page: an <iframe> at 250%
+           dimensions, scaled to 0.4 so the full visualizer UI (topbar, note,
+           sidebar, grid) shows as a thumbnail. pointer-events:none on the
+           iframe lets clicks fall through to the wrapping <a>. */
+        .gs-preview-iframe {
+            position: relative;
+            display: block;
+            height: 360px;
+            overflow: hidden;
+            background: #ffffff;
+            border-radius: 8px;
+            text-decoration: none;
+            color: inherit;
+            cursor: pointer;
+        }
+        .gs-preview-iframe iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 250%;
+            height: 250%;
+            border: 0;
+            transform: scale(0.4);
+            transform-origin: top left;
+            pointer-events: none;
+        }
+        .gs-preview-iframe .gs-preview-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 50, 98, 0);
+            color: #fff;
+            font-weight: 600;
+            font-size: 1.05rem;
+            letter-spacing: 0.3px;
+            opacity: 0;
+            transition: background 0.25s ease, opacity 0.25s ease;
+        }
+        .gs-preview-iframe .gs-preview-overlay span {
+            padding: 0.55rem 1.2rem;
+            background: rgba(0, 50, 98, 0.85);
+            border-radius: 6px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+        }
+        .gs-preview-iframe:hover .gs-preview-overlay {
+            background: rgba(0, 50, 98, 0.2);
+            opacity: 1;
         }
         .gs-empty-inner {
             text-align: center;
-            color: rgba(255,255,255,0.4);
+            color: var(--text-faint);
             font-size: 0.95rem;
             padding: 1rem;
         }
         .gs-empty-inner .gs-icon {
             display: block;
             font-size: 2.2rem;
-            color: rgba(253,181,21,0.55);
+            color: var(--gold-deep);
             margin-bottom: 0.6rem;
         }
         .gs-preview-code {
             padding: 1.25rem 1.5rem;
             overflow-x: auto;
+            background: #f6f8fa;
         }
         .code-block {
             font-family: 'SFMono-Regular', 'Menlo', 'Consolas', 'Courier New', monospace;
             font-size: 0.82rem;
             line-height: 1.7;
-            color: rgba(255,255,255,0.88);
+            color: #24292e;
             white-space: pre;
             margin: 0;
         }
-        .code-block .kw   { color: #ff79c6; }
-        .code-block .fn   { color: #66d9ef; }
-        .code-block .str  { color: #f1fa8c; }
-        .code-block .num  { color: #bd93f9; }
-        .code-block .bool { color: #bd93f9; }
-        .code-block .com  { color: rgba(255,255,255,0.35); font-style: italic; }
+        /* GitHub-light-style syntax palette */
+        .code-block .kw   { color: #d73a49; }
+        .code-block .fn   { color: #6f42c1; }
+        .code-block .str  { color: #032f62; }
+        .code-block .num  { color: #005cc5; }
+        .code-block .bool { color: #005cc5; }
+        .code-block .com  { color: #6a737d; font-style: italic; }
         .gs-card-desc {
-            color: rgba(255,255,255,0.75);
+            color: var(--text-muted);
             font-size: 0.95rem;
             line-height: 1.65;
             margin: 0;
@@ -306,17 +387,19 @@
             gap: 0.4rem;
             align-self: flex-start;
             padding: 0.5rem 1rem;
-            background: rgba(253,181,21,0.1);
-            border: 1px solid rgba(253,181,21,0.4);
+            background: var(--gold-soft);
+            border: 1px solid var(--gold);
             border-radius: 6px;
-            color: #FDB515;
+            color: var(--gold-deep);
+            font-weight: 600;
             font-size: 0.9rem;
             text-decoration: none;
-            transition: background 0.3s ease, border-color 0.3s ease;
+            transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
         }
         .gs-action:hover {
-            background: rgba(253,181,21,0.18);
-            border-color: #FDB515;
+            background: var(--gold);
+            border-color: var(--gold);
+            color: #ffffff;
         }
         .gs-action.disabled {
             opacity: 0.45;
@@ -333,27 +416,29 @@
         .download-card {
             display: block;
             text-decoration: none;
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.1);
+            background: var(--bg-soft);
+            border: 1px solid var(--border);
             border-radius: 10px;
             padding: 1.5rem 1.75rem;
-            color: white;
-            transition: border-color 0.3s ease, background 0.3s ease, transform 0.3s ease;
+            color: var(--text);
+            transition: border-color 0.3s ease, background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
         }
         .download-card:hover {
-            border-color: #FDB515;
-            background: rgba(253,181,21,0.06);
+            border-color: var(--blue);
+            background: var(--blue-soft);
             transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.06);
         }
         .download-card .dl-title {
             font-size: 1.1rem;
             font-weight: 600;
-            color: #FDB515;
+            color: var(--blue);
             margin-bottom: 0.5rem;
             display: flex; align-items: center; justify-content: space-between;
         }
         .download-card .dl-title .arrow {
             font-size: 1rem; opacity: 0.7;
+            color: var(--gold-deep);
             transition: transform 0.3s ease;
         }
         .download-card:hover .dl-title .arrow {
@@ -361,32 +446,33 @@
         }
         .download-card .dl-desc {
             font-size: 0.9rem;
-            color: rgba(255,255,255,0.7);
+            color: var(--text-muted);
             line-height: 1.5;
         }
 
         /* ===== License / note ===== */
         .info-box {
-            background: rgba(253,181,21,0.06);
-            border-left: 3px solid #FDB515;
+            background: var(--gold-soft);
+            border-left: 3px solid var(--gold);
             border-radius: 6px;
             padding: 1.25rem 1.5rem;
-            color: rgba(255,255,255,0.85);
+            color: var(--text);
             font-size: 0.95rem;
             line-height: 1.7;
             margin-top: 1.5rem;
         }
+        .info-box strong { color: var(--blue); }
 
         /* ===== BibTeX ===== */
         .bibtex-code {
-            background: #2a2a2a;
-            border: 1px solid #333;
+            background: #f6f8fa;
+            border: 1px solid var(--border);
             border-radius: 8px;
             padding: 2rem;
             font-family: 'Courier New', monospace;
             font-size: 0.9rem;
             line-height: 1.6;
-            color: #FDB515;
+            color: #24292e;
             overflow-x: auto;
             white-space: pre;
         }
@@ -396,17 +482,17 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 40px 40px 60px;
-            border-top: 1px solid rgba(255,255,255,0.08);
+            border-top: 1px solid var(--border);
             text-align: center;
-            color: rgba(255,255,255,0.5);
+            color: var(--text-faint);
             font-size: 0.9rem;
         }
         .footer a {
-            color: #FDB515; text-decoration: none;
+            color: var(--blue); text-decoration: none;
             border-bottom: 1px solid transparent;
             transition: border-color 0.3s ease;
         }
-        .footer a:hover { border-bottom-color: #FDB515; }
+        .footer a:hover { border-bottom-color: var(--gold); }
 
         /* ===== Responsive ===== */
         @media (max-width: 900px) {
@@ -470,8 +556,8 @@
                     Tactile-Rich Bimanual<br>Dexterous Manipulation
                 </h1>
                 <p class="hero-subtitle">
-                    100&nbsp;hours of teleoperated bimanual dexterous play, spanning 270+
-                    daily objects and 22 motion primitives — with synchronized multi-view
+                    Teleoperated bimanual dexterous play spanning 200+ daily
+                    objects and 22 motion primitives — with synchronized multi-view
                     vision, robot states, joint actions, per-fingertip tactile signals,
                     and language instructions.
                 </p>
@@ -480,13 +566,12 @@
     </section>
 
     <!-- ===== Stats ===== -->
+    <!-- TODO: re-add the "100h Teleoperated Play" stat card here once the
+         dataset reaches its final size, and switch .stats-strip back to
+         grid-template-columns: repeat(4, 1fr). -->
     <section class="stats-strip">
         <div class="stat-card">
-            <div class="stat-number">100<span style="font-size:1.4rem;">h</span></div>
-            <div class="stat-label">Teleoperated Play</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-number">270<span style="font-size:1.4rem;">+</span></div>
+            <div class="stat-number">200<span style="font-size:1.4rem;">+</span></div>
             <div class="stat-label">Daily Objects</div>
         </div>
         <div class="stat-card">
@@ -512,9 +597,9 @@
                 embodiment.
             </p>
             <p style="margin-top: 1.25rem;">
-                The T-Rex mid-training dataset contains <strong>100 hours</strong> of
-                teleoperated bimanual dexterous manipulation, spanning more than
-                <strong>270 daily objects</strong> and <strong>22 motion primitives</strong>.
+                The T-Rex mid-training dataset consists of teleoperated bimanual
+                dexterous manipulation episodes spanning more than
+                <strong>200 daily objects</strong> and <strong>22 motion primitives</strong>.
                 Episodes are designed around <em>object &times; motion-primitive</em>
                 combinations for compact coverage of contact-rich behaviors, and include
                 randomly selected distractor objects to encourage instruction-following
@@ -533,27 +618,27 @@
         <div class="modality-grid">
             <div class="modality-card">
                 <h3>Multi-View Vision</h3>
-                <p>RGB streams from one head camera and two wrist cameras, time-synchronized with all other modalities.</p>
+                <p>Time-synchronised RGB streams from one head camera and two wrist cameras, aligned with all robot states and tactile signals at 30&nbsp;Hz.</p>
             </div>
             <div class="modality-card">
                 <h3>Robot States &amp; Actions</h3>
-                <p>Per-step robot states and joint-level actions for the bimanual Dexmate Vega-1 arms and two Sharpa Wave dexterous hands.</p>
+                <p>30&nbsp;Hz joint positions and EF poses — current states paired with target actions — across the bimanual 7-DOF arms and 22-DOF dexterous hands.</p>
             </div>
             <div class="modality-card">
                 <h3>Per-Fingertip Tactile</h3>
-                <p>Three tactile modalities per fingertip: raw tactile images, deformation maps, and net force/torque signals.</p>
+                <p>Three synchronised modalities across 10 fingertips: 240&times;320 raw tactile images, 240&times;240 deformation maps, and 6-axis force/torque signals.</p>
             </div>
             <div class="modality-card">
                 <h3>Language Instructions</h3>
-                <p>VLM-generated natural-language instructions paired with every episode, enabling instruction-following under visual ambiguity.</p>
+                <p>VLM-generated natural-language task descriptions paired with every episode, enabling robust instruction-following under visual ambiguity and distractor clutter.</p>
             </div>
             <div class="modality-card">
                 <h3>Object &times; Primitive Coverage</h3>
-                <p>Episodes are structured around <em>object</em>&nbsp;&times;&nbsp;<em>motion-primitive</em> combinations spanning 270+ daily objects and 22 primitives.</p>
+                <p>Episodes are structured around <em>object</em>&nbsp;&times;&nbsp;<em>motion-primitive</em> combinations spanning 200+ daily objects and 22 motion primitives, giving compact coverage of contact-rich behaviours.</p>
             </div>
             <div class="modality-card">
                 <h3>Distractor Objects</h3>
-                <p>Each scene includes randomly selected distractor objects, providing visually ambiguous contexts for grounded policy learning.</p>
+                <p>Each scene is populated with randomly selected distractor objects, providing visually ambiguous contexts that ground policy learning under realistic clutter.</p>
             </div>
         </div>
     </section>
@@ -562,32 +647,59 @@
     <section class="section" id="samples">
         <h2 class="section-title">Sample Trajectories</h2>
         <div class="section-content">
-            <p>A small selection of demonstrations is shown below. The full dataset spans many more tasks, objects, and scene configurations.</p>
+            <p>A small selection of demonstrations is shown below, covering
+            deformation, force-sensitive contact, bimanual coordination, and
+            precision insertion. The full dataset spans many more tasks,
+            objects, and scene configurations.</p>
         </div>
         <div class="sample-grid">
             <div class="sample-item">
-                <div class="sample-placeholder">Sample video coming soon</div>
-                <div class="sample-caption">Insertion (placeholder)</div>
+                <video src="https://huggingface.co/datasets/Beakerman0101/trex-visualizer/resolve/main/videos/fold__aluminum_foil__01495.mp4" muted autoplay loop playsinline preload="metadata"></video>
+                <div class="sample-caption">Fold aluminum foil</div>
             </div>
             <div class="sample-item">
-                <div class="sample-placeholder">Sample video coming soon</div>
-                <div class="sample-caption">Deformation (placeholder)</div>
+                <video src="https://huggingface.co/datasets/Beakerman0101/trex-visualizer/resolve/main/videos/wrap__cable__01532.mp4" muted autoplay loop playsinline preload="metadata"></video>
+                <div class="sample-caption">Wrap cable</div>
             </div>
             <div class="sample-item">
-                <div class="sample-placeholder">Sample video coming soon</div>
-                <div class="sample-caption">Force-sensitive contact (placeholder)</div>
+                <video src="https://huggingface.co/datasets/Beakerman0101/trex-visualizer/resolve/main/videos/peel__bandaid__01546.mp4" muted autoplay loop playsinline preload="metadata"></video>
+                <div class="sample-caption">Peel bandaid</div>
             </div>
             <div class="sample-item">
-                <div class="sample-placeholder">Sample video coming soon</div>
-                <div class="sample-caption">Bimanual coordination (placeholder)</div>
+                <video src="https://huggingface.co/datasets/Beakerman0101/trex-visualizer/resolve/main/videos/press__bumper_sticker__01598.mp4" muted autoplay loop playsinline preload="metadata"></video>
+                <div class="sample-caption">Press bumper sticker</div>
             </div>
             <div class="sample-item">
-                <div class="sample-placeholder">Sample video coming soon</div>
-                <div class="sample-caption">In-hand reorientation (placeholder)</div>
+                <video src="https://huggingface.co/datasets/Beakerman0101/trex-visualizer/resolve/main/videos/squeeze__air_blower__01632.mp4" muted autoplay loop playsinline preload="metadata"></video>
+                <div class="sample-caption">Squeeze air blower</div>
             </div>
             <div class="sample-item">
-                <div class="sample-placeholder">Sample video coming soon</div>
-                <div class="sample-caption">Slip recovery (placeholder)</div>
+                <video src="https://huggingface.co/datasets/Beakerman0101/trex-visualizer/resolve/main/videos/wipe__book__01648.mp4" muted autoplay loop playsinline preload="metadata"></video>
+                <div class="sample-caption">Wipe book cover</div>
+            </div>
+            <div class="sample-item">
+                <video src="https://huggingface.co/datasets/Beakerman0101/trex-visualizer/resolve/main/videos/open__clamshell_container__01762.mp4" muted autoplay loop playsinline preload="metadata"></video>
+                <div class="sample-caption">Open clamshell container</div>
+            </div>
+            <div class="sample-item">
+                <video src="https://huggingface.co/datasets/Beakerman0101/trex-visualizer/resolve/main/videos/cut__origami_paper__01573.mp4" muted autoplay loop playsinline preload="metadata"></video>
+                <div class="sample-caption">Cut origami paper</div>
+            </div>
+            <div class="sample-item">
+                <video src="https://huggingface.co/datasets/Beakerman0101/trex-visualizer/resolve/main/videos/pour__carafe__01700.mp4" muted autoplay loop playsinline preload="metadata"></video>
+                <div class="sample-caption">Pour from carafe</div>
+            </div>
+            <div class="sample-item">
+                <video src="https://huggingface.co/datasets/Beakerman0101/trex-visualizer/resolve/main/videos/insert__battery__01809.mp4" muted autoplay loop playsinline preload="metadata"></video>
+                <div class="sample-caption">Insert battery</div>
+            </div>
+            <div class="sample-item">
+                <video src="https://huggingface.co/datasets/Beakerman0101/trex-visualizer/resolve/main/videos/screw__carafe_lid__01985.mp4" muted autoplay loop playsinline preload="metadata"></video>
+                <div class="sample-caption">Screw on carafe lid</div>
+            </div>
+            <div class="sample-item">
+                <video src="https://huggingface.co/datasets/Beakerman0101/trex-visualizer/resolve/main/videos/shake__box_of_matches__01716.mp4" muted autoplay loop playsinline preload="metadata"></video>
+                <div class="sample-caption">Shake matchbox</div>
             </div>
         </div>
     </section>
@@ -600,17 +712,15 @@
             <!-- Interactive Dataset Visualizer -->
             <div class="gs-card">
                 <h3 class="gs-card-title">Interactive Dataset Visualizer</h3>
-                <div class="gs-preview gs-preview-empty">
-                    <div class="gs-empty-inner">
-                        <span class="gs-icon">&#9783;</span>
-                        Visualizer coming soon
-                    </div>
-                </div>
+                <a class="gs-preview gs-preview-iframe" href="./visualizer/" aria-label="Open the interactive dataset visualizer">
+                    <iframe src="./visualizer/" title="T-Rex Dataset Visualizer preview" loading="lazy" tabindex="-1" aria-hidden="true"></iframe>
+                    <div class="gs-preview-overlay"><span>Open visualizer &nbsp;&rarr;</span></div>
+                </a>
                 <p class="gs-card-desc">
-                    Filter by scene, object category, and motion primitive to browse a
-                    representative subset of T-Rex trajectories directly in your browser.
+                    Browse a 500-trajectory random subset, filter by object and motion
+                    primitive, and resample on demand — all directly in your browser.
                 </p>
-                <a class="gs-action disabled" href="#" aria-disabled="true">
+                <a class="gs-action" href="./visualizer/">
                     Open visualizer &nbsp;&rarr;
                 </a>
             </div>
