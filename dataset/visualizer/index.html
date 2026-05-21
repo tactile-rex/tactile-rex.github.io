@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T-Rex Dataset Visualizer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap">
+    <style>
+        :root {
+            --bg:           #ffffff;
+            --bg-soft:      #f7f8fa;
+            --text:         #1a1a1a;
+            --text-muted:   #555a63;
+            --text-faint:   #7a818c;
+            --border:       rgba(0,0,0,0.10);
+            --border-soft:  rgba(0,0,0,0.06);
+            --blue:         #003262;
+            --blue-soft:    rgba(0,50,98,0.06);
+            --gold:         #FDB515;
+            --gold-deep:    #C68B16;
+            --gold-soft:    rgba(253,181,21,0.10);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', 'Arial', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        a { color: inherit; }
+
+        /* ===== Top bar ===== */
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.25rem 2rem;
+            border-bottom: 1px solid var(--border);
+            background: #fff;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .topbar .back {
+            color: var(--blue);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .topbar .back:hover { color: var(--gold-deep); }
+        .topbar .title-block {
+            display: flex;
+            align-items: baseline;
+            gap: 0.9rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            flex: 1;
+        }
+        .topbar h1 {
+            font-size: 1.9rem;
+            font-weight: 700;
+            color: var(--blue);
+            margin: 0;
+            letter-spacing: -0.01em;
+        }
+        .topbar .subtitle {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+        .topbar .spacer { width: 80px; }
+
+        /* Slim info banner below the topbar — left-aligned, single-line on
+           desktop, replacing the cramped centered two-line note that used to
+           sit inside the topbar. */
+        .display-note {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0.6rem 2rem;
+            background: var(--gold-soft);
+            border-bottom: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 0.82rem;
+            font-style: italic;
+            line-height: 1.55;
+        }
+        .display-note strong {
+            color: var(--blue);
+            font-weight: 600;
+            font-style: normal;
+        }
+
+        /* ===== Layout ===== */
+        .container {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 2rem;
+            padding: 2rem;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* ===== Sidebar ===== */
+        .sidebar {
+            position: sticky;
+            top: 85px;
+            align-self: start;
+            padding-right: 0.5rem;
+        }
+        .filter-group {
+            background: var(--bg-soft);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1rem 1.1rem 0.8rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+        }
+        .sidebar h2 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--blue);
+            margin: 0 0 0.6rem;
+            padding-left: 0.55rem;
+            border-left: 4px solid var(--gold);
+            line-height: 1.2;
+        }
+        .filter-list { list-style: none; }
+        .filter-list li {
+            display: flex;
+            align-items: center;
+            padding: 0.3rem 0.55rem;
+            margin: 1px -0.55rem;
+            font-size: 0.9rem;
+            color: var(--text);
+            cursor: pointer;
+            user-select: none;
+            border-radius: 5px;
+            transition: background 0.15s ease, color 0.15s ease;
+        }
+        .filter-list li:hover { color: var(--blue); background: rgba(0,50,98,0.04); }
+        .filter-list li.selected {
+            background: var(--gold-soft);
+            color: var(--blue);
+            font-weight: 600;
+        }
+        .filter-list li.selected .count {
+            color: var(--gold-deep);
+            font-weight: 600;
+        }
+        .filter-list input[type="checkbox"] {
+            margin-right: 0.55rem;
+            cursor: pointer;
+            accent-color: var(--blue);
+        }
+        .filter-list .count {
+            color: var(--text-faint);
+            margin-left: 0.3rem;
+            font-variant-numeric: tabular-nums;
+        }
+        .filter-list li.disabled {
+            color: var(--text-faint);
+            cursor: not-allowed;
+            background: transparent;
+        }
+        .filter-list li.disabled:hover { background: transparent; color: var(--text-faint); }
+
+        .status {
+            margin-top: 1.6rem;
+            padding: 0.75rem 0.9rem;
+            background: var(--bg-soft);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+        .resample-btn {
+            margin-top: 0.8rem;
+            width: 100%;
+            padding: 0.65rem 1rem;
+            background: var(--blue);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.55rem;
+            box-shadow: 0 2px 6px rgba(0, 50, 98, 0.18);
+        }
+        .resample-btn:hover {
+            background: #00254a;
+            box-shadow: 0 4px 12px rgba(0, 50, 98, 0.28);
+        }
+        .resample-btn:active { transform: translateY(1px); }
+        .resample-btn:disabled {
+            background: var(--text-faint);
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        .resample-icon {
+            display: inline-block;
+            font-size: 1.05rem;
+            line-height: 1;
+            transform-origin: 50% 50%;
+        }
+        @keyframes spin-once {
+            from { transform: rotate(0deg); }
+            to   { transform: rotate(360deg); }
+        }
+        .resample-btn.spinning .resample-icon {
+            animation: spin-once 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ===== Grid ===== */
+        /* Grid scrolls internally (like the DROID visualizer); sidebar stays
+           put on the left, and the whole page can still scroll to reveal the
+           footer below. */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 0.6rem;
+            max-height: calc(100vh - 5rem);
+            overflow-y: auto;
+            padding-right: 6px;
+            /* `normal` align-content/items behaves as `stretch` for grid, which
+               vertically stretches the single row when only a few cards exist,
+               distorting the 16:9 ratio. Pin to start so rows/items stay at
+               their intrinsic size. */
+            align-content: start;
+            align-items: start;
+        }
+        /* The padding-bottom trick locks the 16:9 ratio (9/16 = 56.25%).
+           We deliberately avoid `aspect-ratio` here because in a grid with
+           constrained max-height + overflow:auto, browsers can resolve grid
+           row sizing before the aspect-ratio resolves, which silently squashes
+           items shorter than their natural 16:9 height. */
+        .card {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            background: var(--bg-soft);
+            border: 1px solid var(--border-soft);
+            border-radius: 6px;
+            overflow: hidden;
+            cursor: default;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            border-color: var(--gold);
+            box-shadow: 0 8px 22px rgba(0, 0, 0, 0.10);
+        }
+        .card video,
+        .card .placeholder {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            background: #e9ebee;
+        }
+        .card .placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-faint);
+            font-size: 0.8rem;
+        }
+        .card .tooltip {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            right: 8px;
+            padding: 0.45rem 0.7rem;
+            background: rgba(0, 50, 98, 0.92);
+            -webkit-backdrop-filter: blur(4px);
+            backdrop-filter: blur(4px);
+            color: #fff;
+            font-size: 0.82rem;
+            font-weight: 500;
+            border-radius: 5px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.18);
+            opacity: 0;
+            transform: translateY(-4px);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            pointer-events: none;
+            line-height: 1.35;
+        }
+        .card .tooltip .verb { color: var(--gold); font-weight: 700; }
+        .card:hover .tooltip { opacity: 1; transform: translateY(0); }
+
+        /* ===== Loading / error ===== */
+        .center-msg {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 4rem 1rem;
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+        .center-msg.error {
+            color: #b00020;
+        }
+        .spinner {
+            display: inline-block;
+            width: 22px;
+            height: 22px;
+            border: 3px solid var(--border);
+            border-top-color: var(--blue);
+            border-radius: 50%;
+            animation: spin 0.9s linear infinite;
+            vertical-align: middle;
+            margin-right: 0.6rem;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ===== Footer ===== */
+        .footer {
+            text-align: center;
+            padding: 2.5rem 1.5rem 3rem;
+            color: var(--text-muted);
+            font-size: 0.88rem;
+            line-height: 1.75;
+            border-top: 1px solid var(--border);
+            margin-top: 2.5rem;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .footer a {
+            color: var(--blue);
+            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+            padding-bottom: 2px;
+            transition: color 0.2s ease;
+        }
+        .footer a::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--gold);
+            transform: scaleX(0);
+            transform-origin: left center;
+            transition: transform 0.3s ease;
+        }
+        .footer a:hover { color: var(--gold-deep); }
+        .footer a:hover::after { transform: scaleX(1); }
+
+        /* ===== Responsive ===== */
+        @media (max-width: 900px) {
+            .container { grid-template-columns: 1fr; padding: 1rem; }
+            .sidebar { position: static; }
+            .grid { max-height: none; overflow-y: visible; padding-right: 0; }
+            .topbar { padding: 1rem; flex-wrap: wrap; gap: 0.5rem; }
+            .topbar h1 { font-size: 1.35rem; }
+            .topbar .subtitle { font-size: 0.85rem; }
+            .display-note { padding: 0.55rem 1rem; font-size: 0.78rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="topbar">
+        <a href="../" class="back">&larr; Back to dataset</a>
+        <div class="title-block">
+            <h1>T-Rex Dataset Visualizer</h1>
+            <span class="subtitle" id="subtitle">(Showing a random subset of 500 trajectories from the T-Rex Dataset)</span>
+        </div>
+        <span class="spacer"></span>
+    </div>
+
+    <div class="display-note">
+        <strong>Note:</strong> clips shown are from the head-camera view, trimmed
+        (some sped up) for display — the underlying dataset preserves full
+        multi-view trajectories at their original speed.
+    </div>
+
+    <div class="container">
+        <aside class="sidebar">
+            <div class="filter-group">
+                <h2>Object Types</h2>
+                <ul class="filter-list" id="filter-objects">
+                    <li class="disabled"><input type="checkbox" disabled> Loading&hellip;</li>
+                </ul>
+            </div>
+
+            <div class="filter-group">
+                <h2>Motion Types</h2>
+                <ul class="filter-list" id="filter-verbs">
+                    <li class="disabled"><input type="checkbox" disabled> Loading&hellip;</li>
+                </ul>
+            </div>
+
+            <div class="status" id="status">Loading metadata&hellip;</div>
+            <button class="resample-btn" id="resample-btn" disabled>
+                <span class="resample-icon" aria-hidden="true">&#x21bb;</span>
+                <span>Resample</span>
+            </button>
+        </aside>
+
+        <main class="grid" id="grid">
+            <div class="center-msg"><span class="spinner"></span>Loading metadata from Hugging Face&hellip;</div>
+        </main>
+    </div>
+
+    <div class="footer">
+        This visualizer borrows the format of the
+        <a href="https://droid-dataset.github.io/visualizer/" target="_blank" rel="noopener noreferrer">DROID Dataset Visualizer</a>
+        by Jimmy Wu — many thanks for making the source code openly available.
+        Feel free to borrow our source code as well; we just kindly ask that you
+        link back to <a href="./">this page</a> in your footer.
+    </div>
+
+    <script>
+    (function () {
+        // ===== Config =====
+        const HF_BASE   = 'https://huggingface.co/datasets/Beakerman0101/trex-visualizer/resolve/main';
+        const CSV_URL   = HF_BASE + '/metadata.csv';
+        const VIDEO_URL = (fileName) => HF_BASE + '/' + fileName;
+
+        const POOL_SIZE    = 500;  // random subset drawn from the full dataset
+        const DISPLAY_SIZE = 60;   // number of video cards shown at once
+        const TOP_N        = 10;   // top-N + "Other" bucket per category
+
+        // ===== State =====
+        let allRows       = [];   // full metadata (3838 rows)
+        let pool          = [];   // random subset of size POOL_SIZE — drives filter counts
+        let objectCounts  = {};   // computed from `pool`, not `allRows`
+        let verbCounts    = {};
+        let topObjects    = [];   // top-N object names within current pool
+        let topVerbs      = [];
+        let selectedObjects = new Set(); // empty == "All"
+        let selectedVerbs   = new Set(); // empty == "All"
+        let displayedRows = [];
+
+        const $ = (id) => document.getElementById(id);
+
+        // ===== CSV parsing =====
+        // Simple parser — handles quoted fields and embedded commas.
+        function parseCSV(text) {
+            const rows = [];
+            let i = 0, field = '', row = [], inQuote = false;
+            while (i < text.length) {
+                const c = text[i];
+                if (inQuote) {
+                    if (c === '"') {
+                        if (text[i + 1] === '"') { field += '"'; i += 2; continue; }
+                        inQuote = false; i++; continue;
+                    }
+                    field += c; i++; continue;
+                }
+                if (c === '"') { inQuote = true; i++; continue; }
+                if (c === ',') { row.push(field); field = ''; i++; continue; }
+                if (c === '\n' || c === '\r') {
+                    if (field.length > 0 || row.length > 0) {
+                        row.push(field); rows.push(row); row = []; field = '';
+                    }
+                    // skip \r\n
+                    if (c === '\r' && text[i + 1] === '\n') i++;
+                    i++; continue;
+                }
+                field += c; i++;
+            }
+            if (field.length > 0 || row.length > 0) { row.push(field); rows.push(row); }
+            if (rows.length === 0) return [];
+            const headers = rows[0];
+            return rows.slice(1).map(r => {
+                const obj = {};
+                headers.forEach((h, idx) => { obj[h] = r[idx] !== undefined ? r[idx] : ''; });
+                return obj;
+            });
+        }
+
+        // ===== Counts & top-N =====
+        function countBy(rows, key) {
+            const counts = {};
+            for (const r of rows) {
+                const v = r[key];
+                if (!v) continue;
+                counts[v] = (counts[v] || 0) + 1;
+            }
+            return counts;
+        }
+        function topNNames(counts, n) {
+            return Object.entries(counts)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, n)
+                .map(e => e[0]);
+        }
+        function sumOthers(counts, topSet) {
+            let s = 0;
+            for (const [k, v] of Object.entries(counts)) {
+                if (!topSet.has(k)) s += v;
+            }
+            return s;
+        }
+
+        // ===== Pretty labels =====
+        function pretty(s) {
+            if (!s) return s;
+            // snake_case → "Snake Case"
+            return s.split('_')
+                .map(w => w.length === 0 ? '' : w[0].toUpperCase() + w.slice(1))
+                .join(' ');
+        }
+
+        // ===== Filter UI =====
+        function buildFilterUI(listId, counts, topNames, selectedSet, kind) {
+            const ul = $(listId);
+            ul.innerHTML = '';
+            const topSet = new Set(topNames);
+            const totalAll = Object.values(counts).reduce((a, b) => a + b, 0);
+            const otherCount = sumOthers(counts, topSet);
+
+            // "All" entry
+            ul.appendChild(makeFilterItem('All', totalAll, true, () => {
+                selectedSet.clear();
+                refreshFilterUI();
+                onFiltersChanged();
+            }, selectedSet.size === 0));
+
+            // Top-N entries (descending count)
+            for (const name of topNames) {
+                const c = counts[name] || 0;
+                ul.appendChild(makeFilterItem(pretty(name), c, false, () => {
+                    toggleSelection(selectedSet, name);
+                    refreshFilterUI();
+                    onFiltersChanged();
+                }, selectedSet.has(name)));
+            }
+
+            // "Other" bucket
+            if (otherCount > 0) {
+                ul.appendChild(makeFilterItem('Other', otherCount, false, () => {
+                    toggleSelection(selectedSet, '__OTHER__');
+                    refreshFilterUI();
+                    onFiltersChanged();
+                }, selectedSet.has('__OTHER__')));
+            }
+        }
+        function makeFilterItem(label, count, isAll, onToggle, checked) {
+            const li = document.createElement('li');
+            if (checked) li.classList.add('selected');
+            const cb = document.createElement('input');
+            cb.type = 'checkbox';
+            cb.checked = !!checked;
+            cb.addEventListener('change', onToggle);
+            li.appendChild(cb);
+            li.appendChild(document.createTextNode(' ' + label + ' '));
+            const span = document.createElement('span');
+            span.className = 'count';
+            span.textContent = '(' + count + ')';
+            li.appendChild(span);
+            li.addEventListener('click', (e) => {
+                if (e.target !== cb) {
+                    cb.checked = !cb.checked;
+                    onToggle();
+                }
+            });
+            return li;
+        }
+        function toggleSelection(set, key) {
+            if (set.has(key)) set.delete(key);
+            else set.add(key);
+        }
+        // Each panel's counts are computed by applying every OTHER panel's
+        // selection — so picking "Airpods" in Object Types causes Motion Types
+        // counts to reflect only airpods rows, and vice versa.
+        function refreshFilterUI() {
+            const objRows  = pool.filter(r => rowMatchesExcluding(r, 'object'));
+            const verbRows = pool.filter(r => rowMatchesExcluding(r, 'verb'));
+            const objCountsNow  = countBy(objRows,  'object');
+            const verbCountsNow = countBy(verbRows, 'verb');
+            buildFilterUI('filter-objects', objCountsNow,  topObjects, selectedObjects, 'object');
+            buildFilterUI('filter-verbs',   verbCountsNow, topVerbs,   selectedVerbs,   'verb');
+        }
+
+        // ===== Filtering logic =====
+        function rowMatchesExcluding(r, excludeKind) {
+            // Empty selection set == "All" (matches everything)
+            if (excludeKind !== 'object' && selectedObjects.size > 0) {
+                const isOther = !topObjects.includes(r.object);
+                const ok = selectedObjects.has(r.object) ||
+                           (isOther && selectedObjects.has('__OTHER__'));
+                if (!ok) return false;
+            }
+            if (excludeKind !== 'verb' && selectedVerbs.size > 0) {
+                const isOther = !topVerbs.includes(r.verb);
+                const ok = selectedVerbs.has(r.verb) ||
+                           (isOther && selectedVerbs.has('__OTHER__'));
+                if (!ok) return false;
+            }
+            return true;
+        }
+        function rowMatches(r) {
+            return rowMatchesExcluding(r, null);
+        }
+
+        // ===== Random sample (Fisher–Yates partial shuffle) =====
+        function sample(arr, n) {
+            const a = arr.slice();
+            const out = [];
+            const k = Math.min(n, a.length);
+            for (let i = 0; i < k; i++) {
+                const j = i + Math.floor(Math.random() * (a.length - i));
+                [a[i], a[j]] = [a[j], a[i]];
+                out.push(a[i]);
+            }
+            return out;
+        }
+
+        // ===== Lazy-loading videos via IntersectionObserver =====
+        // When card enters viewport: set src + play.
+        // When it leaves: pause, unset src to free memory.
+        let io = null;
+        function ensureObserver() {
+            if (io) return io;
+            // root: null (viewport) works in both layouts — desktop (grid is the
+            // scroll container) and mobile (page is the scroll container) —
+            // because each card's screen bounding rect already reflects its
+            // actual on-screen position after any scrolling.
+            io = new IntersectionObserver((entries) => {
+                for (const entry of entries) {
+                    const card = entry.target;
+                    const vid = card.querySelector('video');
+                    if (!vid) continue;
+                    const src = card.dataset.src;
+                    if (entry.isIntersecting) {
+                        if (vid.getAttribute('src') !== src) {
+                            vid.setAttribute('src', src);
+                            // play() can be rejected silently on some browsers; ignore.
+                            const p = vid.play();
+                            if (p && typeof p.catch === 'function') p.catch(() => {});
+                        }
+                    } else {
+                        if (vid.getAttribute('src')) {
+                            vid.pause();
+                            vid.removeAttribute('src');
+                            vid.load(); // releases buffered data
+                        }
+                    }
+                }
+            }, { rootMargin: '300px 0px' });
+            return io;
+        }
+
+        // ===== Grid rendering =====
+        function renderGrid(rows) {
+            const grid = $('grid');
+            grid.innerHTML = '';
+            // Disconnect any prior observer state.
+            if (io) { io.disconnect(); io = null; }
+            const observer = ensureObserver();
+
+            if (rows.length === 0) {
+                const msg = document.createElement('div');
+                msg.className = 'center-msg';
+                msg.textContent = 'No trajectories match the selected filters.';
+                grid.appendChild(msg);
+                return;
+            }
+
+            const frag = document.createDocumentFragment();
+            for (const r of rows) {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.dataset.src = VIDEO_URL(r.file_name);
+
+                const vid = document.createElement('video');
+                vid.muted = true;
+                vid.loop = true;
+                vid.autoplay = true;
+                vid.playsInline = true;
+                vid.preload = 'none';
+                card.appendChild(vid);
+
+                const tip = document.createElement('div');
+                tip.className = 'tooltip';
+                tip.innerHTML = '<span class="verb">' + escapeHtml(pretty(r.verb)) +
+                                '</span> / ' + escapeHtml(pretty(r.object));
+                card.appendChild(tip);
+
+                frag.appendChild(card);
+                observer.observe(card);
+            }
+            grid.appendChild(frag);
+        }
+        function escapeHtml(s) {
+            return String(s || '')
+                .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        }
+
+        // ===== Pipeline =====
+        // Pool of 500 drives filter-UI counts; display = up to 30 from filter matches.
+        function onFiltersChanged() {
+            const matches = pool.filter(rowMatches);
+            displayedRows = sample(matches, DISPLAY_SIZE);
+            renderGrid(displayedRows);
+            updateStatus(matches.length);
+        }
+        function resamplePool() {
+            // Re-draw the 500-row pool from the full dataset, recompute counts
+            // and top-N labels, reset selections, and re-render.
+            pool         = sample(allRows, POOL_SIZE);
+            objectCounts = countBy(pool, 'object');
+            verbCounts   = countBy(pool, 'verb');
+            topObjects   = topNNames(objectCounts, TOP_N);
+            topVerbs     = topNNames(verbCounts,   TOP_N);
+            selectedObjects.clear();
+            selectedVerbs.clear();
+            refreshFilterUI();
+            onFiltersChanged();
+        }
+        function updateStatus(totalMatches) {
+            $('status').innerHTML =
+                'Showing <strong>' + displayedRows.length +
+                '</strong> matches randomly sampled from <strong>' +
+                totalMatches + '</strong> total matches';
+        }
+
+        // ===== Init =====
+        function showError(message) {
+            const grid = $('grid');
+            grid.innerHTML = '';
+            const msg = document.createElement('div');
+            msg.className = 'center-msg error';
+            msg.textContent = message;
+            grid.appendChild(msg);
+            $('status').textContent = 'Error.';
+        }
+
+        async function init() {
+            try {
+                const resp = await fetch(CSV_URL);
+                if (!resp.ok) throw new Error('HTTP ' + resp.status);
+                const text = await resp.text();
+                allRows = parseCSV(text);
+                if (allRows.length === 0) throw new Error('Empty metadata.');
+
+                resamplePool();   // initial draw + filter UI
+
+                $('resample-btn').disabled = false;
+                $('resample-btn').addEventListener('click', () => {
+                    const btn = $('resample-btn');
+                    btn.disabled = true;
+                    // Force the spin animation to restart even if the class is
+                    // already applied from a previous click.
+                    btn.classList.remove('spinning');
+                    void btn.offsetWidth;
+                    btn.classList.add('spinning');
+                    resamplePool();
+                    setTimeout(() => { btn.disabled = false; }, 400);
+                });
+            } catch (err) {
+                console.error(err);
+                showError('Failed to load metadata from Hugging Face: ' + err.message);
+            }
+        }
+
+        init();
+    })();
+    </script>
+</body>
+</html>
