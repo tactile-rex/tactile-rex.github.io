@@ -69,7 +69,9 @@
 
         /* ===== Top navigation ===== */
         .nav-buttons {
-            position: fixed; top: 2rem; left: 50%;
+            /* top is offset up by ~padding-top of .nav-btn (0.6rem) so the
+               nav text baseline aligns with the .header-title text/logos. */
+            position: fixed; top: 1.4rem; left: 50%;
             transform: translateX(-50%);
             display: flex; gap: 1rem; z-index: 10;
         }
@@ -97,7 +99,7 @@
         /* ===== Hero ===== */
         .hero {
             display: flex; align-items: flex-start;
-            padding: 10rem 10% 2rem;
+            padding: 8rem 10% 2rem;
             position: relative;
         }
         .hero-inner { display: flex; align-items: flex-start; }
