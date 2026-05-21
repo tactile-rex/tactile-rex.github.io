@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T-Rex Benchmark — Tactile-Reactive Dexterous Manipulation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap">
+    <style>
+        :root {
+            --bg:           #ffffff;
+            --bg-soft:      #f7f8fa;
+            --text:         #1a1a1a;
+            --text-muted:   #555a63;
+            --text-faint:   #7a818c;
+            --border:       rgba(0,0,0,0.10);
+            --border-soft:  rgba(0,0,0,0.06);
+            --blue:         #003262;
+            --blue-soft:    rgba(0,50,98,0.06);
+            --gold:         #FDB515;
+            --gold-deep:    #C68B16;
+            --gold-soft:    rgba(253,181,21,0.10);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', 'Arial', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            margin: 0;
+            min-height: 100vh;
+        }
+
+        a { color: inherit; }
+
+        /* ===== Header ===== */
+        .header-title {
+            position: fixed;
+            top: 2rem;
+            font-size: 1.2rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            z-index: 10;
+            color: var(--blue);
+            text-decoration: none;
+        }
+        .header-left  { left: 3rem; }
+        .header-right { right: 3rem; }
+
+        .header-logos { display: flex; align-items: center; gap: 1.5rem; }
+        .header-logo-link { display: block; }
+        .bair-logo, .nvidia-logo { display: block; height: 2.5rem; width: auto; }
+        .bair-logo { filter: invert(1) brightness(0.15); }
+
+        .top-gradient {
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 110px;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.7) 60%, transparent 100%);
+            z-index: 5; pointer-events: none;
+        }
+
+        /* ===== Top navigation ===== */
+        .nav-buttons {
+            position: fixed; top: 2rem; left: 50%;
+            transform: translateX(-50%);
+            display: flex; gap: 1rem; z-index: 10;
+        }
+        .nav-btn {
+            padding: 0.6rem 1.5rem;
+            background: transparent; border: none;
+            color: var(--text); font-size: 1.1rem;
+            font-weight: 500; letter-spacing: 0.5px;
+            cursor: pointer; text-decoration: none;
+            display: inline-block; position: relative;
+            transition: color 0.3s ease; white-space: nowrap;
+        }
+        .nav-btn::after {
+            content: ''; position: absolute; bottom: 0; left: 50%;
+            transform: translateX(-50%);
+            width: 0; height: 3px;
+            background: var(--gold);
+            transition: width 0.3s ease;
+        }
+        .nav-btn:hover { color: var(--blue); }
+        .nav-btn:hover::after { width: 100%; }
+        .nav-btn.active { color: var(--blue); }
+        .nav-btn.active::after { width: 100%; }
+
+        /* ===== Hero ===== */
+        .hero {
+            display: flex; align-items: flex-start;
+            padding: 7rem 10% 2rem;
+            position: relative;
+        }
+        .hero-inner { display: flex; align-items: flex-start; }
+        .vertical-bar {
+            width: 10px; height: 9rem;
+            background: var(--gold);
+            margin-right: 2rem;
+        }
+        .hero-title {
+            font-size: 2.7rem;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+            color: var(--text);
+        }
+        .hero-title .accent {
+            display: block;
+            color: var(--blue);
+            font-size: 3.6rem;
+            font-weight: 700;
+            margin-bottom: 0.4rem;
+            line-height: 1.1;
+        }
+        .hero-subtitle {
+            font-size: 1.1rem;
+            font-weight: 400;
+            letter-spacing: 0.3px;
+            color: var(--text-muted);
+            max-width: 820px;
+            line-height: 1.75;
+        }
+
+        /* ===== Sections ===== */
+        .section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 32px 40px 56px;
+        }
+        .section-title {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 0.6rem;
+            color: var(--blue);
+            padding-left: 1rem;
+            border-left: 5px solid var(--gold);
+        }
+        .section-subtitle {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-faint);
+            margin-left: 1rem;
+            margin-bottom: 1.2rem;
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
+        }
+        .section-content {
+            font-size: 1.02rem;
+            line-height: 1.75;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            max-width: 920px;
+        }
+
+        /* ===== Task cards ===== */
+        .task-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        .task-card {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+        }
+        .task-card:hover {
+            border-color: var(--gold);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+            transform: translateY(-2px);
+        }
+        .task-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.1rem 1.5rem;
+            background: var(--bg-soft);
+            border-bottom: 1px solid var(--border-soft);
+        }
+        .task-num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 42px;
+            height: 42px;
+            padding: 0 0.5rem;
+            border-radius: 999px;
+            background: var(--gold);
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 6px rgba(253, 181, 21, 0.35);
+        }
+        .task-name {
+            color: var(--blue);
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin: 0;
+            flex: 1;
+            min-width: 0;
+        }
+        .task-rubric-type {
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
+            padding: 0.3rem 0.75rem;
+            border-radius: 999px;
+            background: var(--blue-soft);
+            color: var(--blue);
+            white-space: nowrap;
+        }
+        .task-rubric-type.progress {
+            background: var(--gold-soft);
+            color: var(--gold-deep);
+        }
+        .task-body {
+            display: grid;
+            grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+            gap: 1.75rem;
+            padding: 1.5rem;
+        }
+
+        /* ===== Demo video placeholder ===== */
+        .task-video {
+            display: flex;
+            flex-direction: column;
+        }
+        .task-video-placeholder,
+        .task-video video {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            border-radius: 8px;
+            background: var(--bg-soft);
+        }
+        .task-video-placeholder {
+            border: 1.5px dashed var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-faint);
+            font-size: 0.9rem;
+            text-align: center;
+            padding: 1rem;
+        }
+        .task-video-caption {
+            margin-top: 0.6rem;
+            text-align: center;
+            color: var(--text-faint);
+            font-size: 0.82rem;
+        }
+
+        /* ===== Task text content ===== */
+        .task-text { display: flex; flex-direction: column; gap: 1.1rem; }
+
+        .task-instruction {
+            position: relative;
+            padding: 0.85rem 1rem 0.85rem 1.05rem;
+            background: var(--bg-soft);
+            border-left: 3px solid var(--gold);
+            border-radius: 0 6px 6px 0;
+            color: var(--text);
+            font-style: italic;
+            font-size: 0.95rem;
+            line-height: 1.65;
+        }
+        .task-instruction::before {
+            content: 'Instruction';
+            display: block;
+            font-style: normal;
+            font-weight: 600;
+            font-size: 0.72rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            color: var(--gold-deep);
+            margin-bottom: 0.3rem;
+        }
+
+        .task-description {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+        .task-description::before {
+            content: 'Description';
+            display: block;
+            font-weight: 600;
+            font-size: 0.72rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            color: var(--blue);
+            margin-bottom: 0.3rem;
+        }
+
+        .task-rubric {
+            border-top: 1px solid var(--border-soft);
+            padding-top: 1rem;
+        }
+        .task-rubric h4 {
+            color: var(--blue);
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.65rem;
+        }
+        .rubric-list {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+        .rubric-list li {
+            display: grid;
+            grid-template-columns: 56px 32px 1fr;
+            column-gap: 0.6rem;
+            align-items: baseline;
+            font-size: 0.9rem;
+            line-height: 1.55;
+            color: var(--text);
+        }
+        .rubric-list.progress li {
+            grid-template-columns: 56px 1fr;
+        }
+        .rubric-score {
+            font-family: 'SFMono-Regular', 'Consolas', 'Menlo', monospace;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--gold-deep);
+            background: var(--gold-soft);
+            padding: 0.12rem 0.5rem;
+            border-radius: 4px;
+            text-align: center;
+        }
+        .rubric-label {
+            color: var(--text-muted);
+            font-weight: 500;
+            font-size: 0.88rem;
+        }
+
+        /* ===== Footer ===== */
+        .footer {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 40px 60px;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            color: var(--text-faint);
+            font-size: 0.9rem;
+        }
+        .footer a {
+            color: var(--blue); text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.3s ease;
+        }
+        .footer a:hover { border-bottom-color: var(--gold); }
+
+        /* ===== Responsive ===== */
+        @media (max-width: 900px) {
+            .task-body { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 768px) {
+            .header-title { font-size: 1rem; top: 1.5rem; }
+            .header-left { left: 1.5rem; }
+            .header-right { right: 1.5rem; }
+            .nav-buttons {
+                top: 4.5rem; left: 0; transform: none;
+                width: 100%; padding: 0 1rem; gap: 0.4rem;
+                justify-content: center; flex-wrap: wrap;
+            }
+            .nav-btn { padding: 0.4rem 0.8rem; font-size: 0.9rem; }
+            .hero { padding: 7rem 5% 1rem; align-items: flex-start; }
+            .vertical-bar { height: 6rem; margin-right: 1rem; }
+            .hero-title { font-size: 1.6rem; }
+            .hero-title .accent { font-size: 2.3rem; }
+            .hero-subtitle { font-size: 1rem; }
+            .section { padding: 24px 20px 40px; }
+            .section-title { font-size: 1.6rem; }
+            .task-header { flex-wrap: wrap; }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-gradient"></div>
+
+    <a href="../" class="header-title header-left">T-Rex</a>
+    <div class="header-title header-right header-logos">
+        <a class="header-logo-link" href="https://bair.berkeley.edu/" target="_blank" rel="noopener noreferrer" aria-label="Berkeley AI Research">
+            <img src="../logos/BAIR_Logo_White_BearOnly.svg" alt="BAIR" class="bair-logo">
+        </a>
+        <a class="header-logo-link" href="https://research.nvidia.com/labs/gear/" target="_blank" rel="noopener noreferrer" aria-label="NVIDIA GEAR Lab">
+            <img src="../logos/NVIDIA_eye_green.svg" alt="NVIDIA" class="nvidia-logo">
+        </a>
+    </div>
+
+    <nav class="nav-buttons">
+        <a href="../" class="nav-btn">Home</a>
+        <a href="../#paper" class="nav-btn">Paper Details</a>
+        <a href="../dataset/" class="nav-btn">Dataset</a>
+        <a href="./" class="nav-btn active">Benchmark</a>
+        <a href="#" class="nav-btn" target="_blank" rel="noopener noreferrer">arXiv</a>
+        <a href="#" class="nav-btn" target="_blank" rel="noopener noreferrer">Code</a>
+    </nav>
+
+    <!-- ===== Hero ===== -->
+    <section class="hero">
+        <div class="hero-inner">
+            <div class="vertical-bar"></div>
+            <div>
+                <h1 class="hero-title">
+                    <span class="accent">T-Rex Benchmark</span>
+                    13 Tactile-Reactive<br>Dexterous Manipulation Tasks
+                </h1>
+                <p class="hero-subtitle">
+                    A real-world benchmark of 13 contact-rich dexterous manipulation
+                    tasks organized into three categories — <strong>Force</strong>,
+                    <strong>Deform</strong>, and <strong>Both</strong>. Each task is
+                    evaluated with one of two rubrics: an <em>additive</em> rubric
+                    awarding partial credit for each completed sub-step, or a
+                    <em>progress-based</em> rubric scoring how far the robot advanced
+                    along a predefined success hierarchy.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Force Tasks ===== -->
+    <section class="section" id="force-tasks">
+        <h2 class="section-title">Force Tasks</h2>
+        <div class="section-subtitle">Tasks I &ndash; IV &middot; 4 tasks</div>
+        <p class="section-content">
+            Force tasks require the robot to precisely regulate contact forces during
+            manipulation — such as grasping fragile objects, applying controlled
+            pressure, or resisting slip. Success depends on tactile feedback to adjust
+            grip force and avoid object damage or task failure.
+        </p>
+
+        <div class="task-list">
+
+            <!-- Task I -->
+            <article class="task-card">
+                <header class="task-header">
+                    <span class="task-num">I</span>
+                    <h3 class="task-name">Apply Toothpaste</h3>
+                    <span class="task-rubric-type">Additive</span>
+                </header>
+                <div class="task-body">
+                    <div class="task-video">
+                        <div class="task-video-placeholder">Demo video coming soon</div>
+                        <!-- TODO: replace with <video src="..." muted autoplay loop playsinline></video> -->
+                    </div>
+                    <div class="task-text">
+                        <div class="task-instruction">
+                            &ldquo;On the left side of the countertop sits a cup holding a toothbrush,
+                            while an open tube of toothpaste rests on the right. Pick up the toothbrush
+                            with your left hand and the toothpaste with your right, squeeze some
+                            toothpaste onto the brush, and then set the tube back down.&rdquo;
+                        </div>
+                        <p class="task-description">
+                            The robot must grasp a toothbrush in one hand and a toothpaste tube in the
+                            other, align the tube nozzle above the bristles and squeeze out a bead of
+                            toothpaste, and return the toothbrush upright into its holder and the
+                            toothpaste back onto the table.
+                        </p>
+                        <div class="task-rubric">
+                            <h4>Grading Rubric (Additive)</h4>
+                            <ul class="rubric-list">
+                                <li><span class="rubric-score">+0.2</span><span class="rubric-label">(a)</span>Grasps the toothbrush.</li>
+                                <li><span class="rubric-score">+0.1</span><span class="rubric-label">(b)</span>Grasps the toothpaste tube.</li>
+                                <li><span class="rubric-score">+0.4</span><span class="rubric-label">(c)</span>Dispenses a bead of toothpaste onto the bristles.</li>
+                                <li><span class="rubric-score">+0.2</span><span class="rubric-label">(d)</span>Returns the toothbrush upright into its holder.</li>
+                                <li><span class="rubric-score">+0.1</span><span class="rubric-label">(e)</span>Places the toothpaste tube back on the table.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Task II -->
+            <article class="task-card">
+                <header class="task-header">
+                    <span class="task-num">II</span>
+                    <h3 class="task-name">Erase Whiteboard</h3>
+                    <span class="task-rubric-type">Additive</span>
+                </header>
+                <div class="task-body">
+                    <div class="task-video">
+                        <div class="task-video-placeholder">Demo video coming soon</div>
+                    </div>
+                    <div class="task-text">
+                        <div class="task-instruction">
+                            &ldquo;A whiteboard featuring a colored design is placed on the desk.
+                            Using the left hand, grasp the whiteboard at the bottom of its left side
+                            to steady it; then, using the right hand, pick up the eraser located on
+                            the right side and erase the colored design.&rdquo;
+                        </div>
+                        <p class="task-description">
+                            The robot must hold the whiteboard at an angle with the left hand and
+                            grasp an eraser with the right hand, wipe a hand-drawn sketch off a small
+                            whiteboard with repeated strokes until no ink remains, then place the
+                            eraser on the table and release the whiteboard.
+                        </p>
+                        <div class="task-rubric">
+                            <h4>Grading Rubric (Additive)</h4>
+                            <ul class="rubric-list">
+                                <li><span class="rubric-score">+0.1</span><span class="rubric-label">(a)</span>Grasps the whiteboard and holds it at an angle.</li>
+                                <li><span class="rubric-score">+0.2</span><span class="rubric-label">(b)</span>Grasps the eraser.</li>
+                                <li><span class="rubric-score">+0.2</span><span class="rubric-label">(c)</span>Brings the eraser into contact with the whiteboard surface.</li>
+                                <li><span class="rubric-score">+0.4</span><span class="rubric-label">(d)</span>Wipes the board until the drawing is fully erased (no visible ink remaining).</li>
+                                <li><span class="rubric-score">+0.1</span><span class="rubric-label">(e)</span>Places the eraser on the table and releases the whiteboard.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Task III -->
+            <article class="task-card">
+                <header class="task-header">
+                    <span class="task-num">III</span>
+                    <h3 class="task-name">Flip Page</h3>
+                    <span class="task-rubric-type progress">Progress</span>
+                </header>
+                <div class="task-body">
+                    <div class="task-video">
+                        <div class="task-video-placeholder">Demo video coming soon</div>
+                    </div>
+                    <div class="task-text">
+                        <div class="task-instruction">
+                            &ldquo;Turn a page of the book from right to left using your right index
+                            finger.&rdquo;
+                        </div>
+                        <p class="task-description">
+                            The robot must lift a single sheet from the right side of an open book,
+                            sweep it across the spine, and smooth it down flat on the left side.
+                        </p>
+                        <div class="task-rubric">
+                            <h4>Grading Rubric (Progress-Based)</h4>
+                            <ul class="rubric-list progress">
+                                <li><span class="rubric-score">+0.0</span>No success of any page flipping.</li>
+                                <li><span class="rubric-score">+0.25</span>Successfully lifts one page from the right but fails to flip it across the spine.</li>
+                                <li><span class="rubric-score">+0.5</span>Successfully flips the page to the left side, but flips multiple pages.</li>
+                                <li><span class="rubric-score">+1.0</span>Successfully flips exactly one page from right to left and smooths it flat.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Task IV -->
+            <article class="task-card">
+                <header class="task-header">
+                    <span class="task-num">IV</span>
+                    <h3 class="task-name">Pick Eggs</h3>
+                    <span class="task-rubric-type">Additive</span>
+                </header>
+                <div class="task-body">
+                    <div class="task-video">
+                        <div class="task-video-placeholder">Demo video coming soon</div>
+                    </div>
+                    <div class="task-text">
+                        <div class="task-instruction">
+                            &ldquo;Using the right thumb and index finger, pick up the egg from the
+                            green egg tray and place it into the yellow egg tray.&rdquo;
+                        </div>
+                        <p class="task-description">
+                            The robot must grasp a fragile egg without cracking the shell from the
+                            green container, lift it off the surface, transport it above the yellow
+                            container, and gently release it inside.
+                        </p>
+                        <div class="task-rubric">
+                            <h4>Grading Rubric (Additive)</h4>
+                            <ul class="rubric-list">
+                                <li><span class="rubric-score">+0.2</span><span class="rubric-label">(a)</span>Approaches the egg and makes contact without knocking it off the table.</li>
+                                <li><span class="rubric-score">+0.3</span><span class="rubric-label">(b)</span>Lifts the egg off the table without cracking it.</li>
+                                <li><span class="rubric-score">+0.2</span><span class="rubric-label">(c)</span>Transports the egg above the yellow container.</li>
+                                <li><span class="rubric-score">+0.3</span><span class="rubric-label">(d)</span>Releases the egg inside the container intact.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+        </div>
+    </section>
+
+    <!-- ===== Deform Tasks ===== -->
+    <section class="section" id="deform-tasks">
+        <h2 class="section-title">Deform Tasks</h2>
+        <div class="section-subtitle">Tasks V &ndash; VIII &middot; 4 tasks</div>
+        <p class="section-content">
+            Deform tasks involve objects or mechanisms where deformation plays a key
+            role — such as stacked cups, or mahjong tiles identified by surface
+            texture. The robot must sense and respond to physical deformation that
+            cannot be detected by vision alone.
+        </p>
+
+        <div class="task-list">
+
+            <!-- Task V -->
+            <article class="task-card">
+                <header class="task-header">
+                    <span class="task-num">V</span>
+                    <h3 class="task-name">Open Lock</h3>
+                    <span class="task-rubric-type">Additive</span>
+                </header>
+                <div class="task-body">
+                    <div class="task-video">
+                        <div class="task-video-placeholder">Demo video coming soon</div>
+                    </div>
+                    <div class="task-text">
+                        <div class="task-instruction">
+                            &ldquo;On the left side of the desk lies a red book, atop which rests a
+                            gray key; on the right side is a lock. Using your left thumb and index
+                            finger, slide the key free; then, pick up the lock with your right hand
+                            and use the key to unlock it.&rdquo;
+                        </div>
+                        <p class="task-description">
+                            The robot must first grasp the key with one hand and the padlock with the
+                            other, align and insert the key into the keyhole, and rotate it to
+                            release the shackle.
+                        </p>
+                        <div class="task-rubric">
+                            <h4>Grading Rubric (Additive)</h4>
+                            <ul class="rubric-list">
+                                <li><span class="rubric-score">+0.2</span><span class="rubric-label">(a)</span>Grasps the key.</li>
+                                <li><span class="rubric-score">+0.1</span><span class="rubric-label">(b)</span>Grasps the padlock.</li>
+                                <li><span class="rubric-score">+0.4</span><span class="rubric-label">(c)</span>Aligns and inserts the key into the keyhole.</li>
+                                <li><span class="rubric-score">+0.3</span><span class="rubric-label">(d)</span>Rotates the key and successfully opens the lock.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Task VI -->
+            <article class="task-card">
+                <header class="task-header">
+                    <span class="task-num">VI</span>
+                    <h3 class="task-name">Pick and Place Ball</h3>
+                    <span class="task-rubric-type">Additive</span>
+                </header>
+                <div class="task-body">
+                    <div class="task-video">
+                        <div class="task-video-placeholder">Demo video coming soon</div>
+                    </div>
+                    <div class="task-text">
+                        <div class="task-instruction">
+                            &ldquo;Use your left hand to open one of the compartments in the small box,
+                            use your right hand to grasp the small ball on the table, place the ball
+                            into the box, and then close the box.&rdquo;
+                        </div>
+                        <p class="task-description">
+                            The robot must use the left index finger to press the button on a
+                            compartment lid to unlock it, flip the lid open with the left thumb, pick
+                            up the ball with the right hand, place the ball into the open
+                            compartment, and press the lid closed with the right thumb.
+                        </p>
+                        <div class="task-rubric">
+                            <h4>Grading Rubric (Additive)</h4>
+                            <ul class="rubric-list">
+                                <li><span class="rubric-score">+0.2</span><span class="rubric-label">(a)</span>Left index finger presses the compartment button to unlock the lid.</li>
+                                <li><span class="rubric-score">+0.2</span><span class="rubric-label">(b)</span>Left thumb flips the lid open.</li>
+                                <li><span class="rubric-score">+0.2</span><span class="rubric-label">(c)</span>Right hand picks up the ball.</li>
+                                <li><span class="rubric-score">+0.2</span><span class="rubric-label">(d)</span>Right hand places the ball into the open compartment.</li>
+                                <li><span class="rubric-score">+0.2</span><span class="rubric-label">(e)</span>Right thumb presses the lid closed.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Task VII -->
+            <article class="task-card">
+                <header class="task-header">
+                    <span class="task-num">VII</span>
+                    <h3 class="task-name">Remove Cup</h3>
+                    <span class="task-rubric-type">Additive</span>
+                </header>
+                <div class="task-body">
+                    <div class="task-video">
+                        <div class="task-video-placeholder">Demo video coming soon</div>
+                    </div>
+                    <div class="task-text">
+                        <div class="task-instruction">
+                            &ldquo;A stack of red plastic cups sits on the desktop; use the right hand
+                            to slide out the topmost one, exerting effort to separate it from the
+                            rest of the stack.&rdquo;
+                        </div>
+                        <p class="task-description">
+                            Given a stack of nested cups on the table, the robot must grasp the stack
+                            with the left hand to stabilize it, and use the right hand to twist and
+                            rub exactly one cup off the top of the stack.
+                        </p>
+                        <div class="task-rubric">
+                            <h4>Grading Rubric (Additive)</h4>
+                            <ul class="rubric-list">
+                                <li><span class="rubric-score">+0.2</span><span class="rubric-label">(a)</span>Left hand grasps and stabilizes the cup stack.</li>
+                                <li><span class="rubric-score">+0.3</span><span class="rubric-label">(b)</span>Right hand grasps the topmost cup of the stack.</li>
+                                <li><span class="rubric-score">+0.3</span><span class="rubric-label">(c)</span>Right hand twists and separates exactly one cup from the stack.</li>
+                                <li><span class="rubric-score">+0.2</span><span class="rubric-label">(d)</span>Right hand holds the single separated cup intact.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Task VIII -->
+            <article class="task-card">
+                <header class="task-header">
+                    <span class="task-num">VIII</span>
+                    <h3 class="task-name">Sort Mahjong</h3>
+                    <span class="task-rubric-type">Additive</span>
+                </header>
+                <div class="task-body">
+                    <div class="task-video">
+                        <div class="task-video-placeholder">Demo video coming soon</div>
+                    </div>
+                    <div class="task-text">
+                        <div class="task-instruction">
+                            &ldquo;Three boxes are placed on the table, representing the Mahjong tiles
+                            &lsquo;Red Zhong&rsquo;, &lsquo;Green Fa&rsquo;, and &lsquo;White
+                            Blank&rsquo;, respectively. In the center of the table lies a single
+                            Mahjong tile, placed face-down. Now, using your right hand, grasp the tile
+                            and discern its pattern; then, use your left hand to open the box
+                            corresponding to that pattern and place the tile inside.&rdquo;
+                        </div>
+                        <p class="task-description">
+                            The robot must pick up a face-down mahjong tile with the right hand and
+                            feel its surface via tactile sensing to identify its category, then use
+                            the left hand to slide open the lid of the matching compartment in the
+                            organizer box, place the tile into the compartment with the right hand,
+                            and close the lid with the right thumb.
+                        </p>
+                        <div class="task-rubric">
+                            <h4>Grading Rubric (Additive)</h4>
+                            <ul class="rubric-list">
+                                <li><span class="rubric-score">+0.1</span><span class="rubric-label">(a)</span>Right hand picks up the face-down mahjong tile.</li>
+                                <li><span class="rubric-score">+0.5</span><span class="rubric-label">(b)</span>Left hand slides open the lid of the correct compartment.</li>
+                                <li><span class="rubric-score">+0.2</span><span class="rubric-label">(c)</span>Right hand places the tile into the correct compartment.</li>
+                                <li><span class="rubric-score">+0.2</span><span class="rubric-label">(d)</span>Right thumb closes the compartment lid.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+        </div>
+    </section>
+
+    <!-- ===== Both Tasks ===== -->
+    <section class="section" id="both-tasks">
+        <h2 class="section-title">Both Tasks</h2>
+        <div class="section-subtitle">Tasks IX &ndash; XIII &middot; 5 tasks &middot; Most challenging</div>
+        <p class="section-content">
+            Both tasks require the robot to handle force control and deformable
+            objects at the same time, often in longer sequences involving insertion,
+            extraction, and bimanual handovers. They are the most challenging
+            category in the benchmark.
+        </p>
+
+        <div class="task-list">
+
+            <!-- Task IX -->
+            <article class="task-card">
+                <header class="task-header">
+                    <span class="task-num">IX</span>
+                    <h3 class="task-name">Acid-Base Neutralization</h3>
+                    <span class="task-rubric-type">Additive</span>
+                </header>
+                <div class="task-body">
+                    <div class="task-video">
+                        <div class="task-video-placeholder">Demo video coming soon</div>
+                    </div>
+                    <div class="task-text">
+                        <div class="task-instruction">
+                            &ldquo;On the right side of the desktop stands an Erlenmeyer flask
+                            containing 200&nbsp;mL of citric acid solution; on the left is a beaker
+                            holding 20&nbsp;mL of NaOH solution, which includes bromothymol blue
+                            indicator — appearing blue due to its alkaline nature. Using your right
+                            hand, pick up the dropper and draw up approximately 5&nbsp;mL of the acid
+                            solution; then, using your left hand to hold the beaker, perform an
+                            acid-base titration until the liquid in the beaker turns green or
+                            yellow.&rdquo;
+                        </div>
+                        <p class="task-description">
+                            The robot uses a dropper held in the right hand to aspirate liquid from a
+                            conical flask, dispenses it into a beaker held in the left hand, and
+                            swirls the beaker until the blue indicator solution fully turns
+                            colorless, and then returns the dropper to the conical flask and places
+                            the beaker back on the table.
+                        </p>
+                        <div class="task-rubric">
+                            <h4>Grading Rubric (Additive)</h4>
+                            <ul class="rubric-list">
+                                <li><span class="rubric-score">+0.1</span><span class="rubric-label">(a)</span>Right hand grasps the dropper from the conical flask.</li>
+                                <li><span class="rubric-score">+0.15</span><span class="rubric-label">(b)</span>Right hand aspirates liquid from the conical flask.</li>
+                                <li><span class="rubric-score">+0.1</span><span class="rubric-label">(c)</span>Left hand picks up the beaker.</li>
+                                <li><span class="rubric-score">+0.15</span><span class="rubric-label">(d)</span>Right hand dispenses liquid from the dropper into the beaker.</li>
+                                <li><span class="rubric-score">+0.15</span><span class="rubric-label">(e)</span>Left hand swirls the beaker to mix the contents.</li>
+                                <li><span class="rubric-score">+0.15</span><span class="rubric-label">(f)</span>The solution in the beaker fully transitions from blue to colorless.</li>
+                                <li><span class="rubric-score">+0.1</span><span class="rubric-label">(g)</span>Right hand returns the dropper to the conical flask.</li>
+                                <li><span class="rubric-score">+0.1</span><span class="rubric-label">(h)</span>Left hand places the beaker back on the table.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Task X -->
+            <article class="task-card">
+                <header class="task-header">
+                    <span class="task-num">X</span>
+                    <h3 class="task-name">Insert Battery</h3>
+                    <span class="task-rubric-type">Additive</span>
+                </header>
+                <div class="task-body">
+                    <div class="task-video">
+                        <div class="task-video-placeholder">Demo video coming soon</div>
+                    </div>
+                    <div class="task-text">
+                        <div class="task-instruction">
+                            &ldquo;A remote control and a battery are sitting on the table; open the
+                            remote&rsquo;s cover and insert the battery.&rdquo;
+                        </div>
+                        <p class="task-description">
+                            The robot must use the right thumb to slide open the back cover of the TV
+                            remote, pick up the cover and set it aside on the table, grasp the loose
+                            battery with the right hand, place the battery into the compartment in the
+                            correct orientation, and press it fully into the slot.
+                        </p>
+                        <div class="task-rubric">
+                            <h4>Grading Rubric (Additive)</h4>
+                            <ul class="rubric-list">
+                                <li><span class="rubric-score">+0.2</span><span class="rubric-label">(a)</span>Right thumb slides open the back cover of the TV remote.</li>
+                                <li><span class="rubric-score">+0.1</span><span class="rubric-label">(b)</span>Right hand picks up the cover and places it on the table.</li>
+                                <li><span class="rubric-score">+0.2</span><span class="rubric-label">(c)</span>Right hand grasps the loose battery.</li>
+                                <li><span class="rubric-score">+0.3</span><span class="rubric-label">(d)</span>Right hand inserts the battery into the compartment, correctly oriented.</li>
+                                <li><span class="rubric-score">+0.2</span><span class="rubric-label">(e)</span>Right hand presses the battery fully into the slot.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Task XI -->
+            <article class="task-card">
+                <header class="task-header">
+                    <span class="task-num">XI</span>
+                    <h3 class="task-name">Play Card</h3>
+                    <span class="task-rubric-type">Additive</span>
+                </header>
+                <div class="task-body">
+                    <div class="task-video">
+                        <div class="task-video-placeholder">Demo video coming soon</div>
+                    </div>
+                    <div class="task-text">
+                        <div class="task-instruction">
+                            &ldquo;Pick up a stack of playing cards with your right hand, then
+                            transfer it to your left; hold the stack aloft with your left hand, use
+                            your right thumb to slide out the top card, grasp it, and place it into
+                            the card holder.&rdquo;
+                        </div>
+                        <p class="task-description">
+                            The robot must grasp the full card stack from above with the right hand,
+                            transfer it to the left hand, use the right thumb to flick the top card
+                            partially out, adjust with the right thumb and index finger until exactly
+                            one card protrudes, grasp that single card, and insert it vertically into
+                            the dedicated card slot.
+                        </p>
+                        <div class="task-rubric">
+                            <h4>Grading Rubric (Additive)</h4>
+                            <ul class="rubric-list">
+                                <li><span class="rubric-score">+0.1</span><span class="rubric-label">(a)</span>Right hand grasps the card stack from above.</li>
+                                <li><span class="rubric-score">+0.2</span><span class="rubric-label">(b)</span>Right hand transfers the stack to the left hand (handover).</li>
+                                <li><span class="rubric-score">+0.3</span><span class="rubric-label">(c)</span>Right thumb flicks and adjusts until exactly one card protrudes from the top.</li>
+                                <li><span class="rubric-score">+0.3</span><span class="rubric-label">(d)</span>Right hand successfully grasps the single protruding card.</li>
+                                <li><span class="rubric-score">+0.1</span><span class="rubric-label">(e)</span>Right hand inserts the card vertically into the card slot.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Task XII -->
+            <article class="task-card">
+                <header class="task-header">
+                    <span class="task-num">XII</span>
+                    <h3 class="task-name">Remove Card</h3>
+                    <span class="task-rubric-type">Additive</span>
+                </header>
+                <div class="task-body">
+                    <div class="task-video">
+                        <div class="task-video-placeholder">Demo video coming soon</div>
+                    </div>
+                    <div class="task-text">
+                        <div class="task-instruction">
+                            &ldquo;Next to the cube on the table lies a card case containing two
+                            cards. Pick up the case with the left hand, then use the right thumb to
+                            slide the cards out through the central opening; subsequently, use the
+                            right thumb and index finger to slide out the first card, taking care not
+                            to pull out the second one.&rdquo;
+                        </div>
+                        <p class="task-description">
+                            The robot must pick up the card sleeve (containing two cards) with the
+                            left hand, use the right thumb to rub the cards partially out, then use
+                            the right thumb and index finger to push the bottom card back in so that
+                            only the top card remains exposed, and extract that single card.
+                        </p>
+                        <div class="task-rubric">
+                            <h4>Grading Rubric (Additive)</h4>
+                            <ul class="rubric-list">
+                                <li><span class="rubric-score">+0.2</span><span class="rubric-label">(a)</span>Left hand picks up and holds the card sleeve.</li>
+                                <li><span class="rubric-score">+0.3</span><span class="rubric-label">(b)</span>Right thumb rubs the cards partially out of the sleeve.</li>
+                                <li><span class="rubric-score">+0.3</span><span class="rubric-label">(c)</span>Right thumb and index finger push the bottom card in.</li>
+                                <li><span class="rubric-score">+0.2</span><span class="rubric-label">(d)</span>Right hand extracts the single top card from the sleeve.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Task XIII -->
+            <article class="task-card">
+                <header class="task-header">
+                    <span class="task-num">XIII</span>
+                    <h3 class="task-name">Screw White Lightbulb</h3>
+                    <span class="task-rubric-type">Additive</span>
+                </header>
+                <div class="task-body">
+                    <div class="task-video">
+                        <div class="task-video-placeholder">Demo video coming soon</div>
+                    </div>
+                    <div class="task-text">
+                        <div class="task-instruction">
+                            &ldquo;There is a lightbulb and a base on the desktop. Use your left hand
+                            to pick up the lightbulb and transfer it to your right hand; then, use
+                            your left hand to hold down the base while using your right hand to screw
+                            the lightbulb into the base until it lights up.&rdquo;
+                        </div>
+                        <p class="task-description">
+                            The robot must pick up the lightbulb with the left hand, transfer it to
+                            the right hand (handover), stabilize the lamp socket with the left hand,
+                            and use the right hand to rotate the bulb through multiple turns into
+                            the socket until it is fully seated and illuminates.
+                        </p>
+                        <div class="task-rubric">
+                            <h4>Grading Rubric (Additive)</h4>
+                            <ul class="rubric-list">
+                                <li><span class="rubric-score">+0.1</span><span class="rubric-label">(a)</span>Left hand picks up the lightbulb.</li>
+                                <li><span class="rubric-score">+0.2</span><span class="rubric-label">(b)</span>Left hand transfers the bulb to the right hand (handover).</li>
+                                <li><span class="rubric-score">+0.1</span><span class="rubric-label">(c)</span>Left hand stabilizes the lamp socket.</li>
+                                <li><span class="rubric-score">+0.4</span><span class="rubric-label">(d)</span>Right hand aligns the bulb and rotates continuously to engage the threads.</li>
+                                <li><span class="rubric-score">+0.2</span><span class="rubric-label">(e)</span>Bulb is fully seated and the lamp illuminates.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+        </div>
+    </section>
+
+    <footer class="footer">
+        <p>
+            T-Rex Benchmark &middot; Berkeley AI Research &amp; NVIDIA GEAR Lab &middot;
+            <a href="../">Back to project page</a>
+        </p>
+    </footer>
+</body>
+</html>
