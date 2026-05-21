@@ -25,6 +25,11 @@
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 6rem;  /* clear the fixed top nav when jumping */
+        }
+
         body {
             font-family: 'Inter', 'Arial', sans-serif;
             background: var(--bg);
@@ -157,6 +162,102 @@
             max-width: 920px;
         }
 
+        /* Gold center-fading hairline between Force / Deform / Both sections */
+        .section-divider {
+            max-width: 1200px;
+            margin: 1.5rem auto;
+            padding: 0 40px;
+        }
+        .section-divider hr {
+            border: 0;
+            height: 1px;
+            background: linear-gradient(
+                to right,
+                transparent 0%,
+                rgba(253, 181, 21, 0.45) 50%,
+                transparent 100%
+            );
+            margin: 0;
+        }
+
+        /* ===== Sticky table of contents (left rail) =====
+           Fixed-position rail anchored to the viewport left margin. It only
+           shows on wide screens — below 1400px there isn't enough room next
+           to the centered 1200px content area, so we hide it. */
+        .task-toc {
+            position: fixed;
+            top: 7rem;
+            left: 1.25rem;
+            width: 180px;
+            max-height: calc(100vh - 9rem);
+            overflow-y: auto;
+            padding: 0.9rem 0.95rem;
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+            z-index: 4;
+            font-size: 0.82rem;
+        }
+        .task-toc-title {
+            font-size: 0.68rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.7px;
+            color: var(--text-faint);
+            text-align: center;
+            margin-bottom: 0.65rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-soft);
+        }
+        .task-toc-group { margin-bottom: 0.7rem; }
+        .task-toc-group:last-child { margin-bottom: 0; }
+        .task-toc-group-title {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--blue);
+            border-left: 3px solid var(--gold);
+            padding-left: 0.45rem;
+            margin: 0 0 0.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+        .task-toc ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .task-toc li { margin: 0; }
+        .task-toc a {
+            display: grid;
+            grid-template-columns: 28px 1fr;
+            gap: 0.45rem;
+            padding: 0.2rem 0.4rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background 0.15s ease, color 0.15s ease;
+            line-height: 1.3;
+        }
+        .task-toc a:hover {
+            color: var(--blue);
+            background: var(--blue-soft);
+        }
+        .task-toc a.active {
+            color: var(--blue);
+            background: var(--gold-soft);
+            font-weight: 600;
+        }
+        .task-toc .toc-num {
+            color: var(--gold-deep);
+            font-weight: 600;
+            text-align: right;
+        }
+
+        @media (max-width: 1400px) {
+            .task-toc { display: none; }
+        }
+
         /* ===== Task cards ===== */
         .task-list {
             display: flex;
@@ -187,17 +288,17 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            min-width: 42px;
-            height: 42px;
-            padding: 0 0.5rem;
-            border-radius: 999px;
-            background: var(--gold);
-            color: #ffffff;
+            min-width: 40px;
+            height: 34px;
+            padding: 0 0.6rem;
+            border-radius: 6px;
+            background: transparent;
+            border: 1.5px solid var(--gold);
+            color: var(--blue);
             font-family: 'Inter', sans-serif;
             font-weight: 700;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             letter-spacing: 0.5px;
-            box-shadow: 0 2px 6px rgba(253, 181, 21, 0.35);
         }
         .task-name {
             color: var(--blue);
@@ -418,6 +519,39 @@
         </div>
     </section>
 
+    <!-- ===== Sticky TOC (desktop only) ===== -->
+    <aside class="task-toc" aria-label="Task navigation">
+        <div class="task-toc-title">Tasks</div>
+        <div class="task-toc-group">
+            <div class="task-toc-group-title">Force</div>
+            <ul>
+                <li><a href="#task-1"><span class="toc-num">I</span><span>Apply Toothpaste</span></a></li>
+                <li><a href="#task-2"><span class="toc-num">II</span><span>Erase Whiteboard</span></a></li>
+                <li><a href="#task-3"><span class="toc-num">III</span><span>Flip Page</span></a></li>
+                <li><a href="#task-4"><span class="toc-num">IV</span><span>Pick Eggs</span></a></li>
+            </ul>
+        </div>
+        <div class="task-toc-group">
+            <div class="task-toc-group-title">Deform</div>
+            <ul>
+                <li><a href="#task-5"><span class="toc-num">V</span><span>Open Lock</span></a></li>
+                <li><a href="#task-6"><span class="toc-num">VI</span><span>Pick &amp; Place Ball</span></a></li>
+                <li><a href="#task-7"><span class="toc-num">VII</span><span>Remove Cup</span></a></li>
+                <li><a href="#task-8"><span class="toc-num">VIII</span><span>Sort Mahjong</span></a></li>
+            </ul>
+        </div>
+        <div class="task-toc-group">
+            <div class="task-toc-group-title">Both</div>
+            <ul>
+                <li><a href="#task-9"><span class="toc-num">IX</span><span>Acid-Base Neutralization</span></a></li>
+                <li><a href="#task-10"><span class="toc-num">X</span><span>Insert Battery</span></a></li>
+                <li><a href="#task-11"><span class="toc-num">XI</span><span>Play Card</span></a></li>
+                <li><a href="#task-12"><span class="toc-num">XII</span><span>Remove Card</span></a></li>
+                <li><a href="#task-13"><span class="toc-num">XIII</span><span>Screw Lightbulb</span></a></li>
+            </ul>
+        </div>
+    </aside>
+
     <!-- ===== Force Tasks ===== -->
     <section class="section" id="force-tasks">
         <h2 class="section-title">Force Tasks</h2>
@@ -432,7 +566,7 @@
         <div class="task-list">
 
             <!-- Task I -->
-            <article class="task-card">
+            <article class="task-card" id="task-1">
                 <header class="task-header">
                     <span class="task-num">I</span>
                     <h3 class="task-name">Apply Toothpaste</h3>
@@ -470,7 +604,7 @@
             </article>
 
             <!-- Task II -->
-            <article class="task-card">
+            <article class="task-card" id="task-2">
                 <header class="task-header">
                     <span class="task-num">II</span>
                     <h3 class="task-name">Erase Whiteboard</h3>
@@ -507,7 +641,7 @@
             </article>
 
             <!-- Task III -->
-            <article class="task-card">
+            <article class="task-card" id="task-3">
                 <header class="task-header">
                     <span class="task-num">III</span>
                     <h3 class="task-name">Flip Page</h3>
@@ -539,7 +673,7 @@
             </article>
 
             <!-- Task IV -->
-            <article class="task-card">
+            <article class="task-card" id="task-4">
                 <header class="task-header">
                     <span class="task-num">IV</span>
                     <h3 class="task-name">Pick Eggs</h3>
@@ -574,6 +708,8 @@
         </div>
     </section>
 
+    <div class="section-divider"><hr></div>
+
     <!-- ===== Deform Tasks ===== -->
     <section class="section" id="deform-tasks">
         <h2 class="section-title">Deform Tasks</h2>
@@ -588,7 +724,7 @@
         <div class="task-list">
 
             <!-- Task V -->
-            <article class="task-card">
+            <article class="task-card" id="task-5">
                 <header class="task-header">
                     <span class="task-num">V</span>
                     <h3 class="task-name">Open Lock</h3>
@@ -623,7 +759,7 @@
             </article>
 
             <!-- Task VI -->
-            <article class="task-card">
+            <article class="task-card" id="task-6">
                 <header class="task-header">
                     <span class="task-num">VI</span>
                     <h3 class="task-name">Pick and Place Ball</h3>
@@ -659,7 +795,7 @@
             </article>
 
             <!-- Task VII -->
-            <article class="task-card">
+            <article class="task-card" id="task-7">
                 <header class="task-header">
                     <span class="task-num">VII</span>
                     <h3 class="task-name">Remove Cup</h3>
@@ -693,7 +829,7 @@
             </article>
 
             <!-- Task VIII -->
-            <article class="task-card">
+            <article class="task-card" id="task-8">
                 <header class="task-header">
                     <span class="task-num">VIII</span>
                     <h3 class="task-name">Sort Mahjong</h3>
@@ -734,6 +870,8 @@
         </div>
     </section>
 
+    <div class="section-divider"><hr></div>
+
     <!-- ===== Both Tasks ===== -->
     <section class="section" id="both-tasks">
         <h2 class="section-title">Both Tasks</h2>
@@ -748,7 +886,7 @@
         <div class="task-list">
 
             <!-- Task IX -->
-            <article class="task-card">
+            <article class="task-card" id="task-9">
                 <header class="task-header">
                     <span class="task-num">IX</span>
                     <h3 class="task-name">Acid-Base Neutralization</h3>
@@ -793,7 +931,7 @@
             </article>
 
             <!-- Task X -->
-            <article class="task-card">
+            <article class="task-card" id="task-10">
                 <header class="task-header">
                     <span class="task-num">X</span>
                     <h3 class="task-name">Insert Battery</h3>
@@ -828,7 +966,7 @@
             </article>
 
             <!-- Task XI -->
-            <article class="task-card">
+            <article class="task-card" id="task-11">
                 <header class="task-header">
                     <span class="task-num">XI</span>
                     <h3 class="task-name">Play Card</h3>
@@ -866,7 +1004,7 @@
             </article>
 
             <!-- Task XII -->
-            <article class="task-card">
+            <article class="task-card" id="task-12">
                 <header class="task-header">
                     <span class="task-num">XII</span>
                     <h3 class="task-name">Remove Card</h3>
@@ -903,7 +1041,7 @@
             </article>
 
             <!-- Task XIII -->
-            <article class="task-card">
+            <article class="task-card" id="task-13">
                 <header class="task-header">
                     <span class="task-num">XIII</span>
                     <h3 class="task-name">Screw White Lightbulb</h3>
@@ -948,5 +1086,45 @@
             <a href="../">Back to project page</a>
         </p>
     </footer>
+
+    <script>
+    // Highlight the active TOC entry as the user scrolls past each task card.
+    // We use IntersectionObserver with a rootMargin biased toward the upper
+    // third of the viewport — that's the "reading zone", so whichever card is
+    // currently centered there wins the active state.
+    (function () {
+        const tocLinks = document.querySelectorAll('.task-toc a');
+        if (tocLinks.length === 0) return;
+
+        const linkById = new Map();
+        tocLinks.forEach(link => {
+            const id = link.getAttribute('href').slice(1);
+            linkById.set(id, link);
+        });
+
+        const cards = document.querySelectorAll('.task-card[id]');
+        let visible = new Set();
+
+        const observer = new IntersectionObserver((entries) => {
+            for (const entry of entries) {
+                if (entry.isIntersecting) visible.add(entry.target.id);
+                else visible.delete(entry.target.id);
+            }
+            // Pick the topmost visible task (smallest numeric suffix).
+            const ids = [...visible].sort((a, b) => {
+                const na = parseInt(a.replace('task-', ''), 10);
+                const nb = parseInt(b.replace('task-', ''), 10);
+                return na - nb;
+            });
+            tocLinks.forEach(l => l.classList.remove('active'));
+            if (ids.length > 0) {
+                const link = linkById.get(ids[0]);
+                if (link) link.classList.add('active');
+            }
+        }, { rootMargin: '-20% 0px -55% 0px' });
+
+        cards.forEach(card => observer.observe(card));
+    })();
+    </script>
 </body>
 </html>
