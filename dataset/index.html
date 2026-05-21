@@ -74,7 +74,9 @@
             display: flex; gap: 1rem; z-index: 10;
         }
         .nav-btn {
-            padding: 0.6rem 1.5rem;
+            /* Extra padding-bottom pushes the gold ::after underline a bit
+               further below the nav text so it doesn't crowd the baseline. */
+            padding: 0.6rem 1.5rem 1rem;
             background: transparent; border: none;
             color: var(--text); font-size: 1.1rem;
             font-weight: 500; letter-spacing: 0.5px;
