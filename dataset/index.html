@@ -192,45 +192,48 @@
         }
         .section-content strong { color: var(--text); }
 
-        /* ===== Robot platform ===== */
+        /* ===== Robot platform =====
+           Hardware figure is very wide (~16:6), so stack figure on top
+           and description below — same shape as the supp.tex teaser. */
         .platform-layout {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2.5rem;
-            align-items: center;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
             margin-top: 2rem;
         }
         .platform-figure {
             background: var(--bg-soft);
             border: 1px solid var(--border);
             border-radius: 10px;
-            padding: 1.5rem;
+            padding: 1.25rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            min-height: 320px;
         }
         .platform-figure img {
             width: 100%;
             height: auto;
             display: block;
+            border-radius: 4px;
         }
-        .platform-figure-empty {
-            border-style: dashed;
-            color: var(--text-faint);
+        .platform-caption {
             font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--text-muted);
             text-align: center;
-            padding: 2rem;
+            max-width: 1000px;
+            margin: -0.25rem auto 0;
+            padding: 0 1rem;
         }
+        .platform-caption strong { color: var(--text); }
         .platform-text {
             font-size: 1.05rem;
             line-height: 1.8;
             color: var(--text-muted);
+            max-width: 900px;
         }
+        .platform-text p + p { margin-top: 1rem; }
         .platform-text strong { color: var(--text); }
-        @media (max-width: 900px) {
-            .platform-layout { grid-template-columns: 1fr; }
-        }
 
         /* ===== Modality grid ===== */
         .modality-grid {
@@ -662,11 +665,42 @@
     <section class="section" id="robot-platform">
         <h2 class="section-title">Robot Platform</h2>
         <div class="platform-layout">
-            <div class="platform-figure platform-figure-empty">
-                <span>Robot platform figure — TBA</span>
+            <div class="platform-figure">
+                <img src="./hardware-setup.jpg" alt="T-Rex robot platform: Dexmate Vega-1 bimanual robot with Sharpa Wave dexterous hands, ZED head and wrist cameras, and a Manus glove / VIVE tracker teleoperation rig.">
             </div>
+            <p class="platform-caption">
+                <strong>Hardware setup.</strong> The T-Rex dataset is collected on a
+                bimanual <strong>Dexmate Vega-1</strong> robot with two
+                <strong>Sharpa Wave</strong> dexterous hands. The on-board sensing
+                rig combines a <strong>ZED X Mini</strong> head camera and two
+                wide-view <strong>ZED X One S</strong> wrist cameras with per-fingertip
+                tactile sensors on all ten fingertips. Teleoperation uses
+                <strong>Manus gloves</strong> for finger retargeting and
+                <strong>VIVE trackers</strong> for wrist <em>SE(3)</em> pose, with a
+                Windows laptop running the teleoperation interface.
+            </p>
             <div class="platform-text">
-                <p>Robot platform description — TBA.</p>
+                <p>
+                    The Vega-1 platform has a fixed base, torso, and head, with two
+                    7-DoF arms actuated during data collection. Each Sharpa Wave hand
+                    contributes an additional 22 DoF for in-hand dexterous control and
+                    carries five fingertip tactile sensors that report estimated
+                    deformation depth and a 6-axis net wrench.
+                </p>
+                <p>
+                    All RGB streams are captured at <strong>640&times;360</strong>,
+                    time-synchronized with robot states and tactile signals at
+                    <strong>30&nbsp;Hz</strong>. Camera placements are tuned so the head
+                    camera covers the full reachable workspace while the wrist cameras
+                    retain unoccluded views of the fingers during contact-rich behaviour.
+                </p>
+                <p>
+                    During teleoperation, VIVE trackers stream <em>SE(3)</em> wrist
+                    targets and Manus gloves stream fingertip targets to the same
+                    inverse-kinematics pipeline used at deployment. A high-level thread
+                    runs at 30&nbsp;Hz, while a low-level controller tracks the resulting
+                    joint targets at <strong>300&nbsp;Hz</strong>.
+                </p>
             </div>
         </div>
     </section>
