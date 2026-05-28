@@ -822,24 +822,14 @@
             <!-- Dataset Quickstart (Colab) -->
             <div class="gs-card">
                 <h3 class="gs-card-title">
-                    Dataset Quickstart <span class="muted">(Colab)</span>
+                    Dataset Quickstart <span class="muted">(Colab &middot; to be done)</span>
                 </h3>
-                <div class="gs-preview gs-preview-code">
-<pre class="code-block"><span class="kw">import</span> datasets
-
-ds = datasets.<span class="fn">load_dataset</span>(<span class="str">"tactile-rex/trex-dataset"</span>,
-    split=<span class="str">"train"</span>, streaming=<span class="bool">True</span>)
-
-<span class="kw">for</span> episode <span class="kw">in</span> ds.take(<span class="num">5</span>):
-    head_image  = episode[<span class="str">"observation"</span>][<span class="str">"head_image"</span>]
-    wrist_left  = episode[<span class="str">"observation"</span>][<span class="str">"wrist_image_left"</span>]
-    tactile     = episode[<span class="str">"observation"</span>][<span class="str">"tactile_left"</span>]
-    action      = episode[<span class="str">"action"</span>]
-    instruction = episode[<span class="str">"language_instruction"</span>]</pre>
+                <div class="gs-preview gs-preview-code" style="display: flex; align-items: center; justify-content: center; min-height: 180px; color: var(--text-faint); font-style: italic;">
+                    to be done
                 </div>
                 <p class="gs-card-desc">
                     A single-cell Colab notebook to stream the dataset, inspect each
-                    modality, and visualize episodes &mdash; no local download required.
+                    modality, and visualize episodes &mdash; coming soon.
                 </p>
                 <a class="gs-action disabled" href="#" aria-disabled="true">
                     Open in Colab &nbsp;&rarr;
