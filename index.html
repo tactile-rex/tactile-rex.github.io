@@ -766,6 +766,26 @@
             overflow-x: auto;
         }
 
+        .template-credits {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        .template-credits a {
+            color: #FDB515;
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.3s ease;
+        }
+
+        .template-credits a:hover {
+            border-bottom-color: #FDB515;
+        }
+
         .technical-details {
             margin-top: 2rem;
         }
@@ -1108,29 +1128,14 @@
   primaryClass={cs.RO}
 }</pre>
 
-            <!-- Technical Details Collapsible -->
-            <details class="technical-details">
-                <summary>Interested in the simulation rendering / website template?</summary>
-                <div class="technical-details-content">
-                    <ul>
-                        <li>
-                            <strong>Website Source Code:</strong> The website source code can be found at <a href="https://github.com/doorman-humanoid/doorman-humanoid.github.io" target="_blank" rel="noopener noreferrer">here</a>, which includes comprehensive documentation on how to adapt the template for other projects.
-                        </li>
-                        <li>
-                            <strong>Simulation Rendering with IsaacSim:</strong> All simulation rendering is done using IsaacSim. The workflow involves:
-                            <ol style="margin-top: 0.5rem; padding-left: 1.5rem;">
-                                <li>Recording rollouts as USD animation files following <a href="https://isaac-sim.github.io/IsaacLab/main/source/how-to/record_animation.html" target="_blank" rel="noopener noreferrer">IsaacLab's animation recording guide</a></li>
-                                <li>Opening the USD files interactively in IsaacSim</li>
-                                <li>Generating camera flyby trajectories using the <a href="https://docs.omniverse.nvidia.com/extensions/latest/ext_animation-motionpath.html" target="_blank" rel="noopener noreferrer">Animation Curve extension</a></li>
-                                <li>Recording final videos using the <a href="https://docs.omniverse.nvidia.com/extensions/latest/ext_core/ext_movie-capture.html" target="_blank" rel="noopener noreferrer">Movie Capture extension</a></li>
-                            </ol>
-                        </li>
-                        <li>
-                            <strong>Contact:</strong> For further guidance on the website implementation or simulation rendering pipeline, please contact Haoru Xue at <a href="mailto:haoru-xue@berkeley.edu">haoru-xue@berkeley.edu</a>.
-                        </li>
-                    </ul>
-                </div>
-            </details>
+            <!-- Template Credits Footer -->
+            <p class="template-credits">
+                The design of this project page was adapted from the
+                <a href="https://github.com/doorman-humanoid/doorman-humanoid.github.io" target="_blank" rel="noopener noreferrer">Doorman&nbsp;Humanoid</a>
+                project page template &mdash; many thanks to the original authors. If you would like to
+                reuse this T-Rex page as a starting point for your own project, please kindly link back to
+                <a href="https://tactile-rex.github.io" target="_blank" rel="noopener noreferrer">tactile-rex.github.io</a>.
+            </p>
         </div>
     </div>
 
