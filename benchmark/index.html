@@ -510,10 +510,10 @@
             <div>
                 <h1 class="hero-title">
                     <span class="accent">T-Rex Benchmark</span>
-                    13 Tactile-Reactive<br>Dexterous Manipulation Tasks
+                    12 Tactile-Reactive<br>Dexterous Manipulation Tasks
                 </h1>
                 <p class="hero-subtitle">
-                    A real-world benchmark of 13 contact-rich dexterous manipulation
+                    A real-world benchmark of 12 contact-rich dexterous manipulation
                     tasks organized into three categories — <strong>Force</strong>,
                     <strong>Deform</strong>, and <strong>Both</strong>. Each task is
                     evaluated with one of two rubrics: an <em>additive</em> rubric
@@ -531,29 +531,28 @@
         <div class="task-toc-group">
             <div class="task-toc-group-title">Force</div>
             <ul>
-                <li><a href="#task-1"><span class="toc-num">I</span><span>Apply Toothpaste</span></a></li>
-                <li><a href="#task-2"><span class="toc-num">II</span><span>Erase Whiteboard</span></a></li>
-                <li><a href="#task-3"><span class="toc-num">III</span><span>Flip Page</span></a></li>
-                <li><a href="#task-4"><span class="toc-num">IV</span><span>Pick Eggs</span></a></li>
+                <li><a href="#task-1"><span class="toc-num">I</span><span>Flip Page</span></a></li>
+                <li><a href="#task-2"><span class="toc-num">II</span><span>Transfer Egg</span></a></li>
+                <li><a href="#task-3"><span class="toc-num">III</span><span>Wipe Plate</span></a></li>
+                <li><a href="#task-4"><span class="toc-num">IV</span><span>Apply Toothpaste</span></a></li>
             </ul>
         </div>
         <div class="task-toc-group">
             <div class="task-toc-group-title">Deform</div>
             <ul>
-                <li><a href="#task-5"><span class="toc-num">V</span><span>Open Lock</span></a></li>
-                <li><a href="#task-6"><span class="toc-num">VI</span><span>Pick &amp; Place Ball</span></a></li>
-                <li><a href="#task-7"><span class="toc-num">VII</span><span>Remove Cup</span></a></li>
-                <li><a href="#task-8"><span class="toc-num">VIII</span><span>Sort Mahjong</span></a></li>
+                <li><a href="#task-5"><span class="toc-num">V</span><span>Split Cup</span></a></li>
+                <li><a href="#task-6"><span class="toc-num">VI</span><span>Sort Mahjong</span></a></li>
+                <li><a href="#task-7"><span class="toc-num">VII</span><span>Open Lock</span></a></li>
+                <li><a href="#task-8"><span class="toc-num">VIII</span><span>Refill Tablet</span></a></li>
             </ul>
         </div>
         <div class="task-toc-group">
             <div class="task-toc-group-title">Both</div>
             <ul>
                 <li><a href="#task-9"><span class="toc-num">IX</span><span>Acid-Base Neutralization</span></a></li>
-                <li><a href="#task-10"><span class="toc-num">X</span><span>Insert Battery</span></a></li>
-                <li><a href="#task-11"><span class="toc-num">XI</span><span>Play Card</span></a></li>
-                <li><a href="#task-12"><span class="toc-num">XII</span><span>Remove Card</span></a></li>
-                <li><a href="#task-13"><span class="toc-num">XIII</span><span>Screw Lightbulb</span></a></li>
+                <li><a href="#task-10"><span class="toc-num">X</span><span>Extract Card</span></a></li>
+                <li><a href="#task-11"><span class="toc-num">XI</span><span>Deal Poker</span></a></li>
+                <li><a href="#task-12"><span class="toc-num">XII</span><span>Screw Lightbulb</span></a></li>
             </ul>
         </div>
     </aside>
@@ -571,90 +570,16 @@
 
         <div class="task-list">
 
-            <!-- Task I -->
+            <!-- Task I: Flip Page -->
             <article class="task-card" id="task-1">
                 <header class="task-header">
                     <span class="task-num">I</span>
-                    <h3 class="task-name">Apply Toothpaste</h3>
-                </header>
-                <div class="task-body">
-                    <div class="task-video">
-                        <div class="task-video-placeholder">Demo video coming soon</div>
-                        <!-- TODO: replace with <video src="..." muted autoplay loop playsinline></video> -->
-                    </div>
-                    <div class="task-text">
-                        <div class="task-instruction">
-                            &ldquo;On the left side of the countertop sits a cup holding a toothbrush,
-                            while an open tube of toothpaste rests on the right. Pick up the toothbrush
-                            with your left hand and the toothpaste with your right, squeeze some
-                            toothpaste onto the brush, and then set the tube back down.&rdquo;
-                        </div>
-                        <p class="task-description">
-                            The robot must grasp a toothbrush in one hand and a toothpaste tube in the
-                            other, align the tube nozzle above the bristles and squeeze out a bead of
-                            toothpaste, and return the toothbrush upright into its holder and the
-                            toothpaste back onto the table.
-                        </p>
-                        <div class="task-rubric">
-                            <h4>Grading Rubric (Additive)</h4>
-                            <ul class="rubric-list">
-                                <li><span class="rubric-score">+0.2</span><span class="rubric-label">(a)</span>Grasps the toothbrush.</li>
-                                <li><span class="rubric-score">+0.1</span><span class="rubric-label">(b)</span>Grasps the toothpaste tube.</li>
-                                <li><span class="rubric-score">+0.4</span><span class="rubric-label">(c)</span>Dispenses a bead of toothpaste onto the bristles.</li>
-                                <li><span class="rubric-score">+0.2</span><span class="rubric-label">(d)</span>Returns the toothbrush upright into its holder.</li>
-                                <li><span class="rubric-score">+0.1</span><span class="rubric-label">(e)</span>Places the toothpaste tube back on the table.</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </article>
-
-            <!-- Task II -->
-            <article class="task-card" id="task-2">
-                <header class="task-header">
-                    <span class="task-num">II</span>
-                    <h3 class="task-name">Erase Whiteboard</h3>
-                </header>
-                <div class="task-body">
-                    <div class="task-video">
-                        <div class="task-video-placeholder">Demo video coming soon</div>
-                    </div>
-                    <div class="task-text">
-                        <div class="task-instruction">
-                            &ldquo;A whiteboard featuring a colored design is placed on the desk.
-                            Using the left hand, grasp the whiteboard at the bottom of its left side
-                            to steady it; then, using the right hand, pick up the eraser located on
-                            the right side and erase the colored design.&rdquo;
-                        </div>
-                        <p class="task-description">
-                            The robot must hold the whiteboard at an angle with the left hand and
-                            grasp an eraser with the right hand, wipe a hand-drawn sketch off a small
-                            whiteboard with repeated strokes until no ink remains, then place the
-                            eraser on the table and release the whiteboard.
-                        </p>
-                        <div class="task-rubric">
-                            <h4>Grading Rubric (Additive)</h4>
-                            <ul class="rubric-list">
-                                <li><span class="rubric-score">+0.1</span><span class="rubric-label">(a)</span>Grasps the whiteboard and holds it at an angle.</li>
-                                <li><span class="rubric-score">+0.2</span><span class="rubric-label">(b)</span>Grasps the eraser.</li>
-                                <li><span class="rubric-score">+0.2</span><span class="rubric-label">(c)</span>Brings the eraser into contact with the whiteboard surface.</li>
-                                <li><span class="rubric-score">+0.4</span><span class="rubric-label">(d)</span>Wipes the board until the drawing is fully erased (no visible ink remaining).</li>
-                                <li><span class="rubric-score">+0.1</span><span class="rubric-label">(e)</span>Places the eraser on the table and releases the whiteboard.</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </article>
-
-            <!-- Task III -->
-            <article class="task-card" id="task-3">
-                <header class="task-header">
-                    <span class="task-num">III</span>
                     <h3 class="task-name">Flip Page</h3>
                 </header>
                 <div class="task-body">
                     <div class="task-video">
                         <div class="task-video-placeholder">Demo video coming soon</div>
+                        <!-- TODO: replace with <video src="..." muted autoplay loop playsinline></video> -->
                     </div>
                     <div class="task-text">
                         <div class="task-instruction">
@@ -666,23 +591,22 @@
                             sweep it across the spine, and smooth it down flat on the left side.
                         </p>
                         <div class="task-rubric">
-                            <h4>Grading Rubric (Progress-Based)</h4>
-                            <ul class="rubric-list progress">
-                                <li><span class="rubric-score">+0.0</span>No success of any page flipping.</li>
-                                <li><span class="rubric-score">+0.25</span>Successfully lifts one page from the right but fails to flip it across the spine.</li>
-                                <li><span class="rubric-score">+0.5</span>Successfully flips the page to the left side, but flips multiple pages.</li>
-                                <li><span class="rubric-score">+1.0</span>Successfully flips exactly one page from right to left and smooths it flat.</li>
+                            <h4>Grading Rubric (Additive)</h4>
+                            <ul class="rubric-list">
+                                <li><span class="rubric-score">+0.3</span><span class="rubric-label">(a)</span>Successfully touched the book page with a single finger.</li>
+                                <li><span class="rubric-score">+0.3</span><span class="rubric-label">(b)</span>Using the index finger turn the page up.</li>
+                                <li><span class="rubric-score">+0.4</span><span class="rubric-label">(c)</span>Successfully flips exactly one page from right to left and smooths it flat.</li>
                             </ul>
                         </div>
                     </div>
                 </div>
             </article>
 
-            <!-- Task IV -->
-            <article class="task-card" id="task-4">
+            <!-- Task II: Transfer Egg -->
+            <article class="task-card" id="task-2">
                 <header class="task-header">
-                    <span class="task-num">IV</span>
-                    <h3 class="task-name">Pick Eggs</h3>
+                    <span class="task-num">II</span>
+                    <h3 class="task-name">Transfer Egg</h3>
                 </header>
                 <div class="task-body">
                     <div class="task-video">
@@ -711,6 +635,81 @@
                 </div>
             </article>
 
+            <!-- Task III: Wipe Plate -->
+            <article class="task-card" id="task-3">
+                <header class="task-header">
+                    <span class="task-num">III</span>
+                    <h3 class="task-name">Wipe Plate</h3>
+                </header>
+                <div class="task-body">
+                    <div class="task-video">
+                        <div class="task-video-placeholder">Demo video coming soon</div>
+                    </div>
+                    <div class="task-text">
+                        <div class="task-instruction">
+                            &ldquo;There is a white plate and a white cloth on the table; the white
+                            plate has colored stains on it. Use your right hand to pick up the cloth,
+                            hold the plate steady with your left hand, and then use the cloth to wipe
+                            away the stains.&rdquo;
+                        </div>
+                        <p class="task-description">
+                            The robot must grasp the cloth with the right hand, press down on the
+                            plate with the left hand to hold it steady, bring the cloth into contact
+                            with the plate surface, wipe the plate until the colored stains are
+                            fully removed, and place the cloth back on the table while releasing the
+                            plate.
+                        </p>
+                        <div class="task-rubric">
+                            <h4>Grading Rubric (Additive)</h4>
+                            <ul class="rubric-list">
+                                <li><span class="rubric-score">+0.2</span><span class="rubric-label">(a)</span>Right hand grasps the rag.</li>
+                                <li><span class="rubric-score">+0.1</span><span class="rubric-label">(b)</span>Left hand presses down on the plate to hold it steady.</li>
+                                <li><span class="rubric-score">+0.2</span><span class="rubric-label">(c)</span>Brings the rag into contact with the plate surface.</li>
+                                <li><span class="rubric-score">+0.4</span><span class="rubric-label">(d)</span>Wipes the plate until the design is fully removed (no visible ink remaining).</li>
+                                <li><span class="rubric-score">+0.1</span><span class="rubric-label">(e)</span>Places the rag back on the table and releases the plate.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Task IV: Apply Toothpaste -->
+            <article class="task-card" id="task-4">
+                <header class="task-header">
+                    <span class="task-num">IV</span>
+                    <h3 class="task-name">Apply Toothpaste</h3>
+                </header>
+                <div class="task-body">
+                    <div class="task-video">
+                        <div class="task-video-placeholder">Demo video coming soon</div>
+                    </div>
+                    <div class="task-text">
+                        <div class="task-instruction">
+                            &ldquo;On the left side of the countertop sits a cup holding a toothbrush,
+                            while an open tube of toothpaste rests on the right. Pick up the toothbrush
+                            with your left hand and the toothpaste with your right, squeeze some
+                            toothpaste onto the brush, and then set the tube back down.&rdquo;
+                        </div>
+                        <p class="task-description">
+                            The robot must grasp a toothbrush in one hand and a toothpaste tube in the
+                            other, align the tube nozzle above the bristles and squeeze out a bead of
+                            toothpaste, and return the toothbrush upright into its holder and the
+                            toothpaste back onto the table.
+                        </p>
+                        <div class="task-rubric">
+                            <h4>Grading Rubric (Additive)</h4>
+                            <ul class="rubric-list">
+                                <li><span class="rubric-score">+0.2</span><span class="rubric-label">(a)</span>Grasps the toothbrush.</li>
+                                <li><span class="rubric-score">+0.1</span><span class="rubric-label">(b)</span>Grasps the toothpaste tube.</li>
+                                <li><span class="rubric-score">+0.4</span><span class="rubric-label">(c)</span>Dispenses a bead of toothpaste onto the bristles.</li>
+                                <li><span class="rubric-score">+0.2</span><span class="rubric-label">(d)</span>Returns the toothbrush upright into its holder.</li>
+                                <li><span class="rubric-score">+0.1</span><span class="rubric-label">(e)</span>Places the toothpaste tube back on the table.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
         </div>
     </section>
 
@@ -729,82 +728,11 @@
 
         <div class="task-list">
 
-            <!-- Task V -->
+            <!-- Task V: Split Cup -->
             <article class="task-card" id="task-5">
                 <header class="task-header">
                     <span class="task-num">V</span>
-                    <h3 class="task-name">Open Lock</h3>
-                </header>
-                <div class="task-body">
-                    <div class="task-video">
-                        <div class="task-video-placeholder">Demo video coming soon</div>
-                    </div>
-                    <div class="task-text">
-                        <div class="task-instruction">
-                            &ldquo;On the left side of the desk lies a red book, atop which rests a
-                            gray key; on the right side is a lock. Using your left thumb and index
-                            finger, slide the key free; then, pick up the lock with your right hand
-                            and use the key to unlock it.&rdquo;
-                        </div>
-                        <p class="task-description">
-                            The robot must first grasp the key with one hand and the padlock with the
-                            other, align and insert the key into the keyhole, and rotate it to
-                            release the shackle.
-                        </p>
-                        <div class="task-rubric">
-                            <h4>Grading Rubric (Additive)</h4>
-                            <ul class="rubric-list">
-                                <li><span class="rubric-score">+0.2</span><span class="rubric-label">(a)</span>Grasps the key.</li>
-                                <li><span class="rubric-score">+0.1</span><span class="rubric-label">(b)</span>Grasps the padlock.</li>
-                                <li><span class="rubric-score">+0.4</span><span class="rubric-label">(c)</span>Aligns and inserts the key into the keyhole.</li>
-                                <li><span class="rubric-score">+0.3</span><span class="rubric-label">(d)</span>Rotates the key and successfully opens the lock.</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </article>
-
-            <!-- Task VI -->
-            <article class="task-card" id="task-6">
-                <header class="task-header">
-                    <span class="task-num">VI</span>
-                    <h3 class="task-name">Pick and Place Ball</h3>
-                </header>
-                <div class="task-body">
-                    <div class="task-video">
-                        <div class="task-video-placeholder">Demo video coming soon</div>
-                    </div>
-                    <div class="task-text">
-                        <div class="task-instruction">
-                            &ldquo;Use your left hand to open one of the compartments in the small box,
-                            use your right hand to grasp the small ball on the table, place the ball
-                            into the box, and then close the box.&rdquo;
-                        </div>
-                        <p class="task-description">
-                            The robot must use the left index finger to press the button on a
-                            compartment lid to unlock it, flip the lid open with the left thumb, pick
-                            up the ball with the right hand, place the ball into the open
-                            compartment, and press the lid closed with the right thumb.
-                        </p>
-                        <div class="task-rubric">
-                            <h4>Grading Rubric (Additive)</h4>
-                            <ul class="rubric-list">
-                                <li><span class="rubric-score">+0.2</span><span class="rubric-label">(a)</span>Left index finger presses the compartment button to unlock the lid.</li>
-                                <li><span class="rubric-score">+0.2</span><span class="rubric-label">(b)</span>Left thumb flips the lid open.</li>
-                                <li><span class="rubric-score">+0.2</span><span class="rubric-label">(c)</span>Right hand picks up the ball.</li>
-                                <li><span class="rubric-score">+0.2</span><span class="rubric-label">(d)</span>Right hand places the ball into the open compartment.</li>
-                                <li><span class="rubric-score">+0.2</span><span class="rubric-label">(e)</span>Right thumb presses the lid closed.</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </article>
-
-            <!-- Task VII -->
-            <article class="task-card" id="task-7">
-                <header class="task-header">
-                    <span class="task-num">VII</span>
-                    <h3 class="task-name">Remove Cup</h3>
+                    <h3 class="task-name">Split Cup</h3>
                 </header>
                 <div class="task-body">
                     <div class="task-video">
@@ -834,10 +762,10 @@
                 </div>
             </article>
 
-            <!-- Task VIII -->
-            <article class="task-card" id="task-8">
+            <!-- Task VI: Sort Mahjong -->
+            <article class="task-card" id="task-6">
                 <header class="task-header">
-                    <span class="task-num">VIII</span>
+                    <span class="task-num">VI</span>
                     <h3 class="task-name">Sort Mahjong</h3>
                 </header>
                 <div class="task-body">
@@ -873,6 +801,77 @@
                 </div>
             </article>
 
+            <!-- Task VII: Open Lock -->
+            <article class="task-card" id="task-7">
+                <header class="task-header">
+                    <span class="task-num">VII</span>
+                    <h3 class="task-name">Open Lock</h3>
+                </header>
+                <div class="task-body">
+                    <div class="task-video">
+                        <div class="task-video-placeholder">Demo video coming soon</div>
+                    </div>
+                    <div class="task-text">
+                        <div class="task-instruction">
+                            &ldquo;On the left side of the desk lies a red book, atop which rests a
+                            gray key; on the right side is a lock. Using your left thumb and index
+                            finger, slide the key free; then, pick up the lock with your right hand
+                            and use the key to unlock it.&rdquo;
+                        </div>
+                        <p class="task-description">
+                            The robot must first grasp the key with one hand and the padlock with the
+                            other, align and insert the key into the keyhole, and rotate it to
+                            release the shackle.
+                        </p>
+                        <div class="task-rubric">
+                            <h4>Grading Rubric (Additive)</h4>
+                            <ul class="rubric-list">
+                                <li><span class="rubric-score">+0.2</span><span class="rubric-label">(a)</span>Grasps the key.</li>
+                                <li><span class="rubric-score">+0.1</span><span class="rubric-label">(b)</span>Grasps the padlock.</li>
+                                <li><span class="rubric-score">+0.4</span><span class="rubric-label">(c)</span>Aligns and inserts the key into the keyhole.</li>
+                                <li><span class="rubric-score">+0.3</span><span class="rubric-label">(d)</span>Rotates the key and successfully opens the lock.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Task VIII: Refill Tablet -->
+            <article class="task-card" id="task-8">
+                <header class="task-header">
+                    <span class="task-num">VIII</span>
+                    <h3 class="task-name">Refill Tablet</h3>
+                </header>
+                <div class="task-body">
+                    <div class="task-video">
+                        <div class="task-video-placeholder">Demo video coming soon</div>
+                    </div>
+                    <div class="task-text">
+                        <div class="task-instruction">
+                            &ldquo;Use your left hand to open one of the compartments in the small box,
+                            use your right hand to grasp the small ball on the table, place the ball
+                            into the box, and then close the box.&rdquo;
+                        </div>
+                        <p class="task-description">
+                            The robot must use the left index finger to press the button on a
+                            compartment lid to unlock it, flip the lid open with the left thumb, pick
+                            up the ball with the right hand, place the ball into the open
+                            compartment, and press the lid closed with the right index finger.
+                        </p>
+                        <div class="task-rubric">
+                            <h4>Grading Rubric (Additive)</h4>
+                            <ul class="rubric-list">
+                                <li><span class="rubric-score">+0.2</span><span class="rubric-label">(a)</span>Left index finger presses the compartment button to unlock the lid.</li>
+                                <li><span class="rubric-score">+0.2</span><span class="rubric-label">(b)</span>Left thumb flips the lid open.</li>
+                                <li><span class="rubric-score">+0.2</span><span class="rubric-label">(c)</span>Right hand picks up the ball.</li>
+                                <li><span class="rubric-score">+0.2</span><span class="rubric-label">(d)</span>Right hand places the ball into the open compartment.</li>
+                                <li><span class="rubric-score">+0.2</span><span class="rubric-label">(e)</span>Right thumb presses the lid closed.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
         </div>
     </section>
 
@@ -881,7 +880,7 @@
     <!-- ===== Both Tasks ===== -->
     <section class="section" id="both-tasks">
         <h2 class="section-title">Both Tasks</h2>
-        <div class="section-subtitle">Tasks IX &ndash; XIII &middot; 5 tasks</div>
+        <div class="section-subtitle">Tasks IX &ndash; XII &middot; 4 tasks</div>
         <p class="section-content">
             Both tasks require the robot to handle force control and deformable
             objects at the same time, often in longer sequences involving insertion,
@@ -936,11 +935,11 @@
                 </div>
             </article>
 
-            <!-- Task X -->
+            <!-- Task X: Extract Card -->
             <article class="task-card" id="task-10">
                 <header class="task-header">
                     <span class="task-num">X</span>
-                    <h3 class="task-name">Insert Battery</h3>
+                    <h3 class="task-name">Extract Card</h3>
                 </header>
                 <div class="task-body">
                     <div class="task-video">
@@ -948,34 +947,36 @@
                     </div>
                     <div class="task-text">
                         <div class="task-instruction">
-                            &ldquo;A remote control and a battery are sitting on the table; open the
-                            remote&rsquo;s cover and insert the battery.&rdquo;
+                            &ldquo;Next to the cube on the table lies a card case containing two
+                            cards. Pick up the case with the left hand, then use the right thumb to
+                            slide the cards out through the central opening; subsequently, use the
+                            right thumb and index finger to slide out the first card, taking care not
+                            to pull out the second one.&rdquo;
                         </div>
                         <p class="task-description">
-                            The robot must use the right thumb to slide open the back cover of the TV
-                            remote, pick up the cover and set it aside on the table, grasp the loose
-                            battery with the right hand, place the battery into the compartment in the
-                            correct orientation, and press it fully into the slot.
+                            The robot must pick up the card sleeve (containing two cards) with the
+                            left hand, use the right thumb to rub the cards partially out, then use
+                            the right thumb and index finger to push the bottom card back in so that
+                            only the top card remains exposed, and extract that single card.
                         </p>
                         <div class="task-rubric">
                             <h4>Grading Rubric (Additive)</h4>
                             <ul class="rubric-list">
-                                <li><span class="rubric-score">+0.2</span><span class="rubric-label">(a)</span>Right thumb slides open the back cover of the TV remote.</li>
-                                <li><span class="rubric-score">+0.1</span><span class="rubric-label">(b)</span>Right hand picks up the cover and places it on the table.</li>
-                                <li><span class="rubric-score">+0.2</span><span class="rubric-label">(c)</span>Right hand grasps the loose battery.</li>
-                                <li><span class="rubric-score">+0.3</span><span class="rubric-label">(d)</span>Right hand inserts the battery into the compartment, correctly oriented.</li>
-                                <li><span class="rubric-score">+0.2</span><span class="rubric-label">(e)</span>Right hand presses the battery fully into the slot.</li>
+                                <li><span class="rubric-score">+0.2</span><span class="rubric-label">(a)</span>Left hand picks up and holds the card sleeve.</li>
+                                <li><span class="rubric-score">+0.3</span><span class="rubric-label">(b)</span>Right thumb rubs the cards partially out of the sleeve.</li>
+                                <li><span class="rubric-score">+0.3</span><span class="rubric-label">(c)</span>Right thumb and index finger push the bottom card in.</li>
+                                <li><span class="rubric-score">+0.2</span><span class="rubric-label">(d)</span>Right hand extracts the single top card from the sleeve.</li>
                             </ul>
                         </div>
                     </div>
                 </div>
             </article>
 
-            <!-- Task XI -->
+            <!-- Task XI: Deal Poker -->
             <article class="task-card" id="task-11">
                 <header class="task-header">
                     <span class="task-num">XI</span>
-                    <h3 class="task-name">Play Card</h3>
+                    <h3 class="task-name">Deal Poker</h3>
                 </header>
                 <div class="task-body">
                     <div class="task-video">
@@ -1009,48 +1010,11 @@
                 </div>
             </article>
 
-            <!-- Task XII -->
+            <!-- Task XII: Screw Lightbulb -->
             <article class="task-card" id="task-12">
                 <header class="task-header">
                     <span class="task-num">XII</span>
-                    <h3 class="task-name">Remove Card</h3>
-                </header>
-                <div class="task-body">
-                    <div class="task-video">
-                        <div class="task-video-placeholder">Demo video coming soon</div>
-                    </div>
-                    <div class="task-text">
-                        <div class="task-instruction">
-                            &ldquo;Next to the cube on the table lies a card case containing two
-                            cards. Pick up the case with the left hand, then use the right thumb to
-                            slide the cards out through the central opening; subsequently, use the
-                            right thumb and index finger to slide out the first card, taking care not
-                            to pull out the second one.&rdquo;
-                        </div>
-                        <p class="task-description">
-                            The robot must pick up the card sleeve (containing two cards) with the
-                            left hand, use the right thumb to rub the cards partially out, then use
-                            the right thumb and index finger to push the bottom card back in so that
-                            only the top card remains exposed, and extract that single card.
-                        </p>
-                        <div class="task-rubric">
-                            <h4>Grading Rubric (Additive)</h4>
-                            <ul class="rubric-list">
-                                <li><span class="rubric-score">+0.2</span><span class="rubric-label">(a)</span>Left hand picks up and holds the card sleeve.</li>
-                                <li><span class="rubric-score">+0.3</span><span class="rubric-label">(b)</span>Right thumb rubs the cards partially out of the sleeve.</li>
-                                <li><span class="rubric-score">+0.3</span><span class="rubric-label">(c)</span>Right thumb and index finger push the bottom card in.</li>
-                                <li><span class="rubric-score">+0.2</span><span class="rubric-label">(d)</span>Right hand extracts the single top card from the sleeve.</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </article>
-
-            <!-- Task XIII -->
-            <article class="task-card" id="task-13">
-                <header class="task-header">
-                    <span class="task-num">XIII</span>
-                    <h3 class="task-name">Screw White Lightbulb</h3>
+                    <h3 class="task-name">Screw Lightbulb</h3>
                 </header>
                 <div class="task-body">
                     <div class="task-video">
