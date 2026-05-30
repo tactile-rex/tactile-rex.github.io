@@ -1275,14 +1275,14 @@
             }, 250); // Debounce resize events
         });
 
-        // Single continuous video sequence (Open Lock)
+        // Single continuous video sequence (Screw Lightbulb)
         // Use more aggressive subsampling on mobile to reduce memory
         const subsampleFactor = isMobile ? 4 : 2; // Every 4th frame on mobile, every 2nd on desktop
-        const frameCount1 = Math.floor(1204 / subsampleFactor); // Subsampled frame count
+        const frameCount1 = Math.floor(1422 / subsampleFactor); // Subsampled frame count
         const frameOffset1 = 1; // Start from frame 1
         const getFrame1 = index => {
             const frameNum = (index * subsampleFactor) + frameOffset1;
-            return `media/frames_open_lock/frame_${frameNum.toString().padStart(4, '0')}.jpg`;
+            return `media/frames_screw_lightbulb/frame_${frameNum.toString().padStart(4, '0')}.jpg`;
         };
 
         // Load all images for the sequence
