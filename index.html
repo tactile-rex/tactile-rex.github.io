@@ -572,11 +572,11 @@
            into the page instead of cutting a harsh rectangle out of it. */
         .paper-figure-card {
             width: 100%;
-            max-width: 1000px;
-            padding: 0.75rem;
+            max-width: 820px;
+            padding: 0.7rem;
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
+            border-radius: 14px;
             box-shadow:
                 0 14px 50px rgba(0, 0, 0, 0.6),
                 0 2px 8px rgba(0, 0, 0, 0.3);
@@ -586,6 +586,10 @@
             height: auto;
             display: block;
             border-radius: 10px;
+            /* Dial down the white-on-black harshness: brightness < 1 maps
+               pure-white backgrounds toward mid-grey while still keeping
+               dark diagram strokes/text legible. Easy lever to retune. */
+            filter: brightness(0.78);
         }
         /* Slightly bigger vertical breathing room. Applied to the teaser,
            the Abstract, and the architecture sections so they read as a
