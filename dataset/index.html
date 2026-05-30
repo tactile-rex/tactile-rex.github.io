@@ -267,6 +267,43 @@
             line-height: 1.7;
         }
 
+        /* ===== Dataset composition charts ===== */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        .chart-item {
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-soft);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.25rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .chart-item:hover {
+            border-color: var(--gold);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+        }
+        .chart-embed {
+            width: 100%;
+            height: 340px;
+            border-radius: 6px;
+            background: #ffffff;
+            border: 1px solid var(--border-soft);
+            display: block;
+        }
+        .chart-caption {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: var(--text-muted);
+            margin-top: 0.9rem;
+            padding: 0 0.2rem;
+        }
+        .chart-caption strong { color: var(--text); }
+
         /* ===== Sample grid (video previews) ===== */
         .sample-grid {
             display: grid;
@@ -550,6 +587,7 @@
             .modality-grid { grid-template-columns: 1fr; }
             .sample-grid { grid-template-columns: 1fr 1fr; }
             .gs-grid { grid-template-columns: 1fr; }
+            .charts-grid { grid-template-columns: 1fr; }
         }
         @media (max-width: 768px) {
             .header-title { font-size: 1rem; top: 1.5rem; }
@@ -734,6 +772,49 @@
                 <h3>Scene Diversification</h3>
                 <p>Each scene randomizes both distractor objects and patterned-cloth backgrounds, producing visually ambiguous and varied contexts that ground policy learning and discourage visual overfitting.</p>
             </div>
+        </div>
+    </section>
+
+    <!-- ===== Dataset composition ===== -->
+    <section class="section" id="composition">
+        <h2 class="section-title">Dataset Composition</h2>
+        <div class="section-content">
+            <p>T-Rex spans a long-tail distribution over both objects and motion
+            primitives. The three charts below summarise how demonstration time
+            is allocated across high-level task categories, individual household
+            objects, and motion primitives.</p>
+        </div>
+        <div class="charts-grid">
+            <figure class="chart-item">
+                <object data="./category_duration_pie.pdf" type="application/pdf" class="chart-embed" aria-label="Pie chart of demonstration time per task category">
+                    <a href="./category_duration_pie.pdf">Download category duration pie chart (PDF)</a>
+                </object>
+                <figcaption class="chart-caption">
+                    <strong>Time per task category.</strong> Share of total
+                    demonstration time across the high-level task categories
+                    covered by the T-Rex taxonomy.
+                </figcaption>
+            </figure>
+            <figure class="chart-item">
+                <object data="./object_frequency_chart.pdf" type="application/pdf" class="chart-embed" aria-label="Bar chart of demonstration counts per object">
+                    <a href="./object_frequency_chart.pdf">Download object frequency chart (PDF)</a>
+                </object>
+                <figcaption class="chart-caption">
+                    <strong>Per-object coverage.</strong> Number of demonstrations
+                    collected for each of the 200+ daily household objects,
+                    ordered by frequency.
+                </figcaption>
+            </figure>
+            <figure class="chart-item">
+                <object data="./verb_frequency_chart_hours.pdf" type="application/pdf" class="chart-embed" aria-label="Bar chart of demonstration hours per motion primitive">
+                    <a href="./verb_frequency_chart_hours.pdf">Download verb frequency chart (PDF)</a>
+                </object>
+                <figcaption class="chart-caption">
+                    <strong>Per-primitive time.</strong> Hours of demonstration
+                    data per motion primitive across the 22 verbs in the T-Rex
+                    taxonomy.
+                </figcaption>
+            </figure>
         </div>
     </section>
 

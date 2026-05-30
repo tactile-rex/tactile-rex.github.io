@@ -621,6 +621,26 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
         }
 
+        .demo-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .demo-item video {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .demo-caption {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            font-style: italic;
+        }
+
         .demo-placeholder {
             background: #2a2a2a;
             border: 2px dashed rgba(255, 255, 255, 0.2);
@@ -1113,7 +1133,44 @@
         <div class="section">
             <h2 class="section-title">Demonstration</h2>
             <div class="section-content">
-                <p>Twelve task demonstrations coming soon.</p>
+                <p>Selected third-view rollouts of T-Rex on our downstream
+                tactile-reactive benchmark tasks, spanning force-sensitive
+                contact, deformation-aware manipulation, and bimanual
+                coordination.</p>
+            </div>
+            <div class="demo-grid">
+                <div class="demo-item">
+                    <video src="task_demo_third_view/pick_egg_1.mp4" muted autoplay loop playsinline preload="metadata"></video>
+                    <div class="demo-caption">Transfer Egg</div>
+                </div>
+                <div class="demo-item">
+                    <video src="task_demo_third_view/apply_toothpaste_1.mp4" muted autoplay loop playsinline preload="metadata"></video>
+                    <div class="demo-caption">Apply Toothpaste</div>
+                </div>
+                <div class="demo-item">
+                    <video src="task_demo_third_view/remove_cup_1.mp4" muted autoplay loop playsinline preload="metadata"></video>
+                    <div class="demo-caption">Split Cup</div>
+                </div>
+                <div class="demo-item">
+                    <video src="task_demo_third_view/sort_mahjong.mp4" muted autoplay loop playsinline preload="metadata"></video>
+                    <div class="demo-caption">Sort Mahjong</div>
+                </div>
+                <div class="demo-item">
+                    <video src="task_demo_third_view/open_lock.mp4" muted autoplay loop playsinline preload="metadata"></video>
+                    <div class="demo-caption">Open Lock</div>
+                </div>
+                <div class="demo-item">
+                    <video src="task_demo_third_view/acid_base_1.mp4" muted autoplay loop playsinline preload="metadata"></video>
+                    <div class="demo-caption">Acid-Base Neutralization</div>
+                </div>
+                <div class="demo-item">
+                    <video src="task_demo_third_view/remove_card_1.mp4" muted autoplay loop playsinline preload="metadata"></video>
+                    <div class="demo-caption">Extract Card</div>
+                </div>
+                <div class="demo-item">
+                    <video src="task_demo_third_view/screw_lightbulb.mp4" muted autoplay loop playsinline preload="metadata"></video>
+                    <div class="demo-caption">Screw Lightbulb</div>
+                </div>
             </div>
         </div>
 
