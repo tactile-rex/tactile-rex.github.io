@@ -302,18 +302,6 @@
             display: block;
             border-radius: 4px;
         }
-        .chart-label {
-            position: absolute;
-            top: 0.65rem;
-            left: 0.9rem;
-            font-size: 0.95rem;
-            font-weight: 700;
-            color: var(--blue);
-            background: rgba(255,255,255,0.85);
-            padding: 0.05rem 0.45rem;
-            border-radius: 4px;
-            z-index: 1;
-        }
         .chart-figcaption {
             margin-top: 1.25rem;
             font-size: 0.95rem;
@@ -808,28 +796,26 @@
         <figure class="chart-figure">
             <div class="chart-grid">
                 <div class="chart-cell">
-                    <span class="chart-label">(a)</span>
                     <img src="./category_duration_pie.png" alt="Pie chart of demonstration time per task category">
                 </div>
                 <div class="chart-cell">
-                    <span class="chart-label">(b)</span>
                     <img src="./verb_frequency_chart_hours.png" alt="Bar chart of demonstration hours per motion primitive">
                 </div>
                 <div class="chart-cell chart-cell--object">
-                    <span class="chart-label">(c)</span>
                     <img src="./object_frequency_chart.png" alt="Bar chart of demonstration counts per object">
                 </div>
             </div>
             <figcaption class="chart-figcaption">
                 <strong>Composition of the T-Rex dataset.</strong>
-                <span class="sub">(a)</span> Share of total demonstration time
-                across the high-level task categories covered by the T-Rex
+                <span class="sub">Top&#8209;left:</span> share of total
+                demonstration time across the high-level task categories
+                covered by the T-Rex taxonomy.
+                <span class="sub">Top&#8209;right:</span> hours of demonstration
+                data per motion primitive across the 22 verbs in the T-Rex
                 taxonomy.
-                <span class="sub">(b)</span> Hours of demonstration data per
-                motion primitive across the 22 verbs in the T-Rex taxonomy.
-                <span class="sub">(c)</span> Number of demonstrations collected
-                for each of the 200+ daily household objects, ordered by
-                frequency.
+                <span class="sub">Bottom:</span> number of demonstrations
+                collected for each of the 200+ daily household objects,
+                ordered by frequency.
             </figcaption>
         </figure>
     </section>
