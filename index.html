@@ -585,66 +585,76 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
         }
 
-        .demo-subsection {
-            margin-top: 3rem;
-        }
-
-        .demo-subsection:first-child {
-            margin-top: 2rem;
-        }
-
-        .demo-subsection-title {
-            font-size: 1.3rem;
-            font-weight: 600;
-            color: rgba(255, 255, 255, 0.9);
-            margin-bottom: 1.5rem;
-            text-align: left;
-        }
-
-        .demo-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
-            width: 100%;
-        }
-
-        .demo-grid video,
-        .demo-grid .demo-placeholder {
-            width: 100%;
-            aspect-ratio: 16 / 9;
-            border-radius: 8px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-        }
-
-        .demo-item {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-
-        .demo-item video {
-            width: 100%;
-            aspect-ratio: 16 / 9;
-            border-radius: 8px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-        }
-
-        .demo-caption {
+        /* ===== Demonstration: pill task selector + single hero player ===== */
+        .demo-subtitle {
             text-align: center;
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 0.9rem;
-            font-style: italic;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.95rem;
+            font-weight: 600;
+            letter-spacing: 0.4px;
+            margin: 0.5rem 0 1.5rem;
         }
-
-        .demo-placeholder {
-            background: #2a2a2a;
-            border: 2px dashed rgba(255, 255, 255, 0.2);
+        .demo-pills {
             display: flex;
-            align-items: center;
+            flex-wrap: wrap;
             justify-content: center;
-            color: rgba(255, 255, 255, 0.3);
-            font-size: 0.9rem;
+            gap: 0.65rem;
+            margin: 0 auto 2rem;
+            max-width: 1000px;
         }
+        .demo-pill {
+            padding: 0.55rem 1.25rem;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 999px;
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 0.95rem;
+            font-weight: 500;
+            font-family: inherit;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background 0.2s ease, color 0.2s ease,
+                        border-color 0.2s ease, transform 0.15s ease,
+                        box-shadow 0.2s ease;
+        }
+        .demo-pill:hover {
+            background: rgba(255, 255, 255, 0.14);
+            color: #fff;
+            transform: translateY(-1px);
+        }
+        .demo-pill.active {
+            background: #FDB515;
+            color: #1a1a1a;
+            border-color: #FDB515;
+            font-weight: 600;
+            box-shadow: 0 4px 16px rgba(253, 181, 21, 0.32);
+            transform: translateY(-1px);
+        }
+        .demo-player-wrap {
+            width: 100%;
+            max-width: 960px;
+            margin: 0 auto 1.5rem;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #000;
+            box-shadow: 0 8px 36px rgba(0, 0, 0, 0.6);
+        }
+        .demo-player-wrap video {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            display: block;
+            object-fit: cover;
+            background: #000;
+        }
+        .demo-description {
+            max-width: 880px;
+            margin: 0 auto;
+            text-align: left;
+            color: rgba(255, 255, 255, 0.78);
+            font-size: 1.02rem;
+            line-height: 1.75;
+        }
+        .demo-description strong { color: #fff; }
 
         .failure-grid {
             display: grid;
@@ -959,10 +969,7 @@
                 grid-template-columns: 1fr;
                 gap: 1rem;
             }
-            .demo-grid {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-            }
+            .demo-pill { padding: 0.45rem 1rem; font-size: 0.9rem; }
             .failure-grid {
                 grid-template-columns: 1fr;
                 gap: 2rem;
@@ -1127,46 +1134,26 @@
         <!-- Demonstration Section -->
         <div class="section">
             <h2 class="section-title">Demonstration</h2>
-            <div class="section-content">
-                <p>Selected third-view rollouts of T-Rex on our downstream
-                tactile-reactive benchmark tasks, spanning force-sensitive
-                contact, deformation-aware manipulation, and bimanual
-                coordination.</p>
+            <div class="demo-subtitle">Real-world autonomous policy rollouts on our bimanual Dexmate&nbsp;Vega-1</div>
+
+            <div class="demo-pills" role="tablist" id="demo-pills">
+                <button class="demo-pill active" type="button" data-task="screw_lightbulb">Screw Lightbulb</button>
+                <button class="demo-pill" type="button" data-task="pick_egg_1">Transfer Egg</button>
+                <button class="demo-pill" type="button" data-task="apply_toothpaste_1">Apply Toothpaste</button>
+                <button class="demo-pill" type="button" data-task="remove_cup_1">Split Cup</button>
+                <button class="demo-pill" type="button" data-task="sort_mahjong">Sort Mahjong</button>
+                <button class="demo-pill" type="button" data-task="open_lock">Open Lock</button>
+                <button class="demo-pill" type="button" data-task="acid_base_1">Acid-Base Neutralization</button>
+                <button class="demo-pill" type="button" data-task="remove_card_1">Extract Card</button>
             </div>
-            <div class="demo-grid">
-                <div class="demo-item">
-                    <video src="https://huggingface.co/datasets/Beakerman0101/trex-visualizer/resolve/main/task_demos/pick_egg_1.mp4" muted autoplay loop playsinline preload="metadata"></video>
-                    <div class="demo-caption">Transfer Egg</div>
-                </div>
-                <div class="demo-item">
-                    <video src="https://huggingface.co/datasets/Beakerman0101/trex-visualizer/resolve/main/task_demos/apply_toothpaste_1.mp4" muted autoplay loop playsinline preload="metadata"></video>
-                    <div class="demo-caption">Apply Toothpaste</div>
-                </div>
-                <div class="demo-item">
-                    <video src="https://huggingface.co/datasets/Beakerman0101/trex-visualizer/resolve/main/task_demos/remove_cup_1.mp4" muted autoplay loop playsinline preload="metadata"></video>
-                    <div class="demo-caption">Split Cup</div>
-                </div>
-                <div class="demo-item">
-                    <video src="https://huggingface.co/datasets/Beakerman0101/trex-visualizer/resolve/main/task_demos/sort_mahjong.mp4" muted autoplay loop playsinline preload="metadata"></video>
-                    <div class="demo-caption">Sort Mahjong</div>
-                </div>
-                <div class="demo-item">
-                    <video src="https://huggingface.co/datasets/Beakerman0101/trex-visualizer/resolve/main/task_demos/open_lock.mp4" muted autoplay loop playsinline preload="metadata"></video>
-                    <div class="demo-caption">Open Lock</div>
-                </div>
-                <div class="demo-item">
-                    <video src="https://huggingface.co/datasets/Beakerman0101/trex-visualizer/resolve/main/task_demos/acid_base_1.mp4" muted autoplay loop playsinline preload="metadata"></video>
-                    <div class="demo-caption">Acid-Base Neutralization</div>
-                </div>
-                <div class="demo-item">
-                    <video src="https://huggingface.co/datasets/Beakerman0101/trex-visualizer/resolve/main/task_demos/remove_card_1.mp4" muted autoplay loop playsinline preload="metadata"></video>
-                    <div class="demo-caption">Extract Card</div>
-                </div>
-                <div class="demo-item">
-                    <video src="https://huggingface.co/datasets/Beakerman0101/trex-visualizer/resolve/main/task_demos/screw_lightbulb.mp4" muted autoplay loop playsinline preload="metadata"></video>
-                    <div class="demo-caption">Screw Lightbulb</div>
-                </div>
+
+            <div class="demo-player-wrap">
+                <video id="demo-player"
+                       src="https://huggingface.co/datasets/Beakerman0101/trex-visualizer/resolve/main/task_demos/screw_lightbulb.mp4"
+                       muted autoplay loop playsinline preload="metadata"></video>
             </div>
+
+            <p class="demo-description" id="demo-description"></p>
         </div>
 
         <!-- BibTeX Section -->
@@ -2033,6 +2020,71 @@
                 paperSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         });
+
+        // ===== Demonstration: pill-based task switcher =====
+        // Single hero player swaps source + description when a pill is clicked.
+        // Default-active pill must match the <video src> rendered server-side.
+        (function () {
+            const HF_BASE = 'https://huggingface.co/datasets/Beakerman0101/trex-visualizer/resolve/main/task_demos/';
+            const tasks = {
+                screw_lightbulb: {
+                    file: 'screw_lightbulb.mp4',
+                    desc: 'The robot picks up the lightbulb with its left hand, transfers it to the right hand, stabilises the lamp socket with the left, and rotates the bulb through multiple turns into the socket until it is fully seated and illuminates.'
+                },
+                pick_egg_1: {
+                    file: 'pick_egg_1.mp4',
+                    desc: 'Using only the right thumb and index finger, the robot grasps a fragile egg without cracking its shell, lifts it off the green tray, transports it across the workspace, and gently releases it into the yellow tray.'
+                },
+                apply_toothpaste_1: {
+                    file: 'apply_toothpaste_1.mp4',
+                    desc: 'The robot grasps a toothbrush in one hand and a toothpaste tube in the other, aligns the nozzle above the bristles and squeezes a controlled bead of toothpaste onto them, then returns each object to the countertop.'
+                },
+                remove_cup_1: {
+                    file: 'remove_cup_1.mp4',
+                    desc: 'Given a stack of nested red plastic cups, the robot stabilises the stack with the left hand and uses the right hand to twist and rub exactly one cup off the top, overcoming inter-cup friction without crushing it.'
+                },
+                sort_mahjong: {
+                    file: 'sort_mahjong.mp4',
+                    desc: 'The robot picks up a face-down mahjong tile and identifies its surface pattern by tactile sensing alone, slides open the lid of the matching compartment, places the tile inside, and seals the lid with its thumb.'
+                },
+                open_lock: {
+                    file: 'open_lock.mp4',
+                    desc: 'The robot first slides a key free with the left thumb and index finger, then grasps a padlock with the right hand, aligns and inserts the key into the keyhole, and rotates it until the shackle releases.'
+                },
+                acid_base_1: {
+                    file: 'acid_base_1.mp4',
+                    desc: 'Using a dropper held in the right hand, the robot aspirates citric acid from a conical flask and titrates it into a beaker of NaOH solution held in the left hand, swirling until the bromothymol blue indicator transitions away from blue.'
+                },
+                remove_card_1: {
+                    file: 'remove_card_1.mp4',
+                    desc: 'The robot picks up a sleeve containing two cards, uses the right thumb to rub them partially out, then uses thumb and index together to push the bottom card back in so that only the top card remains exposed, and extracts that single card.'
+                }
+            };
+
+            const player = document.getElementById('demo-player');
+            const desc = document.getElementById('demo-description');
+            const pills = document.querySelectorAll('#demo-pills .demo-pill');
+            if (!player || !desc || !pills.length) return;
+
+            // Initialise description for the server-side default-active pill.
+            const initialPill = document.querySelector('#demo-pills .demo-pill.active');
+            if (initialPill && tasks[initialPill.dataset.task]) {
+                desc.textContent = tasks[initialPill.dataset.task].desc;
+            }
+
+            pills.forEach(pill => {
+                pill.addEventListener('click', () => {
+                    const t = tasks[pill.dataset.task];
+                    if (!t) return;
+                    pills.forEach(p => p.classList.remove('active'));
+                    pill.classList.add('active');
+                    player.src = HF_BASE + t.file;
+                    desc.textContent = t.desc;
+                    player.load();
+                    player.play().catch(() => {});
+                });
+            });
+        })();
     </script>
 </body>
 </html>
