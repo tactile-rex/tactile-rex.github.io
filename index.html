@@ -1329,14 +1329,17 @@
                 }, 800);
             }, 300); // Small delay to ensure first frame renders
 
-            // Single unified scroll animation
+            // Single unified scroll animation. We end at 70% rather than
+            // bottom bottom so the screw-lightbulb sequence finishes BEFORE
+            // the dark overlay + feature title fade-in (which kicks in at
+            // 76% bottom). The last frame holds on screen across 70%-76%.
             gsap.to(doorman, {
                 progress: 1,
                 ease: "none",
                 scrollTrigger: {
                     trigger: ".content",
                     start: "top top",
-                    end: "bottom bottom",
+                    end: "70% bottom",
                     scrub: 0.5
                 },
                 onUpdate: render
