@@ -139,7 +139,7 @@
             margin: 0 auto;
             padding: 24px 40px 60px;
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             gap: 1.5rem;
         }
         .stat-card {
@@ -682,10 +682,11 @@
     </section>
 
     <!-- ===== Stats ===== -->
-    <!-- TODO: re-add the "100h Teleoperated Play" stat card here once the
-         dataset reaches its final size, and switch .stats-strip back to
-         grid-template-columns: repeat(4, 1fr). -->
     <section class="stats-strip">
+        <div class="stat-card">
+            <div class="stat-number">~50<span style="font-size:1.4rem;">h</span></div>
+            <div class="stat-label">Teleoperated Play</div>
+        </div>
         <div class="stat-card">
             <div class="stat-number">200<span style="font-size:1.4rem;">+</span></div>
             <div class="stat-label">Daily Objects</div>
