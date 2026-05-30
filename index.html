@@ -599,29 +599,6 @@
             padding-bottom: 80px;
         }
 
-        /* ===== Method walkthrough (4 mini-sections under architecture) ===== */
-        .method-grid {
-            max-width: 920px;
-            margin: 2.5rem auto 0;
-            display: flex;
-            flex-direction: column;
-            gap: 1.75rem;
-        }
-        .method-item-title {
-            color: #FDB515;
-            font-size: 1.15rem;
-            font-weight: 600;
-            margin: 0 0 0.55rem 0;
-            letter-spacing: 0.2px;
-        }
-        .method-item p {
-            color: rgba(255, 255, 255, 0.78);
-            line-height: 1.75;
-            font-size: 1.02rem;
-            margin: 0;
-        }
-        .method-item p strong { color: #fff; font-weight: 600; }
-
         /* ===== Quantitative Results: bar chart + per-task table ===== */
         .results-subtitle {
             max-width: 880px;
@@ -1293,31 +1270,10 @@
             </div>
         </div>
 
-        <!-- Method Section (architecture figure + 4-paragraph walkthrough) -->
-        <div class="section section--airier" id="method">
-            <h2 class="section-title">Method</h2>
-            <div class="paper-figure-section" style="margin-bottom: 0.5rem;">
-                <div class="paper-figure-card">
-                    <img src="figures/architecture.png" alt="T-Rex model architecture: latent expert, action expert, and tactile expert in a Mixture-of-Transformer backbone" class="paper-figure">
-                </div>
-            </div>
-            <div class="method-grid">
-                <div class="method-item">
-                    <h3 class="method-item-title">1. Mixture-of-Transformer-Experts Backbone</h3>
-                    <p>T-Rex is built on a Mixture-of-Transformer-Experts (MoT) backbone with three specialised experts that share a joint attention space. The <strong>latent expert</strong> processes vision and language inputs to produce a temporally grounded scene representation. The <strong>action expert</strong> generates a low-frequency action plan by partially denoising an action chunk from pure noise down to an intermediate timestep&nbsp;&tau;<sub>split</sub>. The lightweight <strong>tactile expert</strong> then reuses the cached visual&ndash;language context to finish the denoising trajectory using real-time tactile feedback, producing the executable action chunk.</p>
-                </div>
-                <div class="method-item">
-                    <h3 class="method-item-title">2. Spatial-Temporal Tactile Encoder</h3>
-                    <p>To exploit naturally high-frequency contact signals without sacrificing pretrained VLA capabilities, T-Rex encodes per-fingertip tactile observations along both temporal and spatial axes. A per-finger <strong>VQ-VAE</strong> compresses the recent 16-frame force history into compact discrete tokens; the <strong>current force vector</strong> is projected directly to preserve instantaneous detail; and a lightweight <strong>convolutional encoder</strong> extracts geometry from the dense deformation map. The three streams together form the tactile token sequence consumed by the tactile expert.</p>
-                </div>
-                <div class="method-item">
-                    <h3 class="method-item-title">3. Asynchronous Cascaded Flow Matching</h3>
-                    <p>The action and tactile experts run at different rates through an asynchronous cascaded flow-matching schedule. The action expert resolves the upper segment of the denoising trajectory once per action chunk (6 Euler steps from pure noise down to &tau;<sub>split</sub>&nbsp;=&nbsp;0.4), caches the intermediate state, and hands off to the tactile expert, which resolves the lower segment (4 Euler steps from 0.4 down to 0) <strong>four times</strong> within the same chunk window using fresh tactile observations. This bypasses the heavy visual network during fast ticks and unlocks low-latency closed-loop physical adaptation.</p>
-                </div>
-                <div class="method-item">
-                    <h3 class="method-item-title">4. Three-Stage Training Recipe</h3>
-                    <p>T-Rex is trained with a three-stage recipe that progressively transfers human visuomotor priors into tactile-reactive robot control. First, <strong>large-scale human egocentric pre-training</strong> on 22,889 hours of egocentric video (following EgoScale) gives the latent and action experts broad semantic grounding and coarse visuomotor priors. Second, <strong>tactile-grounded mid-training</strong> on 100 hours of teleoperated bimanual play data adapts these priors to robot-executable contact dynamics and trains the tactile expert end-to-end. Finally, <strong>skill-specific post-training</strong> on roughly 100 demonstrations per task adapts the policy to each evaluation task while preserving the reactive behaviours learned during mid-training.</p>
-                </div>
+        <!-- Architecture Figure (after Abstract) -->
+        <div class="section paper-figure-section section--airier">
+            <div class="paper-figure-card">
+                <img src="figures/architecture.png" alt="T-Rex model architecture: latent, action, and tactile experts in a Mixture-of-Transformer backbone" class="paper-figure">
             </div>
         </div>
 
