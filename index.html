@@ -548,32 +548,27 @@
             object-fit: cover;
         }
 
-        .architecture-section {
+        /* Centered single-figure section, used for the teaser and the
+           architecture diagram around the Abstract. The figure scales to
+           the section width up to ~1000px and keeps its natural aspect
+           ratio (no letterboxing). */
+        .paper-figure-section {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 2rem;
+            justify-content: center;
         }
-
-        .architecture-image-placeholder {
+        .paper-figure {
             width: 100%;
             max-width: 1000px;
-            aspect-ratio: 16 / 9;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1.5px dashed rgba(255, 255, 255, 0.15);
+            height: auto;
+            display: block;
             border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: rgba(255, 255, 255, 0.4);
-            font-size: 1rem;
         }
-
-        .architecture-image-placeholder img {
-            width: 100%;
-            height: 100%;
-            border-radius: 8px;
-            object-fit: contain;
+        /* Slightly bigger vertical breathing room. Applied to the teaser,
+           the Abstract, and the architecture sections so they read as a
+           grouped trio rather than three squashed-together blocks. */
+        .section--airier {
+            padding-top: 80px;
+            padding-bottom: 80px;
         }
 
         .video-grid {
@@ -1111,22 +1106,22 @@
             </div>
         </div>
 
+        <!-- Teaser Figure (before Abstract) -->
+        <div class="section paper-figure-section section--airier">
+            <img src="figures/teaser.png" alt="T-Rex teaser figure" class="paper-figure">
+        </div>
+
         <!-- Abstract Section -->
-        <div class="section">
+        <div class="section section--airier">
             <h2 class="section-title">Abstract</h2>
             <div class="section-content">
                 <p>Dexterous manipulation in contact-rich environments requires robots to dynamically adapt to physical interaction signals such as force, slip, and deformation through tactile feedback. While recent Vision-Language-Action (VLA) models and large-scale human video pretraining have demonstrated promising progress in general robotic manipulation, existing approaches primarily focus on vision-driven and position-level control, limiting their ability to perform tactile-reactive dexterous behaviors. In this work, we propose <strong>T-Rex</strong>, a unified model for tactile-reactive dexterous manipulation. Built upon a Mixture-of-Transformer-Experts (MoT) architecture, T-Rex integrates low-frequency visuomotor action generation with high-frequency asynchronous tactile-reactive residual control through a dedicated tactile expert and a temporal VQ-VAE tactile encoder. To bridge large-scale human visuomotor pretraining and physically grounded robot interaction, we further introduce a tactile-aware midtraining paradigm using a teleoperated dexterous manipulation dataset designed around diverse motor primitive and object interaction combinations. We additionally establish a real-world benchmark of 13 tactile-sensitive dexterous manipulation tasks involving insertion, deformation, force-sensitive interaction, and bimanual coordination.</p>
             </div>
         </div>
 
-        <!-- Architecture Figures Section -->
-        <div class="section architecture-section">
-            <div class="architecture-image-placeholder">
-                <span>Architecture figure 1 coming soon</span>
-            </div>
-            <div class="architecture-image-placeholder">
-                <span>Architecture figure 2 coming soon</span>
-            </div>
+        <!-- Architecture Figure (after Abstract) -->
+        <div class="section paper-figure-section section--airier">
+            <img src="figures/architecture.png" alt="T-Rex model architecture" class="paper-figure">
         </div>
 
         <!-- Demonstration Section -->
