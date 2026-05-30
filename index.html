@@ -556,12 +556,27 @@
             display: flex;
             justify-content: center;
         }
-        .paper-figure {
+        /* Soft passe-partout frame: the white-background paper figures
+           (teaser, architecture) used to slam straight into the page's
+           black background. The card adds a thin dark mat, rounded outer
+           corners, and a soft drop shadow so the figure visually nests
+           into the page instead of cutting a harsh rectangle out of it. */
+        .paper-figure-card {
             width: 100%;
             max-width: 1000px;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            box-shadow:
+                0 14px 50px rgba(0, 0, 0, 0.6),
+                0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+        .paper-figure {
+            width: 100%;
             height: auto;
             display: block;
-            border-radius: 8px;
+            border-radius: 10px;
         }
         /* Slightly bigger vertical breathing room. Applied to the teaser,
            the Abstract, and the architecture sections so they read as a
@@ -569,6 +584,116 @@
         .section--airier {
             padding-top: 80px;
             padding-bottom: 80px;
+        }
+
+        /* ===== Method walkthrough (4 mini-sections under architecture) ===== */
+        .method-grid {
+            max-width: 920px;
+            margin: 2.5rem auto 0;
+            display: flex;
+            flex-direction: column;
+            gap: 1.75rem;
+        }
+        .method-item-title {
+            color: #FDB515;
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin: 0 0 0.55rem 0;
+            letter-spacing: 0.2px;
+        }
+        .method-item p {
+            color: rgba(255, 255, 255, 0.78);
+            line-height: 1.75;
+            font-size: 1.02rem;
+            margin: 0;
+        }
+        .method-item p strong { color: #fff; font-weight: 600; }
+
+        /* ===== Quantitative Results: bar chart + per-task table ===== */
+        .results-subtitle {
+            max-width: 880px;
+            margin: 0 auto 2.5rem;
+            color: rgba(255, 255, 255, 0.78);
+            font-size: 1.05rem;
+            line-height: 1.7;
+            text-align: center;
+        }
+        .results-subtitle strong { color: #FDB515; font-weight: 700; }
+        .results-chart-wrap {
+            max-width: 880px;
+            margin: 0 auto 2.5rem;
+            padding: 1.5rem 1.25rem 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+        }
+        .results-chart { width: 100%; height: auto; display: block; }
+        .results-table-title {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin: 2rem 0 1rem;
+        }
+        .results-table-wrap {
+            width: 100%;
+            overflow-x: auto;
+            margin: 0 auto;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.02);
+        }
+        .results-table {
+            width: 100%;
+            min-width: 880px;
+            border-collapse: collapse;
+            font-size: 0.93rem;
+            color: rgba(255, 255, 255, 0.85);
+        }
+        .results-table th,
+        .results-table td {
+            padding: 0.7rem 0.5rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .results-table th {
+            color: rgba(255, 255, 255, 0.55);
+            font-weight: 600;
+            font-size: 0.78rem;
+            background: rgba(255, 255, 255, 0.04);
+            white-space: nowrap;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+            line-height: 1.25;
+        }
+        .results-table th:first-child,
+        .results-table td:first-child {
+            text-align: left;
+            padding-left: 1.1rem;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        .results-table td:last-child,
+        .results-table th:last-child {
+            font-weight: 700;
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .results-table tbody tr:last-child td { border-bottom: none; }
+        .results-table tbody tr.ours {
+            background: rgba(253, 181, 21, 0.13);
+        }
+        .results-table tbody tr.ours td {
+            color: #FDB515;
+            font-weight: 700;
+        }
+        .results-table-footnote {
+            max-width: 880px;
+            margin: 1rem auto 0;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.5);
+            text-align: center;
+            font-style: italic;
         }
 
         .video-grid {
@@ -1092,17 +1217,43 @@
                 A Unified Model for Tactile-Reactive<br>Dexterous Manipulation
             </h1>
             <div class="authors">
-                <a href="#">Author One</a><sup>1,*</sup>,
-                <a href="#">Author Two</a><sup>1,*</sup>,
-                <a href="#">Author Three</a><sup>2,*</sup><br>
-                <a href="#">Author Four</a><sup>1</sup>,
-                <a href="#">Author Five</a><sup>1</sup>,
-                <a href="#">Author Six</a><sup>2</sup>,
-                <a href="#">Author Seven</a><sup>1,&dagger;</sup>,
-                <a href="#">Author Eight</a><sup>1,&dagger;</sup>
+                <a href="#">Dantong Niu</a><sup>1,2,*</sup>,
+                <a href="#">Zhuoyang Liu</a><sup>1,*</sup>,
+                <a href="#">Zekai Wang</a><sup>1,*</sup>,
+                <a href="#">Boning Shao</a><sup>1</sup>,
+                <a href="#">Zhao-Heng Yin</a><sup>1</sup>,<br>
+                <a href="#">Anirudh Pai</a><sup>1</sup>,
+                <a href="#">Yuvan Sharma</a><sup>1</sup>,
+                <a href="#">Stefano Saravalle</a><sup>4,5</sup>,
+                <a href="#">Ruijie Zheng</a><sup>2</sup>,
+                <a href="#">Jing Wang</a><sup>2</sup>,<br>
+                <a href="#">Ryan Punamiya</a><sup>2</sup>,
+                <a href="#">Mengda Xu</a><sup>2</sup>,
+                <a href="#">Yuqi Xie</a><sup>2</sup>,
+                <a href="#">Yunfan Jiang</a><sup>2,3</sup>,
+                <a href="#">Letian Fu</a><sup>1</sup>,<br>
+                <a href="#">Konstantinos Kallidromitis</a><sup>4</sup>,
+                <a href="#">Matteo Gioia</a><sup>4</sup>,
+                <a href="#">Junyi Zhang</a><sup>1</sup>,
+                <a href="#">Jiaxin Ge</a><sup>1</sup>,
+                <a href="#">Haiwen Feng</a><sup>1</sup>,<br>
+                <a href="#">Fabio Galasso</a><sup>5</sup>,
+                <a href="#">Wei Zhan</a><sup>1</sup>,
+                <a href="#">David M. Chan</a><sup>1</sup>,
+                <a href="#">Yutong Bai</a><sup>1</sup>,
+                <a href="#">Roei Herzig</a><sup>1</sup>,
+                <a href="#">Jiahui Lei</a><sup>1</sup>,<br>
+                <a href="#">Li Fei-Fei</a><sup>3</sup>,
+                <a href="#">Ken Goldberg</a><sup>1</sup>,
+                <a href="#">Jitendra Malik</a><sup>1</sup>,
+                <a href="#">Pieter Abbeel</a><sup>1</sup>,
+                <a href="#">Yuke Zhu</a><sup>2</sup>,
+                <a href="#">Danfei Xu</a><sup>2</sup>,
+                <a href="#">Linxi Fan</a><sup>2,&Dagger;</sup>,
+                <a href="#">Trevor Darrell</a><sup>1,&Dagger;</sup>
                 <br><br>
-                <sup>1</sup>UC Berkeley (BAIR), <sup>2</sup>Institution B<br>
-                <sup>*</sup>Equal Contribution, <sup>&dagger;</sup>Project Leads
+                <sup>1</sup>UC Berkeley &nbsp;&nbsp; <sup>2</sup>NVIDIA &nbsp;&nbsp; <sup>3</sup>Stanford &nbsp;&nbsp; <sup>4</sup>Panasonic &nbsp;&nbsp; <sup>5</sup>Sapienza University of Rome<br>
+                <sup>*</sup>Equal Contribution &nbsp;&nbsp; <sup>&Dagger;</sup>Equal Advising
             </div>
         </div>
 
@@ -1115,7 +1266,9 @@
 
         <!-- Teaser Figure (before Abstract) -->
         <div class="section paper-figure-section section--airier">
-            <img src="figures/teaser.png" alt="T-Rex teaser figure" class="paper-figure">
+            <div class="paper-figure-card">
+                <img src="figures/teaser.png" alt="T-Rex teaser figure" class="paper-figure">
+            </div>
         </div>
 
         <!-- Abstract Section -->
@@ -1126,9 +1279,32 @@
             </div>
         </div>
 
-        <!-- Architecture Figure (after Abstract) -->
-        <div class="section paper-figure-section section--airier">
-            <img src="figures/architecture.png" alt="T-Rex model architecture" class="paper-figure">
+        <!-- Method Section (architecture figure + 4-paragraph walkthrough) -->
+        <div class="section section--airier" id="method">
+            <h2 class="section-title">Method</h2>
+            <div class="paper-figure-section" style="margin-bottom: 0.5rem;">
+                <div class="paper-figure-card">
+                    <img src="figures/architecture.png" alt="T-Rex model architecture: latent expert, action expert, and tactile expert in a Mixture-of-Transformer backbone" class="paper-figure">
+                </div>
+            </div>
+            <div class="method-grid">
+                <div class="method-item">
+                    <h3 class="method-item-title">1. Mixture-of-Transformer-Experts Backbone</h3>
+                    <p>T-Rex is built on a Mixture-of-Transformer-Experts (MoT) backbone with three specialised experts that share a joint attention space. The <strong>latent expert</strong> processes vision and language inputs to produce a temporally grounded scene representation. The <strong>action expert</strong> generates a low-frequency action plan by partially denoising an action chunk from pure noise down to an intermediate timestep&nbsp;&tau;<sub>split</sub>. The lightweight <strong>tactile expert</strong> then reuses the cached visual&ndash;language context to finish the denoising trajectory using real-time tactile feedback, producing the executable action chunk.</p>
+                </div>
+                <div class="method-item">
+                    <h3 class="method-item-title">2. Spatial-Temporal Tactile Encoder</h3>
+                    <p>To exploit naturally high-frequency contact signals without sacrificing pretrained VLA capabilities, T-Rex encodes per-fingertip tactile observations along both temporal and spatial axes. A per-finger <strong>VQ-VAE</strong> compresses the recent 16-frame force history into compact discrete tokens; the <strong>current force vector</strong> is projected directly to preserve instantaneous detail; and a lightweight <strong>convolutional encoder</strong> extracts geometry from the dense deformation map. The three streams together form the tactile token sequence consumed by the tactile expert.</p>
+                </div>
+                <div class="method-item">
+                    <h3 class="method-item-title">3. Asynchronous Cascaded Flow Matching</h3>
+                    <p>The action and tactile experts run at different rates through an asynchronous cascaded flow-matching schedule. The action expert resolves the upper segment of the denoising trajectory once per action chunk (6 Euler steps from pure noise down to &tau;<sub>split</sub>&nbsp;=&nbsp;0.4), caches the intermediate state, and hands off to the tactile expert, which resolves the lower segment (4 Euler steps from 0.4 down to 0) <strong>four times</strong> within the same chunk window using fresh tactile observations. This bypasses the heavy visual network during fast ticks and unlocks low-latency closed-loop physical adaptation.</p>
+                </div>
+                <div class="method-item">
+                    <h3 class="method-item-title">4. Three-Stage Training Recipe</h3>
+                    <p>T-Rex is trained with a three-stage recipe that progressively transfers human visuomotor priors into tactile-reactive robot control. First, <strong>large-scale human egocentric pre-training</strong> on 22,889 hours of egocentric video (following EgoScale) gives the latent and action experts broad semantic grounding and coarse visuomotor priors. Second, <strong>tactile-grounded mid-training</strong> on 100 hours of teleoperated bimanual play data adapts these priors to robot-executable contact dynamics and trains the tactile expert end-to-end. Finally, <strong>skill-specific post-training</strong> on roughly 100 demonstrations per task adapts the policy to each evaluation task while preserving the reactive behaviours learned during mid-training.</p>
+                </div>
+            </div>
         </div>
 
         <!-- Demonstration Section -->
@@ -1154,6 +1330,109 @@
             </div>
 
             <p class="demo-description" id="demo-description"></p>
+        </div>
+
+        <!-- Quantitative Results Section -->
+        <div class="section section--airier" id="results">
+            <h2 class="section-title">Results</h2>
+            <p class="results-subtitle">T-Rex outperforms the strongest baseline by <strong>+30 absolute success-rate points</strong> on average across 12 real-world tactile-reactive manipulation tasks &mdash; spanning force-sensitive contact, deformation-aware manipulation, and bimanual coordination.</p>
+
+            <div class="results-chart-wrap">
+                <svg viewBox="0 0 800 380" xmlns="http://www.w3.org/2000/svg" class="results-chart" role="img" aria-label="Average success rate across 12 tactile-reactive manipulation tasks: T-Rex (Ours) 65%, EgoScale 35%, pi-0.5 17%, Tactile-VLA 15%, pi-0.5 + tactile 6%, RDP 6%, ViTacFormer 3%">
+                    <!-- Chart title -->
+                    <text x="400" y="22" fill="rgba(255,255,255,0.55)" font-size="13" text-anchor="middle" font-weight="600">Average Success Rate (%) &mdash; 12 tactile-reactive tasks</text>
+
+                    <!-- Vertical grid lines at 0, 25, 50, 75, 100 -->
+                    <g stroke="rgba(255,255,255,0.07)" stroke-dasharray="2,4">
+                        <line x1="180" y1="42" x2="180" y2="318"/>
+                        <line x1="325" y1="42" x2="325" y2="318"/>
+                        <line x1="470" y1="42" x2="470" y2="318"/>
+                        <line x1="615" y1="42" x2="615" y2="318"/>
+                        <line x1="760" y1="42" x2="760" y2="318"/>
+                    </g>
+                    <line x1="180" y1="318" x2="760" y2="318" stroke="rgba(255,255,255,0.25)"/>
+
+                    <!-- X-axis labels -->
+                    <g fill="rgba(255,255,255,0.45)" font-size="11" text-anchor="middle">
+                        <text x="180" y="338">0</text>
+                        <text x="325" y="338">25</text>
+                        <text x="470" y="338">50</text>
+                        <text x="615" y="338">75</text>
+                        <text x="760" y="338">100</text>
+                        <text x="470" y="360" font-size="11" fill="rgba(255,255,255,0.4)">Success rate (%)</text>
+                    </g>
+
+                    <!-- Bars (ascending, with T-Rex highlighted gold at the bottom for visual impact) -->
+                    <!-- Row 1: ViTacFormer @ 3 -->
+                    <text x="170" y="62" fill="rgba(255,255,255,0.85)" font-size="12.5" text-anchor="end" dominant-baseline="middle">ViTacFormer</text>
+                    <rect x="180" y="50" width="17" height="24" fill="rgba(255,255,255,0.22)" rx="3"/>
+                    <text x="205" y="62" fill="rgba(255,255,255,0.75)" font-size="11" dominant-baseline="middle">3</text>
+
+                    <!-- Row 2: RDP @ 6 -->
+                    <text x="170" y="100" fill="rgba(255,255,255,0.85)" font-size="12.5" text-anchor="end" dominant-baseline="middle">RDP</text>
+                    <rect x="180" y="88" width="35" height="24" fill="rgba(255,255,255,0.22)" rx="3"/>
+                    <text x="223" y="100" fill="rgba(255,255,255,0.75)" font-size="11" dominant-baseline="middle">6</text>
+
+                    <!-- Row 3: pi_0.5 + tactile @ 6 -->
+                    <text x="170" y="138" fill="rgba(255,255,255,0.85)" font-size="12.5" text-anchor="end" dominant-baseline="middle">&pi;<tspan dy="3" font-size="9">0.5</tspan><tspan dy="-3"> + tactile</tspan></text>
+                    <rect x="180" y="126" width="35" height="24" fill="rgba(255,255,255,0.22)" rx="3"/>
+                    <text x="223" y="138" fill="rgba(255,255,255,0.75)" font-size="11" dominant-baseline="middle">6</text>
+
+                    <!-- Row 4: Tactile-VLA @ 15 -->
+                    <text x="170" y="176" fill="rgba(255,255,255,0.85)" font-size="12.5" text-anchor="end" dominant-baseline="middle">Tactile-VLA</text>
+                    <rect x="180" y="164" width="87" height="24" fill="rgba(255,255,255,0.22)" rx="3"/>
+                    <text x="275" y="176" fill="rgba(255,255,255,0.75)" font-size="11" dominant-baseline="middle">15</text>
+
+                    <!-- Row 5: pi_0.5 @ 17 -->
+                    <text x="170" y="214" fill="rgba(255,255,255,0.85)" font-size="12.5" text-anchor="end" dominant-baseline="middle">&pi;<tspan dy="3" font-size="9">0.5</tspan></text>
+                    <rect x="180" y="202" width="99" height="24" fill="rgba(255,255,255,0.22)" rx="3"/>
+                    <text x="287" y="214" fill="rgba(255,255,255,0.75)" font-size="11" dominant-baseline="middle">17</text>
+
+                    <!-- Row 6: EgoScale @ 35 -->
+                    <text x="170" y="252" fill="rgba(255,255,255,0.85)" font-size="12.5" text-anchor="end" dominant-baseline="middle">EgoScale</text>
+                    <rect x="180" y="240" width="203" height="24" fill="rgba(255,255,255,0.22)" rx="3"/>
+                    <text x="391" y="252" fill="rgba(255,255,255,0.75)" font-size="11" dominant-baseline="middle">35</text>
+
+                    <!-- Row 7: T-Rex (Ours) @ 65 -->
+                    <text x="170" y="290" fill="#FDB515" font-size="13" font-weight="700" text-anchor="end" dominant-baseline="middle">T-Rex (Ours)</text>
+                    <rect x="180" y="278" width="377" height="24" fill="#FDB515" rx="3"/>
+                    <text x="565" y="290" fill="#FDB515" font-size="12" font-weight="700" dominant-baseline="middle">65</text>
+                </svg>
+            </div>
+
+            <h3 class="results-table-title">Per-Task Success Rate (%)</h3>
+            <div class="results-table-wrap">
+                <table class="results-table">
+                    <thead>
+                        <tr>
+                            <th>Method</th>
+                            <th>Flip<br>Page</th>
+                            <th>Transfer<br>Egg</th>
+                            <th>Wipe<br>Plate</th>
+                            <th>Apply<br>Paste</th>
+                            <th>Split<br>Cup</th>
+                            <th>Sort<br>Mahjong</th>
+                            <th>Open<br>Lock</th>
+                            <th>Refill<br>Tablet</th>
+                            <th>Acid-Base<br>Neut.</th>
+                            <th>Extract<br>Card</th>
+                            <th>Deal<br>Poker</th>
+                            <th>Screw<br>Bulb</th>
+                            <th>Avg</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>ViTacFormer</td><td>9</td><td>0</td><td>4</td><td>1</td><td>4</td><td>7</td><td>0</td><td>0</td><td>0</td><td>2</td><td>2</td><td>1</td><td>3</td></tr>
+                        <tr><td>RDP</td><td>12</td><td>8</td><td>18</td><td>2</td><td>6</td><td>9</td><td>2</td><td>0</td><td>0</td><td>1</td><td>2</td><td>7</td><td>6</td></tr>
+                        <tr><td>Tactile-VLA</td><td>38</td><td>14</td><td>24</td><td>0</td><td>21</td><td>27</td><td>8</td><td>0</td><td>9</td><td>4</td><td>11</td><td>18</td><td>15</td></tr>
+                        <tr><td>EgoScale</td><td>68</td><td>44</td><td>34</td><td>38</td><td>33</td><td>36</td><td>19</td><td>12</td><td>43</td><td>41</td><td>28</td><td>18</td><td>35</td></tr>
+                        <tr><td>&pi;<sub>0.5</sub></td><td>36</td><td>17</td><td>28</td><td>13</td><td>18</td><td>32</td><td>5</td><td>1</td><td>24</td><td>8</td><td>9</td><td>11</td><td>17</td></tr>
+                        <tr><td>&pi;<sub>0.5</sub> + tactile</td><td>8</td><td>9</td><td>27</td><td>2</td><td>4</td><td>14</td><td>2</td><td>0</td><td>7</td><td>3</td><td>0</td><td>0</td><td>6</td></tr>
+                        <tr class="ours"><td>T-Rex (Ours)</td><td>96</td><td>75</td><td>69</td><td>66</td><td>78</td><td>65</td><td>47</td><td>41</td><td>76</td><td>70</td><td>57</td><td>43</td><td>65</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="results-table-footnote">Each cell is the success rate (%) averaged over 16 evaluation rollouts; the right-most column is the macro-average across all 12 tasks.</p>
         </div>
 
         <!-- BibTeX Section -->
