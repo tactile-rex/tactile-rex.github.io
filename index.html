@@ -434,6 +434,25 @@
             margin-bottom: 2rem;
             color: #FDB515;
         }
+        /* Centered title variant: removes the implicit left anchor so
+           that title + subtitle + figure read as one symmetric column.
+           Used on showcase-style sections (Results, Demonstration). */
+        .section-title--centered {
+            text-align: center;
+            padding-bottom: 0.7rem;
+            position: relative;
+        }
+        .section-title--centered::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%);
+            width: 64px;
+            height: 3px;
+            background: #FDB515;
+            border-radius: 2px;
+        }
 
         .bootstrap-text {
             display: inline-block;
@@ -602,11 +621,11 @@
         /* ===== Quantitative Results: bar chart + per-task table ===== */
         .results-subtitle {
             max-width: 880px;
-            margin: 0 0 2.5rem;
+            margin: 0 auto 2.5rem;
             color: rgba(255, 255, 255, 0.78);
             font-size: 1.05rem;
             line-height: 1.7;
-            text-align: left;
+            text-align: center;
         }
         .results-subtitle strong { color: #FDB515; font-weight: 700; }
         .results-chart-wrap {
@@ -702,12 +721,12 @@
 
         /* ===== Demonstration: pill task selector + single hero player ===== */
         .demo-subtitle {
-            text-align: left;
+            text-align: center;
             color: rgba(255, 255, 255, 0.6);
             font-size: 0.95rem;
             font-weight: 600;
             letter-spacing: 0.4px;
-            margin: 0.5rem 0 1.5rem;
+            margin: 0.5rem auto 1.5rem;
             max-width: 880px;
         }
         .demo-pills {
@@ -1299,7 +1318,7 @@
 
         <!-- Demonstration Section -->
         <div class="section">
-            <h2 class="section-title">Demonstration</h2>
+            <h2 class="section-title section-title--centered">Demonstration</h2>
             <div class="demo-subtitle">Real-world autonomous policy rollouts on our bimanual Dexmate&nbsp;Vega-1</div>
 
             <div class="demo-pills" role="tablist" id="demo-pills">
@@ -1324,7 +1343,7 @@
 
         <!-- Quantitative Results Section -->
         <div class="section section--airier" id="results">
-            <h2 class="section-title">Results</h2>
+            <h2 class="section-title section-title--centered">Results</h2>
             <p class="results-subtitle">T-Rex outperforms the strongest baseline by <strong>+30 absolute success-rate points</strong> on average across 12 real-world tactile-reactive manipulation tasks &mdash; spanning force-sensitive contact, deformation-aware manipulation, and bimanual coordination.</p>
 
             <div class="results-chart-wrap">
@@ -1646,6 +1665,15 @@
             context.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
         }
 
+        // True when the Image at the given index has finished decoding.
+        // We must check naturalWidth in addition to .complete because a
+        // brand-new Image() that never had .src set ALSO reports
+        // complete === true (it is "complete with nothing").
+        function isFrameReady(i) {
+            const img = images1[i];
+            return img && img.complete && img.naturalWidth > 0;
+        }
+
         // Render function based on overall scroll progress (single continuous sequence)
         function render() {
             if (!imagesLoaded) {
@@ -1656,10 +1684,23 @@
             context.clearRect(0, 0, canvas.width, canvas.height);
 
             const p = doorman.progress;
-            const frame = Math.min(
+            const target = Math.min(
                 frameCount1 - 1,
                 Math.max(0, Math.round(p * (frameCount1 - 1)))
             );
+
+            // Fallback to the nearest already-loaded frame so fast
+            // scrolling past not-yet-fetched frames doesn't flash the
+            // canvas to black. Walk backward first (preserves forward
+            // motion intuition), then forward as a last resort.
+            let frame = target;
+            while (frame > 0 && !isFrameReady(frame)) frame--;
+            if (!isFrameReady(frame)) {
+                frame = target;
+                while (frame < frameCount1 - 1 && !isFrameReady(frame)) frame++;
+            }
+            if (!isFrameReady(frame)) return; // genuinely nothing loaded yet
+
             context.globalAlpha = 1;
             drawImageCover(images1[frame]);
         }
