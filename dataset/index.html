@@ -267,11 +267,15 @@
             line-height: 1.7;
         }
 
-        /* ===== Dataset composition charts ===== */
-        .charts-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
+        /* ===== Dataset composition charts =====
+           Charts have very different aspect ratios (a near-square pie, a
+           wide-ish verb bar chart, and a 6:1 horizontal object frequency
+           strip), so we stack them in a single column and let each image
+           use its natural aspect ratio. */
+        .charts-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
             margin-top: 2rem;
         }
         .chart-item {
@@ -280,27 +284,27 @@
             background: var(--bg-soft);
             border: 1px solid var(--border);
             border-radius: 10px;
-            padding: 1.25rem;
+            padding: 1.5rem;
             transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
         .chart-item:hover {
             border-color: var(--gold);
             box-shadow: 0 6px 20px rgba(0,0,0,0.06);
         }
-        .chart-embed {
+        .chart-image {
             width: 100%;
-            height: 340px;
+            height: auto;
+            display: block;
             border-radius: 6px;
             background: #ffffff;
-            border: 1px solid var(--border-soft);
-            display: block;
         }
         .chart-caption {
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             line-height: 1.6;
             color: var(--text-muted);
-            margin-top: 0.9rem;
-            padding: 0 0.2rem;
+            text-align: center;
+            margin-top: 1rem;
+            padding: 0 0.5rem;
         }
         .chart-caption strong { color: var(--text); }
 
@@ -587,7 +591,6 @@
             .modality-grid { grid-template-columns: 1fr; }
             .sample-grid { grid-template-columns: 1fr 1fr; }
             .gs-grid { grid-template-columns: 1fr; }
-            .charts-grid { grid-template-columns: 1fr; }
         }
         @media (max-width: 768px) {
             .header-title { font-size: 1rem; top: 1.5rem; }
@@ -784,11 +787,9 @@
             is allocated across high-level task categories, individual household
             objects, and motion primitives.</p>
         </div>
-        <div class="charts-grid">
+        <div class="charts-stack">
             <figure class="chart-item">
-                <object data="./category_duration_pie.pdf" type="application/pdf" class="chart-embed" aria-label="Pie chart of demonstration time per task category">
-                    <a href="./category_duration_pie.pdf">Download category duration pie chart (PDF)</a>
-                </object>
+                <img src="./category_duration_pie.png" alt="Pie chart of demonstration time per task category" class="chart-image">
                 <figcaption class="chart-caption">
                     <strong>Time per task category.</strong> Share of total
                     demonstration time across the high-level task categories
@@ -796,9 +797,7 @@
                 </figcaption>
             </figure>
             <figure class="chart-item">
-                <object data="./object_frequency_chart.pdf" type="application/pdf" class="chart-embed" aria-label="Bar chart of demonstration counts per object">
-                    <a href="./object_frequency_chart.pdf">Download object frequency chart (PDF)</a>
-                </object>
+                <img src="./object_frequency_chart.png" alt="Bar chart of demonstration counts per object" class="chart-image">
                 <figcaption class="chart-caption">
                     <strong>Per-object coverage.</strong> Number of demonstrations
                     collected for each of the 200+ daily household objects,
@@ -806,9 +805,7 @@
                 </figcaption>
             </figure>
             <figure class="chart-item">
-                <object data="./verb_frequency_chart_hours.pdf" type="application/pdf" class="chart-embed" aria-label="Bar chart of demonstration hours per motion primitive">
-                    <a href="./verb_frequency_chart_hours.pdf">Download verb frequency chart (PDF)</a>
-                </object>
+                <img src="./verb_frequency_chart_hours.png" alt="Bar chart of demonstration hours per motion primitive" class="chart-image">
                 <figcaption class="chart-caption">
                     <strong>Per-primitive time.</strong> Hours of demonstration
                     data per motion primitive across the 22 verbs in the T-Rex
