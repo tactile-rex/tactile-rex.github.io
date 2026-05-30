@@ -895,6 +895,25 @@
             padding: 50px 40px;
         }
 
+        /* Highlight badge for placeholders that still need real content
+           (links, citations, downloads). Visible on both dark and light
+           themes via the gold brand colour. */
+        .todo-tag {
+            display: inline-block;
+            padding: 0.18rem 0.6rem;
+            background: rgba(253, 181, 21, 0.18);
+            color: #FDB515;
+            border: 1px solid rgba(253, 181, 21, 0.55);
+            border-radius: 999px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            vertical-align: middle;
+            margin-left: 0.6rem;
+            font-family: 'Inter', 'Arial', sans-serif;
+        }
+
         .bibtex-code {
             background: #2a2a2a;
             border: 1px solid #333;
@@ -1408,7 +1427,7 @@
 
         <!-- BibTeX Section -->
         <div class="bibtex-section">
-            <h2 class="section-title">Citation</h2>
+            <h2 class="section-title">Citation <span class="todo-tag">to be done</span></h2>
             <pre class="bibtex-code">@article{trex2025,
   title={T-Rex: A Unified Model for Tactile-Reactive Dexterous Manipulation},
   author={Author One and Author Two and Author Three and others},
