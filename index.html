@@ -758,6 +758,7 @@
             transform: translateY(-1px);
         }
         .demo-player-wrap {
+            position: relative;
             width: 100%;
             max-width: 800px;
             margin: 0 auto 1.5rem;
@@ -772,6 +773,18 @@
             display: block;
             object-fit: cover;
             background: #000;
+        }
+        /* Double-buffered player: the second video overlays the first;
+           on task switch the incoming clip loads in the hidden element
+           while the old one keeps playing, and they swap only once the
+           new clip can render — so there is never a black gap. */
+        .demo-player-wrap video.demo-buffer {
+            position: absolute;
+            inset: 0;
+            height: 100%;
+        }
+        .demo-player-wrap video.is-hidden {
+            visibility: hidden;
         }
         .demo-description {
             max-width: 880px;
@@ -1323,6 +1336,8 @@
                 <video id="demo-player"
                        src="https://huggingface.co/datasets/Beakerman0101/trex-visualizer/resolve/main/task_demos_speed/flip_page_3_final_5x.mp4"
                        muted autoplay loop playsinline preload="metadata"></video>
+                <video id="demo-player-b" class="demo-buffer is-hidden"
+                       muted loop playsinline preload="none"></video>
             </div>
 
             <p class="demo-description" id="demo-description"></p>
@@ -2350,10 +2365,20 @@
                 }
             };
 
-            const player = document.getElementById('demo-player');
+            const playerA = document.getElementById('demo-player');
+            const playerB = document.getElementById('demo-player-b');
             const desc = document.getElementById('demo-description');
             const pills = document.querySelectorAll('#demo-pills .demo-pill');
-            if (!player || !desc || !pills.length) return;
+            if (!playerA || !playerB || !desc || !pills.length) return;
+
+            // Double-buffered swap: `active` is the visible video, `standby`
+            // the hidden one. A new clip loads into standby while active
+            // keeps playing; they swap only once the clip can render, so the
+            // player never goes black. `pending` drops superseded loads when
+            // pills are clicked in quick succession.
+            let active = playerA;
+            let standby = playerB;
+            let pending = null;
 
             // Initialise description for the server-side default-active pill.
             const initialPill = document.querySelector('#demo-pills .demo-pill.active');
@@ -2367,10 +2392,21 @@
                     if (!t) return;
                     pills.forEach(p => p.classList.remove('active'));
                     pill.classList.add('active');
-                    player.src = HF_BASE + t.file;
                     desc.textContent = t.desc;
-                    player.load();
-                    player.play().catch(() => {});
+
+                    pending = t;
+                    standby.src = HF_BASE + t.file;
+                    standby.load();
+                    standby.addEventListener('canplay', function onReady() {
+                        if (pending !== t) return; // superseded by a newer click
+                        standby.play().catch(() => {});
+                        standby.classList.remove('is-hidden');
+                        active.classList.add('is-hidden');
+                        active.pause();
+                        const swapped = active;
+                        active = standby;
+                        standby = swapped;
+                    }, { once: true });
                 });
             });
         })();
