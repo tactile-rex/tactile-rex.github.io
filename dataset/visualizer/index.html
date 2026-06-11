@@ -228,12 +228,16 @@
         /* ===== Grid ===== */
         /* Grid scrolls internally (like the DROID visualizer); sidebar stays
            put on the left, and the whole page can still scroll to reveal the
-           footer below. */
+           footer below. height:0 + min-height:100% is the grid equal-height
+           trick: the row track is sized by the sidebar column alone, then
+           the grid stretches to exactly that height, so both columns always
+           end at the same line. */
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
             gap: 0.6rem;
-            max-height: calc(100vh - 5rem);
+            height: 0;
+            min-height: 100%;
             overflow-y: auto;
             padding-right: 6px;
             /* `normal` align-content/items behaves as `stretch` for grid, which
@@ -369,7 +373,7 @@
         @media (max-width: 900px) {
             .container { grid-template-columns: 1fr; padding: 1rem; }
             .sidebar { position: static; }
-            .grid { max-height: none; overflow-y: visible; padding-right: 0; }
+            .grid { height: auto; min-height: 0; overflow-y: visible; padding-right: 0; }
             .topbar { padding: 1rem; flex-wrap: wrap; gap: 0.5rem; }
             .topbar h1 { font-size: 1.35rem; }
             .topbar .subtitle { font-size: 0.85rem; }
