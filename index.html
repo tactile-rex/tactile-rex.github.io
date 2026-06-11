@@ -328,18 +328,6 @@
             padding: 50px 40px;
         }
 
-        .feature-title-section {
-            position: fixed;
-            top: 50%;
-            left: 10%;
-            transform: translateY(-50%);
-            opacity: 0;
-            z-index: 2;
-            display: flex;
-            align-items: flex-start;
-            pointer-events: none;
-        }
-
         .paper-title-section {
             text-align: left;
             padding: 96px 32px;
@@ -1232,15 +1220,6 @@
     <!-- Static Sections -->
     <div class="static-sections">
         <!-- Paper Title Section -->
-        <!-- Feature Title Section (above paper title, scrolls normally, no pin) -->
-        <div class="feature-title-section">
-            <div class="vertical-bar"></div>
-            <div class="title-content">
-                <h1 class="main-title">Unified Visuotactile<br>Foundation Model</h1>
-                <p class="subtitle">Vision &middot; Action &middot; Tactile</p>
-            </div>
-        </div>
-
         <div class="paper-title-section">
             <h1 class="paper-title">
                 <span class="doorman">T-Rex</span>
@@ -1718,44 +1697,6 @@
         gsap.set(videoContainer, { opacity: 0 });
         gsap.set("#title-section .main-title", { x: -30, opacity: 0 });
         gsap.set("#title-section .subtitle", { x: -20, opacity: 0 });
-
-        // Near the end of the scroll animation, fade in the dark overlay and the
-        // feature title overlay so "Unified Visuotactile Foundation Model" appears
-        // at center, then fades out before the paper title section takes over.
-        gsap.set(".feature-title-section", { opacity: 0 });
-
-        gsap.to(darkOverlay, {
-            opacity: 1,
-            scrollTrigger: {
-                trigger: ".content",
-                start: "76% bottom",
-                end: "82% bottom",
-                scrub: true
-            }
-        });
-
-        gsap.to(".feature-title-section", {
-            opacity: 1,
-            scrollTrigger: {
-                trigger: ".content",
-                start: "76% bottom",
-                end: "82% bottom",
-                scrub: true
-            }
-        });
-
-        // Hold the title at full opacity from ~82% to ~90%, then fade out
-        // slowly between 90% and 100%. Bumping scrub from 1.5 to 2.5 gives the
-        // fade a softer, more drawn-out feel during interactive scrolling.
-        gsap.to(".feature-title-section", {
-            opacity: 0,
-            scrollTrigger: {
-                trigger: ".content",
-                start: "90% bottom",
-                end: "100% bottom",
-                scrub: 2.5
-            }
-        });
 
         // Pin the paper title section so the viewer is forced to dwell on the
         // real T-Rex title for ~2 extra viewport heights of scrolling. The
