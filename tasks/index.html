@@ -333,6 +333,12 @@
             border-radius: 8px;
             background: var(--bg-soft);
         }
+        /* The head-view demo clips are cropped to 390x270 (13:9), so let
+           the video box follow that ratio instead of the 16:9 placeholder
+           default — avoids pillarboxing bars on the sides. */
+        .task-video video {
+            aspect-ratio: 13 / 9;
+        }
         .task-video-placeholder {
             border: 1.5px dashed var(--border);
             display: flex;
@@ -544,8 +550,7 @@
                 </header>
                 <div class="task-body">
                     <div class="task-video">
-                        <div class="task-video-placeholder">Demo video coming soon</div>
-                        <!-- TODO: replace with <video src="..." muted autoplay loop playsinline></video> -->
+                        <video src="https://huggingface.co/datasets/Beakerman0101/trex-visualizer/resolve/main/task_videos/flip_page_head_2x.mp4" muted autoplay loop playsinline preload="metadata"></video>
                     </div>
                     <div class="task-text">
                         <div class="task-instruction">
@@ -572,7 +577,7 @@
                 </header>
                 <div class="task-body">
                     <div class="task-video">
-                        <div class="task-video-placeholder">Demo video coming soon</div>
+                        <video src="https://huggingface.co/datasets/Beakerman0101/trex-visualizer/resolve/main/task_videos/transfer_egg_head_2x.mp4" muted autoplay loop playsinline preload="metadata"></video>
                     </div>
                     <div class="task-text">
                         <div class="task-instruction">
@@ -600,7 +605,7 @@
                 </header>
                 <div class="task-body">
                     <div class="task-video">
-                        <div class="task-video-placeholder">Demo video coming soon</div>
+                        <video src="https://huggingface.co/datasets/Beakerman0101/trex-visualizer/resolve/main/task_videos/wipe_plate_head_2x.mp4" muted autoplay loop playsinline preload="metadata"></video>
                     </div>
                     <div class="task-text">
                         <div class="task-instruction">
@@ -631,7 +636,7 @@
                 </header>
                 <div class="task-body">
                     <div class="task-video">
-                        <div class="task-video-placeholder">Demo video coming soon</div>
+                        <video src="https://huggingface.co/datasets/Beakerman0101/trex-visualizer/resolve/main/task_videos/apply_toothpaste_head_2x.mp4" muted autoplay loop playsinline preload="metadata"></video>
                     </div>
                     <div class="task-text">
                         <div class="task-instruction">
@@ -663,7 +668,7 @@
                 </header>
                 <div class="task-body">
                     <div class="task-video">
-                        <div class="task-video-placeholder">Demo video coming soon</div>
+                        <video src="https://huggingface.co/datasets/Beakerman0101/trex-visualizer/resolve/main/task_videos/split_cup_head_2x.mp4" muted autoplay loop playsinline preload="metadata"></video>
                     </div>
                     <div class="task-text">
                         <div class="task-instruction">
@@ -692,7 +697,7 @@
                 </header>
                 <div class="task-body">
                     <div class="task-video">
-                        <div class="task-video-placeholder">Demo video coming soon</div>
+                        <video src="https://huggingface.co/datasets/Beakerman0101/trex-visualizer/resolve/main/task_videos/sort_mahjong_head_2x.mp4" muted autoplay loop playsinline preload="metadata"></video>
                     </div>
                     <div class="task-text">
                         <div class="task-instruction">
@@ -724,7 +729,7 @@
                 </header>
                 <div class="task-body">
                     <div class="task-video">
-                        <div class="task-video-placeholder">Demo video coming soon</div>
+                        <video src="https://huggingface.co/datasets/Beakerman0101/trex-visualizer/resolve/main/task_videos/open_lock_head_2x.mp4" muted autoplay loop playsinline preload="metadata"></video>
                     </div>
                     <div class="task-text">
                         <div class="task-instruction">
@@ -754,7 +759,7 @@
                 </header>
                 <div class="task-body">
                     <div class="task-video">
-                        <div class="task-video-placeholder">Demo video coming soon</div>
+                        <video src="https://huggingface.co/datasets/Beakerman0101/trex-visualizer/resolve/main/task_videos/refill_tablet_head_2x.mp4" muted autoplay loop playsinline preload="metadata"></video>
                     </div>
                     <div class="task-text">
                         <div class="task-instruction">
@@ -785,7 +790,7 @@
                 </header>
                 <div class="task-body">
                     <div class="task-video">
-                        <div class="task-video-placeholder">Demo video coming soon</div>
+                        <video src="https://huggingface.co/datasets/Beakerman0101/trex-visualizer/resolve/main/task_videos/acid_base_head_2x.mp4" muted autoplay loop playsinline preload="metadata"></video>
                     </div>
                     <div class="task-text">
                         <div class="task-instruction">
@@ -823,7 +828,7 @@
                 </header>
                 <div class="task-body">
                     <div class="task-video">
-                        <div class="task-video-placeholder">Demo video coming soon</div>
+                        <video src="https://huggingface.co/datasets/Beakerman0101/trex-visualizer/resolve/main/task_videos/extract_card_head_2x.mp4" muted autoplay loop playsinline preload="metadata"></video>
                     </div>
                     <div class="task-text">
                         <div class="task-instruction">
@@ -854,7 +859,7 @@
                 </header>
                 <div class="task-body">
                     <div class="task-video">
-                        <div class="task-video-placeholder">Demo video coming soon</div>
+                        <video src="https://huggingface.co/datasets/Beakerman0101/trex-visualizer/resolve/main/task_videos/deal_poker_head_2x.mp4" muted autoplay loop playsinline preload="metadata"></video>
                     </div>
                     <div class="task-text">
                         <div class="task-instruction">
@@ -885,7 +890,7 @@
                 </header>
                 <div class="task-body">
                     <div class="task-video">
-                        <div class="task-video-placeholder">Demo video coming soon</div>
+                        <video src="https://huggingface.co/datasets/Beakerman0101/trex-visualizer/resolve/main/task_videos/screw_lightbulb_head_2x.mp4" muted autoplay loop playsinline preload="metadata"></video>
                     </div>
                     <div class="task-text">
                         <div class="task-instruction">
