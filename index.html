@@ -49,12 +49,11 @@
         .content {
             position: relative;
             z-index: 1;
-            height: 750vh; /* Scroll runway: frames span the first ~93.33%
-                              (700vh — same absolute distance as the old
-                              70% of 1000vh, so playback pacing is
-                              unchanged); the final 50vh is just the
-                              dark-overlay fade, which hands off straight
-                              into the paper title. */
+            height: 800vh; /* Scroll runway: frames span the first 87.5%
+                              (700vh — same pacing as ever), then the last
+                              bright frame HOLDS for 50vh before the
+                              50vh dark-overlay fade, which hands off
+                              straight into the paper title. */
         }
 
         .dark-overlay {
@@ -1589,18 +1588,18 @@
                 }, 800);
             }, 300); // Small delay to ensure first frame renders
 
-            // Single unified scroll animation. Frames end at 93.33% of the
-            // 750vh runway (700vh of scroll — identical pacing to the old
-            // 70% of 1000vh); the dark overlay fills the remaining 50vh,
-            // so the fade-to-dark flows straight into the paper title with
-            // no dark dwell.
+            // Single unified scroll animation. Frames end at 87.5% of the
+            // 800vh runway (700vh of scroll — identical pacing to the old
+            // 70% of 1000vh). The last frame then holds bright for 50vh
+            // (87.5%-93.75%) before the dark overlay fades in over the
+            // final 50vh and hands off into the paper title.
             gsap.to(doorman, {
                 progress: 1,
                 ease: "none",
                 scrollTrigger: {
                     trigger: ".content",
                     start: "top top",
-                    end: "93.33% bottom",
+                    end: "87.5% bottom",
                     scrub: 0.5
                 },
                 onUpdate: render
@@ -1706,14 +1705,15 @@
         gsap.set("#title-section .main-title", { x: -30, opacity: 0 });
         gsap.set("#title-section .subtitle", { x: -20, opacity: 0 });
 
-        // As soon as the frame sequence finishes (93.33%), fade the screen
-        // dark across the remaining runway; the fade completes exactly at
-        // the end of .content, so the paper title scrolls in immediately.
+        // After the frame sequence finishes (87.5%) the last bright frame
+        // holds until 93.75%; then the screen fades dark across the rest
+        // of the runway, completing exactly at the end of .content so the
+        // paper title scrolls in immediately.
         gsap.to(darkOverlay, {
             opacity: 1,
             scrollTrigger: {
                 trigger: ".content",
-                start: "93.33% bottom",
+                start: "93.75% bottom",
                 end: "100% bottom",
                 scrub: true
             }
