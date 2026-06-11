@@ -25,6 +25,13 @@
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
+        html {
+            /* Fluid type scale: 16px up to ~1400px viewports, growing to
+               21px at ~2400px so large displays don't render a tiny page.
+               All sizes are rem-based, so this scales the whole layout. */
+            font-size: clamp(16px, 0.5vw + 9px, 21px);
+        }
+
         body {
             font-family: 'Inter', 'Arial', sans-serif;
             background: var(--bg);
@@ -75,13 +82,13 @@
             color: var(--text-muted);
             font-size: 0.95rem;
         }
-        .topbar .spacer { width: 80px; }
+        .topbar .spacer { width: 5rem; }
 
         /* Slim info banner below the topbar — left-aligned, single-line on
            desktop, replacing the cramped centered two-line note that used to
            sit inside the topbar. */
         .display-note {
-            max-width: 1600px;
+            max-width: 100rem; /* 1600px @16px root, scales with fluid type */
             margin: 0 auto;
             padding: 0.6rem 2rem;
             background: var(--gold-soft);
@@ -100,17 +107,17 @@
         /* ===== Layout ===== */
         .container {
             display: grid;
-            grid-template-columns: 260px 1fr;
+            grid-template-columns: 16.25rem 1fr; /* 260px sidebar @16px root */
             gap: 2rem;
             padding: 2rem;
-            max-width: 1600px;
+            max-width: 100rem; /* 1600px @16px root, scales with fluid type */
             margin: 0 auto;
         }
 
         /* ===== Sidebar ===== */
         .sidebar {
             position: sticky;
-            top: 85px;
+            top: 5.3rem; /* tracks the rem-sized topbar height (~85px @16px root) */
             align-self: start;
             padding-right: 0.5rem;
         }
@@ -234,7 +241,7 @@
            end at the same line. */
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(16.25rem, 1fr)); /* cards scale with fluid type */
             gap: 0.6rem;
             height: 0;
             min-height: 100%;
@@ -342,7 +349,7 @@
             line-height: 1.75;
             border-top: 1px solid var(--border);
             margin-top: 2.5rem;
-            max-width: 900px;
+            max-width: 56.25rem; /* 900px @16px root */
             margin-left: auto;
             margin-right: auto;
         }
