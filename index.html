@@ -1307,8 +1307,7 @@
             <div class="demo-subtitle">Real-world autonomous policy rollouts on our bimanual dexterous platform</div>
 
             <div class="demo-pills" role="tablist" id="demo-pills">
-                <button class="demo-pill active" type="button" data-task="screw_lightbulb">Screw Lightbulb</button>
-                <button class="demo-pill" type="button" data-task="flip_page">Flip Page</button>
+                <button class="demo-pill active" type="button" data-task="flip_page">Flip Page</button>
                 <button class="demo-pill" type="button" data-task="transfer_egg">Transfer Egg</button>
                 <button class="demo-pill" type="button" data-task="wipe_plate">Wipe Plate</button>
                 <button class="demo-pill" type="button" data-task="apply_toothpaste">Apply Toothpaste</button>
@@ -1317,11 +1316,12 @@
                 <button class="demo-pill" type="button" data-task="open_lock">Open Lock</button>
                 <button class="demo-pill" type="button" data-task="acid_base">Acid-Base Neutralization</button>
                 <button class="demo-pill" type="button" data-task="extract_card">Extract Card</button>
+                <button class="demo-pill" type="button" data-task="screw_lightbulb">Screw Lightbulb</button>
             </div>
 
             <div class="demo-player-wrap">
                 <video id="demo-player"
-                       src="https://huggingface.co/datasets/Beakerman0101/trex-visualizer/resolve/main/task_demos_speed/screw_lightbulb_1_final_5x.mp4"
+                       src="https://huggingface.co/datasets/Beakerman0101/trex-visualizer/resolve/main/task_demos_speed/flip_page_3_final_5x.mp4"
                        muted autoplay loop playsinline preload="metadata"></video>
             </div>
 
@@ -2307,10 +2307,6 @@
         (function () {
             const HF_BASE = 'https://huggingface.co/datasets/Beakerman0101/trex-visualizer/resolve/main/task_demos_speed/';
             const tasks = {
-                screw_lightbulb: {
-                    file: 'screw_lightbulb_1_final_5x.mp4',
-                    desc: '“There is a lightbulb and a base on the desktop. Use your left hand to pick up the lightbulb and transfer it to your right hand; then, use your left hand to hold down the base while using your right hand to screw the lightbulb into the base until it lights up.”'
-                },
                 flip_page: {
                     file: 'flip_page_3_final_5x.mp4',
                     desc: '“Turn a page of the book from right to left using your right index finger.”'
@@ -2346,6 +2342,10 @@
                 extract_card: {
                     file: 'extract_card_1_final_5x.mp4',
                     desc: '“Next to the cube on the table lies a card case containing two cards. Pick up the case with the left hand, then use the right thumb to slide the cards out through the central opening; subsequently, use the right thumb and index finger to slide out the first card, taking care not to pull out the second one.”'
+                },
+                screw_lightbulb: {
+                    file: 'screw_lightbulb_1_final_5x.mp4',
+                    desc: '“There is a lightbulb and a base on the desktop. Use your left hand to pick up the lightbulb and transfer it to your right hand; then, use your left hand to hold down the base while using your right hand to screw the lightbulb into the base until it lights up.”'
                 }
             };
 
