@@ -528,6 +528,34 @@
             border-color: var(--blue);
             color: var(--blue);
         }
+        .gs-explore-btn {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1.75rem;
+        }
+        .gs-explore-btn a {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.55rem;
+            padding: 0.85rem 2.2rem;
+            background: var(--gold);
+            border: 2px solid var(--gold);
+            border-radius: 8px;
+            color: #1a1a1a;
+            font-weight: 700;
+            font-size: 1.05rem;
+            text-decoration: none;
+            letter-spacing: 0.2px;
+            transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+            box-shadow: 0 4px 14px rgba(253,181,21,0.35);
+        }
+        .gs-explore-btn a:hover {
+            background: var(--gold-deep);
+            border-color: var(--gold-deep);
+            box-shadow: 0 6px 20px rgba(253,181,21,0.45);
+            transform: translateY(-1px);
+            color: #ffffff;
+        }
         .code-block {
             font-family: 'SFMono-Regular', 'Menlo', 'Consolas', 'Courier New', monospace;
             font-size: 0.82rem;
@@ -957,6 +985,11 @@
     <!-- ===== Getting Started ===== -->
     <section class="section" id="getting-started">
         <h2 class="section-title">Getting Started</h2>
+        <div class="gs-explore-btn">
+            <a href="https://github.com/ZhuoyangLiu2005/T-Rex#dataset-quickstart" target="_blank" rel="noopener noreferrer">
+                &#128269;&nbsp; Explore Dataset on GitHub
+            </a>
+        </div>
         <div class="gs-grid">
 
             <!-- Interactive Dataset Visualizer -->
