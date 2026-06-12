@@ -482,6 +482,52 @@
             overflow-x: auto;
             background: #f6f8fa;
         }
+        /* Mini-notebook variant: a slim editor chrome bar (dots + filename)
+           above the code so the excerpt reads as "this is the notebook". */
+        .gs-preview-nb {
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        .gs-preview-nb .code-block {
+            padding: 1.1rem 1.4rem 1.3rem;
+            overflow-x: auto;
+        }
+        .nb-chrome {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.55rem 0.9rem;
+            background: #eceff3;
+            border-bottom: 1px solid var(--border-soft);
+        }
+        .nb-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: #d3d9e0;
+        }
+        .nb-file {
+            margin-left: 0.5rem;
+            font-family: 'SFMono-Regular', 'Menlo', 'Consolas', 'Courier New', monospace;
+            font-size: 0.76rem;
+            color: var(--text-faint);
+        }
+        .gs-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+        .gs-action.gs-action-secondary {
+            background: transparent;
+            border-color: var(--border);
+            color: var(--text-muted);
+        }
+        .gs-action.gs-action-secondary:hover {
+            background: var(--blue-soft);
+            border-color: var(--blue);
+            color: var(--blue);
+        }
         .code-block {
             font-family: 'SFMono-Regular', 'Menlo', 'Consolas', 'Courier New', monospace;
             font-size: 0.82rem;
@@ -932,18 +978,40 @@
             <!-- Dataset Quickstart (Colab) -->
             <div class="gs-card">
                 <h3 class="gs-card-title">
-                    Dataset Quickstart <span class="muted">(Colab)</span> <span class="todo-tag">to be done</span>
+                    Dataset Quickstart <span class="muted">(Colab)</span>
                 </h3>
-                <div class="gs-preview gs-preview-code" style="display: flex; align-items: center; justify-content: center; min-height: 180px;">
-                    <span class="todo-tag" style="margin-left:0; font-size: 0.85rem; padding: 0.4rem 1rem;">to be done</span>
+                <!-- Excerpted (lightly condensed) from the real notebook so
+                     visitors see exactly what running it looks like. -->
+                <div class="gs-preview gs-preview-code gs-preview-nb">
+                    <div class="nb-chrome">
+                        <span class="nb-dot"></span><span class="nb-dot"></span><span class="nb-dot"></span>
+                        <span class="nb-file">quickstart.ipynb</span>
+                    </div>
+                    <pre class="code-block"><span class="com"># !pip install -q huggingface_hub pandas pyarrow av numpy matplotlib</span>
+SOURCE = <span class="str">"zekaiwang/trex_dataset"</span>  <span class="com"># streamed on demand from the Hub</span>
+
+<span class="com"># 1. Browse &amp; filter &mdash; only meta/ (a few MB) is downloaded</span>
+eps = <span class="fn">load_episodes</span>(<span class="fn">meta_root</span>(SOURCE))
+eps[eps[<span class="str">"motor_primitive"</span>] == <span class="str">"reach"</span>].<span class="fn">head</span>()
+
+<span class="com"># 2. Inspect one episode &mdash; pulls just that episode's files</span>
+droot = <span class="fn">fetch_episode</span>(SOURCE, ep_row)
+f6 = <span class="fn">load_array</span>(droot, <span class="str">"observation.tactile_force"</span>, ep_row)</pre>
                 </div>
                 <p class="gs-card-desc">
-                    A single-cell Colab notebook to stream the dataset, inspect each
-                    modality, and visualize episodes &mdash; coming soon.
+                    A single-notebook quickstart that streams the dataset straight from
+                    Hugging Face: browse and filter every episode from metadata alone,
+                    then pull individual episodes to inspect the three cameras, 20 tactile
+                    streams, and per-finger forces &mdash; no full download required.
                 </p>
-                <a class="gs-action disabled" href="#" aria-disabled="true">
-                    Open in Colab &nbsp;&rarr;
-                </a>
+                <div class="gs-actions">
+                    <a class="gs-action" href="https://colab.research.google.com/github/ZhuoyangLiu2005/T-Rex/blob/main/dataset_quickstart/quickstart.ipynb" target="_blank" rel="noopener noreferrer">
+                        Open in Colab &nbsp;&rarr;
+                    </a>
+                    <a class="gs-action gs-action-secondary" href="https://github.com/ZhuoyangLiu2005/T-Rex/blob/main/dataset_quickstart/quickstart.ipynb" target="_blank" rel="noopener noreferrer">
+                        View on GitHub
+                    </a>
+                </div>
             </div>
 
         </div>
